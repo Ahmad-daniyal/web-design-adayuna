@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk - Portal Edukasi Digital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="login-wrapper">
+        <section class="login-card">
+            
+            <aside class="login-info">
+                <h1>Selamat Datang!</h1>
+                <p>Mari tingkatkan literasi dan kemampuan digital kita bersama komunitas pembelajar cerdas.</p>
+            </aside>
+
+            <article class="login-form-container">
+                <header class="form-header">
+                    <h2>Masuk ke Akun</h2>
+                    <p>Silakan isi email dan kata sandi Anda</p>
+                </header>
+
+                <form id="formLogin" class="form-body">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="contoh: pelajar@sekolah.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Kata Sandi</label>
+                        <input type="password" id="password" name="password" placeholder="Masukkan kata sandi" required>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" name="remember"> Ingat Saya
+                        </label>
+                        <a href="#" class="forgot-link">Lupa sandi?</a>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="btn-primary">Masuk Sekarang</button>
+                </form>
+
+                <footer class="form-footer">
+                    <p>Belum punya akun? <a href="#">Daftar di sini</a></p>
+                </footer>
+            </article>
+
+        </section>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
