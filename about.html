@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tentang — Edquest</title>
+  <meta name="description" content="Tentang Edquest — komunitas belajar siswa SMA/SMK. Latar belakang, visi, misi, dan cara kerja.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{}}}</script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="antialiased">
+
+<nav class="navbar-edquest fixed top-0 left-0 right-0 z-50 py-3">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-extrabold tracking-tight no-underline" style="color:var(--text-primary);">
+      <span class="flex items-center justify-center w-9 h-9 rounded-xl text-white text-base" style="background:var(--gradient-primary);">E</span> Edquest
+    </a>
+    <div class="hidden md:flex items-center gap-1">
+      <a href="index.html" class="px-3 py-2 rounded-lg text-sm font-medium no-underline" style="color:var(--text-secondary);">Beranda</a>
+      <a href="about.html" class="px-3 py-2 rounded-lg text-sm font-medium no-underline" style="color:var(--text-primary); background:var(--primary-light);">Tentang</a>
+      <a href="forum.html" class="px-3 py-2 rounded-lg text-sm font-medium no-underline" style="color:var(--text-secondary);">Forum</a>
+      <a href="matching.html" class="px-3 py-2 rounded-lg text-sm font-medium no-underline" style="color:var(--text-secondary);">Cari Teman</a>
+      <a href="faq.html" class="px-3 py-2 rounded-lg text-sm font-medium no-underline" style="color:var(--text-secondary);">FAQ</a>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+      <div class="guest-menu flex items-center gap-2">
+        <button data-action="login" class="btn-ghost text-sm font-medium rounded-lg px-4 py-2" style="color:var(--text-secondary);">Masuk</button>
+        <button data-action="register" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4">Daftar</button>
+      </div>
+      <div class="user-menu items-center gap-3" style="display:none;">
+        <a href="profile.html" class="flex items-center gap-2 no-underline" style="color:var(--text-primary);">
+          <span class="user-avatar w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white" style="background:var(--gradient-primary);"></span>
+          <span class="user-name text-sm font-medium"></span>
+        </a>
+        <button data-action="logout" class="btn-ghost !p-2 rounded-lg" aria-label="Keluar"><i class="fas fa-sign-out-alt" style="color:var(--text-muted);"></i></button>
+      </div>
+      <button id="mobileMenuBtn" class="md:hidden btn-ghost !p-2 rounded-lg text-lg" aria-label="Menu"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</nav>
+
+<div id="mobileMenu" class="fixed inset-0 z-40 hidden" style="background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);">
+  <div class="absolute top-0 right-0 w-72 h-full pt-20 px-6" style="background:var(--bg-card);">
+    <button id="mobileMenuClose" class="absolute top-5 right-5 btn-ghost !p-2 rounded-lg text-lg"><i class="fas fa-times"></i></button>
+    <div class="flex flex-col gap-1">
+      <a href="index.html" class="block px-4 py-3 rounded-lg text-sm font-medium no-underline" style="color:var(--text-secondary);">Beranda</a>
+      <a href="about.html" class="block px-4 py-3 rounded-lg text-sm font-medium no-underline" style="color:var(--text-primary);background:var(--primary-light);">Tentang</a>
+      <a href="forum.html" class="block px-4 py-3 rounded-lg text-sm font-medium no-underline" style="color:var(--text-secondary);">Forum</a>
+      <a href="matching.html" class="block px-4 py-3 rounded-lg text-sm font-medium no-underline" style="color:var(--text-secondary);">Cari Teman</a>
+      <a href="profile.html" class="block px-4 py-3 rounded-lg text-sm font-medium no-underline" style="color:var(--text-secondary);">Profil</a>
+      <a href="faq.html" class="block px-4 py-3 rounded-lg text-sm font-medium no-underline" style="color:var(--text-secondary);">FAQ</a>
+    </div>
+    <hr class="my-4" style="border-color:var(--border-color);">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="text-sm font-medium" style="color:var(--text-secondary);">Mode Gelap</span>
+      <button id="darkModeToggleMobile" class="dark-mode-toggle !w-9 !h-9 ml-auto" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+    </div>
+    <button data-action="register" class="btn-edquest btn-primary-grad w-full text-sm mb-2">Daftar</button>
+    <button data-action="login" class="btn-edquest btn-outline-glow w-full text-sm">Masuk</button>
+  </div>
+</div>
+
+<!-- Page Header -->
+<section class="page-header">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+    <div class="max-w-3xl">
+      <span class="inline-flex items-center gap-2 text-sm font-semibold px-4 py-1.5 rounded-full bg-white/15 text-white/90 backdrop-blur-sm mb-4">
+        <i class="fas fa-info-circle"></i> Tentang Edquest
+      </span>
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-4">Belajar Bareng,<br>Tumbuh Bareng</h1>
+      <p class="text-lg text-white/80 max-w-xl">Edquest lahir dari keprihatinan bahwa banyak siswa pintar tapi ragu bertanya. Kami hadir sebagai solusi.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Latar Belakang -->
+<section class="py-16 lg:py-20" style="background:var(--bg-body);">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <span class="inline-flex items-center gap-2 text-sm font-semibold px-4 py-1.5 rounded-full" style="background:var(--primary-light);color:var(--primary);">
+          <i class="fas fa-question-circle"></i> Latar Belakang
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold mt-4 mb-6" style="color:var(--text-primary);">Kenapa Edquest Dibuat?</h2>
+        <div class="space-y-4 text-sm leading-relaxed" style="color:var(--text-secondary);">
+          <p>Setiap siswa punya potensi, tapi tidak semua punya keberanian untuk bertanya. Rasa malu, takut dinilai bodoh, atau khawatir dihakimi teman membuat banyak siswa memilih diam — padahal di dalam kepala mereka penuh rasa ingin tahu.</p>
+          <p>Di sisi lain, belajar sendiri terasa berat. Tanpa teman diskusi, materi sulit dipahami dan motivasi mudah menurun. Siswa butuh ruang yang aman untuk bertanya, berpendapat, dan belajar dari teman sebaya.</p>
+          <p><strong>Edquest</strong> hadir sebagai solusi: sebuah komunitas belajar digital di mana siswa SMA/SMK bisa berdiskusi, mencari teman belajar, dan melacak progress mereka — tanpa rasa malu dan tanpa tekanan.</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-center">
+        <div class="glass-card !p-8 text-center max-w-sm">
+          <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl" style="background:var(--primary-light);color:var(--primary);">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <blockquote class="text-sm italic leading-relaxed" style="color:var(--text-secondary);">
+            "Keberanian untuk bertanya adalah awal dari semua pengetahuan."
+          </blockquote>
+          <p class="text-xs font-medium mt-3" style="color:var(--text-muted);">— Semua siswa berhak belajar tanpa rasa takut</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Visi Misi -->
+<section class="py-16 lg:py-20" style="background:var(--bg-section);">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-12">
+      <span class="inline-flex items-center gap-2 text-sm font-semibold px-4 py-1.5 rounded-full" style="background:var(--primary-light);color:var(--primary);">
+        <i class="fas fa-bullseye"></i> Visi & Misi
+      </span>
+      <h2 class="text-3xl sm:text-4xl font-extrabold mt-4 mb-3" style="color:var(--text-primary);">Arah dan Tujuan Kami</h2>
+    </div>
+    <div class="max-w-3xl mx-auto">
+      <div class="glass-card !p-8 mb-8 text-center">
+        <i class="fas fa-eye text-3xl mb-4" style="color:var(--primary);"></i>
+        <h3 class="text-2xl font-bold mb-3" style="color:var(--text-primary);">Visi</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Membangun generasi siswa yang percaya diri untuk belajar, bertanya, dan berbagi ilmu — tanpa batasan rasa malu.</p>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-4">
+        <div class="glass-card !p-6 text-center">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 text-xl" style="background:var(--primary-light);color:var(--primary);">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h4 class="text-sm font-bold mb-2" style="color:var(--text-primary);">Ruang Aman</h4>
+          <p class="text-xs leading-relaxed" style="color:var(--text-secondary);">Menyediakan lingkungan diskusi yang nyaman dengan opsi anonim.</p>
+        </div>
+        <div class="glass-card !p-6 text-center">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 text-xl" style="background:var(--primary-light);color:var(--primary);">
+            <i class="fas fa-handshake"></i>
+          </div>
+          <h4 class="text-sm font-bold mb-2" style="color:var(--text-primary);">Koneksi</h4>
+          <p class="text-xs leading-relaxed" style="color:var(--text-secondary);">Menghubungkan siswa dengan teman belajar yang sesuai minat.</p>
+        </div>
+        <div class="glass-card !p-6 text-center">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 text-xl" style="background:var(--primary-light);color:var(--primary);">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h4 class="text-sm font-bold mb-2" style="color:var(--text-primary);">Progress</h4>
+          <p class="text-xs leading-relaxed" style="color:var(--text-secondary);">Membantu siswa melacak perjalanan belajar mereka.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Cara Kerja -->
+<section class="py-16 lg:py-20" style="background:var(--bg-body);">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-12">
+      <span class="inline-flex items-center gap-2 text-sm font-semibold px-4 py-1.5 rounded-full" style="background:var(--primary-light);color:var(--primary);">
+        <i class="fas fa-cogs"></i> Cara Kerja
+      </span>
+      <h2 class="text-3xl sm:text-4xl font-extrabold mt-4 mb-3" style="color:var(--text-primary);">Gampang, Kok!</h2>
+      <p class="text-lg" style="color:var(--text-secondary);">Cuma 3 langkah buat mulai belajar di Edquest</p>
+    </div>
+    <div class="grid sm:grid-cols-3 gap-8 max-w-4xl mx-auto">
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-extrabold text-white" style="background:var(--gradient-primary);">1</div>
+        <h3 class="text-lg font-bold mb-2" style="color:var(--text-primary);">Daftar Akun</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Buat akun dengan nama panggilan — nggak perlu pakai nama asli kalau malu.</p>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-extrabold text-white" style="background:var(--gradient-primary);">2</div>
+        <h3 class="text-lg font-bold mb-2" style="color:var(--text-primary);">Ikut Diskusi</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Bertanya, menjawab, atau sekadar membaca thread di forum sesuai minatmu.</p>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-extrabold text-white" style="background:var(--gradient-primary);">3</div>
+        <h3 class="text-lg font-bold mb-2" style="color:var(--text-primary);">Tumbuh Bareng</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Dapatkan poin, badge, dan teman belajar baru. Catat progress belajarmu!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer-edquest py-12">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div>
+        <a href="index.html" class="flex items-center gap-2 text-xl font-extrabold tracking-tight no-underline mb-4" style="color:var(--text-primary);">
+          <span class="flex items-center justify-center w-9 h-9 rounded-xl text-white text-base" style="background:var(--gradient-primary);">E</span> Edquest
+        </a>
+        <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Komunitas belajar untuk siswa SMA/SMK. Belajar bareng, tumbuh bareng, tanpa rasa malu.</p>
+      </div>
+      <div>
+        <h4 class="text-sm font-bold uppercase tracking-wider mb-4" style="color:var(--text-muted);">Navigasi</h4>
+        <div class="flex flex-col gap-2">
+          <a href="index.html" class="text-sm no-underline" style="color:var(--text-secondary);">Beranda</a>
+          <a href="about.html" class="text-sm no-underline" style="color:var(--text-secondary);">Tentang</a>
+          <a href="forum.html" class="text-sm no-underline" style="color:var(--text-secondary);">Forum</a>
+          <a href="matching.html" class="text-sm no-underline" style="color:var(--text-secondary);">Cari Teman</a>
+          <a href="faq.html" class="text-sm no-underline" style="color:var(--text-secondary);">FAQ</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-sm font-bold uppercase tracking-wider mb-4" style="color:var(--text-muted);">Fitur</h4>
+        <div class="flex flex-col gap-2">
+          <a href="forum.html" class="text-sm no-underline" style="color:var(--text-secondary);">Forum Diskusi</a>
+          <a href="matching.html" class="text-sm no-underline" style="color:var(--text-secondary);">Study Buddy</a>
+          <a href="profile.html" class="text-sm no-underline" style="color:var(--text-secondary);">Progress Journal</a>
+          <a href="profile.html" class="text-sm no-underline" style="color:var(--text-secondary);">Badge & Poin</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-sm font-bold uppercase tracking-wider mb-4" style="color:var(--text-muted);">Ikuti Kami</h4>
+        <div class="flex gap-3">
+          <a href="#" class="w-10 h-10 rounded-full flex items-center justify-center no-underline" style="background:var(--bg-section);color:var(--text-secondary);" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="w-10 h-10 rounded-full flex items-center justify-center no-underline" style="background:var(--bg-section);color:var(--text-secondary);" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="w-10 h-10 rounded-full flex items-center justify-center no-underline" style="background:var(--bg-section);color:var(--text-secondary);" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        </div>
+        <p class="text-xs mt-4" style="color:var(--text-muted);">Edquest &mdash; INVENTION 2026</p>
+      </div>
+    </div>
+    <hr class="my-8" style="border-color:var(--border-color);">
+    <p class="text-center text-sm" style="color:var(--text-muted);">&copy; 2026 Edquest. Dibuat untuk INVENTION 2026.</p>
+  </div>
+</footer>
+
+<div id="authModal" class="modal-edquest" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="authModalTitle" class="text-xl font-bold" style="color:var(--text-primary);">Akun Edquest</h3>
+      <button class="modal-close" data-action="close-modal" aria-label="Tutup"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab active" data-tab="login" role="tab" aria-selected="true">Masuk</button>
+        <button class="auth-tab" data-tab="register" role="tab" aria-selected="false">Daftar</button>
+      </div>
+      <form id="loginForm" class="auth-form form-edquest" novalidate>
+        <div class="mb-4">
+          <label class="form-label" for="loginEmail">Email</label>
+          <input id="loginEmail" type="email" class="form-input" placeholder="nama@email.com" autocomplete="email">
+          <span class="form-error"></span>
+        </div>
+        <div class="mb-4">
+          <label class="form-label" for="loginPassword">Password</label>
+          <input id="loginPassword" type="password" class="form-input" placeholder="Minimal 8 karakter" autocomplete="current-password">
+          <span class="form-error"></span>
+        </div>
+        <div class="flex items-center justify-between mb-6">
+          <label class="form-checkbox"><input type="checkbox" id="rememberMe" checked> Ingat saya</label>
+          <a href="#" class="text-sm font-medium no-underline" style="color:var(--primary);">Lupa password?</a>
+        </div>
+        <button type="submit" class="btn-edquest btn-primary-grad w-full">Masuk</button>
+        <p class="text-center text-sm mt-4" style="color:var(--text-muted);">Belum punya akun? <a href="#" onclick="Auth.openModal('register');return false;" style="color:var(--primary);font-weight:600;">Daftar</a></p>
+      </form>
+      <form id="registerForm" class="auth-form form-edquest" style="display:none;" novalidate>
+        <div class="mb-4">
+          <label class="form-label" for="regName">Nama / Nama Panggilan</label>
+          <input id="regName" type="text" class="form-input" placeholder="Contoh: Dani, Alex, atau 'Siswa Pemula'" autocomplete="name">
+          <span class="form-error"></span>
+        </div>
+        <div class="mb-4">
+          <label class="form-label" for="regEmail">Email</label>
+          <input id="regEmail" type="email" class="form-input" placeholder="nama@email.com" autocomplete="email">
+          <span class="form-error"></span>
+        </div>
+        <div class="mb-4">
+          <label class="form-label" for="regSchool">Sekolah / Asal</label>
+          <input id="regSchool" type="text" class="form-input" placeholder="Contoh: SMA Negeri 1 Jakarta">
+          <span class="form-error"></span>
+        </div>
+        <div class="mb-4">
+          <label class="form-label" for="regPassword">Password</label>
+          <input id="regPassword" type="password" class="form-input" placeholder="Minimal 8 karakter" autocomplete="new-password">
+          <span class="form-error"></span>
+        </div>
+        <div class="mb-6">
+          <label class="form-label" for="regConfirm">Konfirmasi Password</label>
+          <input id="regConfirm" type="password" class="form-input" placeholder="Ketik ulang password" autocomplete="new-password">
+          <span class="form-error"></span>
+        </div>
+        <button type="submit" class="btn-edquest btn-primary-grad w-full">Daftar</button>
+        <p class="text-center text-sm mt-4" style="color:var(--text-muted);">Sudah punya akun? <a href="#" onclick="Auth.openModal('login');return false;" style="color:var(--primary);font-weight:600;">Masuk</a></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const menuBtn=document.getElementById('mobileMenuBtn');
+  const menu=document.getElementById('mobileMenu');
+  const menuClose=document.getElementById('mobileMenuClose');
+  if(menuBtn&&menu){
+    menuBtn.addEventListener('click',()=>menu.classList.remove('hidden'));
+    menuClose.addEventListener('click',()=>menu.classList.add('hidden'));
+    menu.addEventListener('click',(e)=>{if(e.target===menu)menu.classList.add('hidden');});
+  }
+});
+</script>
+</body>
+</html>
