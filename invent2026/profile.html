@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Profil dan Progress Journal — KawanPintar">
+  <title>Profil — KawanPintar</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+</head>
+<body>
+
+  <nav class="navbar" role="navigation" aria-label="Navigasi utama">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <span class="brand-icon">🎓</span> KawanPintar
+      </a>
+      <ul class="navbar-nav" id="navbar-nav" role="menubar">
+        <li role="none"><a href="index.html" role="menuitem">Beranda</a></li>
+        <li role="none"><a href="about.html" role="menuitem">Tentang</a></li>
+        <li role="none"><a href="forum.html" role="menuitem">Forum</a></li>
+        <li role="none"><a href="matching.html" role="menuitem">Study Buddy</a></li>
+        <li role="none"><a href="profile.html" role="menuitem" class="active">Profil</a></li>
+        <li role="none"><a href="faq.html" role="menuitem">FAQ</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+        <div id="guest-actions">
+          <button class="btn btn-primary btn-sm" data-modal="auth-modal">Masuk</button>
+        </div>
+        <div id="user-menu" style="display:none;">
+          <div class="nav-user">
+            <div class="nav-user-avatar" id="user-avatar">U</div>
+            <span class="nav-user-name" id="user-name">User</span>
+          </div>
+        </div>
+        <button class="navbar-toggle" id="nav-toggle" aria-label="Buka menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top: calc(var(--nav-height) + 40px);">
+    <div class="container-narrow">
+
+      <!-- Profile Header -->
+      <div class="card card-glass profile-header fade-in">
+        <div class="profile-avatar" id="profile-avatar">?</div>
+        <div class="profile-info">
+          <h2 id="profile-name">Teman Belajar</h2>
+          <div class="title" id="profile-school">SMA/SMK Indonesia</div>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <span class="badge"><i class="fas fa-star"></i> 150 Poin</span>
+            <span class="badge badge-warning"><i class="fas fa-fire"></i> Streak 7 hari</span>
+            <span class="badge badge-success"><i class="fas fa-comment"></i> 12 Kontribusi</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div style="margin-bottom: 40px;">
+        <h3 style="margin-bottom: 16px;">🏆 Badge</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">Kumpulkan badge dengan aktif berpartisipasi di forum! (Tanpa ranking, tanpa tekanan)</p>
+        <div class="badge-grid" style="display: flex; gap: 16px; flex-wrap: wrap;">
+          <div class="badge-item fade-in">
+            <div class="badge-icon" style="background: rgba(93,156,236,0.15); font-size: 1.5rem;">🌟</div>
+            <span>Newbie</span>
+          </div>
+          <div class="badge-item fade-in anim-delay-1">
+            <div class="badge-icon" style="background: rgba(255,204,0,0.15); font-size: 1.5rem;">💬</div>
+            <span>Berani Bertanya</span>
+          </div>
+          <div class="badge-item fade-in anim-delay-2">
+            <div class="badge-icon" style="background: rgba(52,199,89,0.15); font-size: 1.5rem;">🤝</div>
+            <span>Suka Membantu</span>
+          </div>
+          <div class="badge-item fade-in anim-delay-3">
+            <div class="badge-icon" style="background: rgba(175,82,222,0.15); font-size: 1.5rem;">📚</div>
+            <span>Rajin Belajar</span>
+          </div>
+          <div class="badge-item fade-in anim-delay-4">
+            <div class="badge-icon" style="background: rgba(255,149,0,0.15); font-size: 1.5rem;">🔥</div>
+            <span>Streak 7 Hari</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Journal -->
+      <div style="margin-bottom: 40px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <h3>📖 Jurnal Progress</h3>
+          <span class="read-mode-indicator">🔒 Hanya kamu yang bisa lihat ini</span>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px;">Catat apa yang sudah kamu pelajari hari ini. Lihat seberapa jauh kamu berkembang!</p>
+
+        <!-- Add Journal -->
+        <form id="journal-form" class="card card-glass fade-in" style="padding: 24px; margin-bottom: 24px;">
+          <h4 style="margin-bottom: 16px;">✏️ Catat Progress</h4>
+          <div class="form-group">
+            <input type="text" class="form-input" id="journal-title" placeholder="Judul catatan (misal: Belajar Turunan)" required>
+          </div>
+          <div class="form-group">
+            <textarea class="form-input" id="journal-content" rows="3" placeholder="Apa yang kamu pelajari hari ini?" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Catatan</button>
+        </form>
+
+        <!-- Journal List -->
+        <div id="journal-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Logout -->
+      <div style="text-align: center; padding: 24px; border-top: 1px solid var(--border-color);">
+        <button class="btn btn-ghost" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h4>🎓 KawanPintar</h4>
+          <p>Komunitas belajar berbasis digital untuk siswa SMA/SMK. Belajar bareng, tumbuh bersama, tanpa rasa malu.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Navigasi</h5>
+          <ul>
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="about.html">Tentang</a></li>
+            <li><a href="forum.html">Forum</a></li>
+            <li><a href="matching.html">Study Buddy</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Lainnya</h5>
+          <ul>
+            <li><a href="profile.html">Profil</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="#" data-modal="auth-modal">Masuk / Daftar</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Kontak</h5>
+          <ul>
+            <li><a href="mailto:halo@kawanpintar.com">halo@kawanpintar.com</a></li>
+            <li><a href="#">IG: @kawanpintar</a></li>
+            <li><a href="#">TikTok: @kawanpintar</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 KawanPintar — INVENTION Web Design Competition</span>
+        <span>Didesain dengan ❤️ untuk Indonesia</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- Auth Modal -->
+  <div class="modal-overlay" id="auth-modal" role="dialog" aria-modal="true" aria-label="Login atau Daftar">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Masuk ke KawanPintar</h3>
+        <button class="modal-close" aria-label="Tutup modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-tabs" role="tablist">
+          <button class="modal-tab active" data-tab="login" role="tab" aria-selected="true">Masuk</button>
+          <button class="modal-tab" data-tab="register" role="tab" aria-selected="false">Daftar</button>
+        </div>
+        <div class="modal-tab-content active" id="tab-login" role="tabpanel">
+          <form id="login-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="login-email">Email</label>
+              <input type="email" class="form-input" id="login-email" placeholder="contoh@email.com" required>
+              <div class="form-error"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="login-pass">Password</label>
+              <input type="password" class="form-input" id="login-pass" placeholder="Minimal 8 karakter" required>
+              <div class="form-error"></div>
+            </div>
+            <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+              <label class="form-check"><input type="checkbox"> Ingat saya</label>
+              <a href="#" id="forgot-link" style="font-size: 0.9rem;">Lupa password?</a>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Masuk</button>
+            <div class="form-footer">Belum punya akun? <a href="#" id="switch-register">Daftar di sini</a></div>
+          </form>
+        </div>
+        <div class="modal-tab-content" id="tab-register" role="tabpanel">
+          <form id="register-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="reg-name">Nama / Nama Panggilan</label>
+              <input type="text" class="form-input" id="reg-name" placeholder="Contoh: Rina" required>
+              <div class="form-error"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-email">Email</label>
+              <input type="email" class="form-input" id="reg-email" placeholder="contoh@email.com" required>
+              <div class="form-error"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-school">Sekolah / Asal</label>
+              <input type="text" class="form-input" id="reg-school" placeholder="SMAN 1 Jakarta" required>
+              <div class="form-error"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-pass">Password</label>
+              <input type="password" class="form-input" id="reg-pass" placeholder="Minimal 8 karakter" required>
+              <div class="form-error"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-confirm">Konfirmasi Password</label>
+              <input type="password" class="form-input" id="reg-confirm" placeholder="Ketik ulang password" required>
+              <div class="form-error"></div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Daftar Gratis</button>
+            <div class="form-footer">Sudah punya akun? <a href="#" id="switch-login">Masuk di sini</a></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="forum-category-modal" role="dialog" aria-modal="true" aria-label="Thread kategori forum">
+    <div class="modal" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3>Kategori</h3>
+        <button class="modal-close" aria-label="Tutup modal">&times;</button>
+      </div>
+      <div class="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
