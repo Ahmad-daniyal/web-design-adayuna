@@ -27,7 +27,7 @@ project-root/
 ├── js/                           # Logic aplikasi (module per fitur)
 │   ├── app.js                    # Entry + boot: Router.init() → App.init() → Auth.init()
 │   ├── auth.js                   # Auth: session login/logout/register, showToast
-│   ├── forum.js                  # Forum: filter kategori, modal diskusi, vote, komentar
+│   ├── forum.js                  # Forum: render thread dari ForumData, filter kategori, modal diskusi, vote, komentar
 │   ├── friend.js                 # Matching: study buddy filter + render
 │   ├── profile.js                # Profile: sync user, journal +5 poin
 │   ├── settings.js               # Settings: modal pengaturan, deleteAccount
@@ -55,7 +55,7 @@ project-root/
 
 1. User mengubah `location.hash` (klik link `#/forum`, dsb).
 2. `Router.handleRoute()` membaca path, memilih fungsi render dari tabel `routes`, dan mengganti `innerHTML` dari `#app`.
-3. Router menandai link aktif, scroll ke atas, lalu melepas event `pageChanged` dengan `{ pageName }`.
+3. Router menandai link aktif, scroll ke atas, lalu melepas event `pageChanged` dengan `{ pageName }` — **dilepas async (microtask)** agar listener yang didaftarkan `App.init()` sudah tersedia saat load pertama (mengatasi halaman forum/friend/profile yang tidak terinisialisasi pada deep-link/reload).
 4. `App.initPageHandlers()` mendengarkan `pageChanged` dan memanggil init fitur per halaman: `Forum.refresh()` (forum), `Matching.init()` (friend), `Profile.init()` (profile).
 5. Sidebar otomatis tertutup di layar mobile.
 

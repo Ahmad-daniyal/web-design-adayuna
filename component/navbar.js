@@ -67,7 +67,7 @@ export function renderNavbar() { return `
               <i class="fas fa-cog mr-2"></i> Pengaturan
             </button>
             <hr class="my-1" style="border-color:var(--border-color);">
-            <button data-action="logout" class="block w-full text-left px-4 py-2 rounded-lg text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" style="color:#dc2626; background:transparent; border:none; cursor:pointer;">
+            <button data-action="logout" class="block w-full text-left px-4 py-2 rounded-lg text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" style="color:#ef4444; background:transparent; border:none; cursor:pointer;">
               <i class="fas fa-sign-out-alt mr-2"></i> Keluar
             </button>
           </div>

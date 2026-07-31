@@ -4,6 +4,8 @@ import { Auth } from './auth.js';
 export const Forum = (() => {
   let globalBound = false;
 
+  const CAT_LABELS = { matematika:'Matematika', fisika:'Fisika', kimia:'Kimia', biologi:'Biologi', sejarah:'Sejarah', bahasa:'Bahasa Indonesia', ips:'IPS' };
+
   function bindGlobal() {
     if (globalBound) return;
     globalBound = true;
@@ -30,6 +32,7 @@ export const Forum = (() => {
 
   function refresh() {
     bindGlobal();
+    renderThreads(ForumData);
     const container = document.getElementById('categoryFilter');
     if (container) {
       container.addEventListener('click', (e) => {
@@ -38,12 +41,37 @@ export const Forum = (() => {
         container.querySelectorAll('.cat-btn').forEach(b => {
           b.style.background = 'transparent'; b.style.color = 'var(--text-secondary)'; b.style.borderColor = 'var(--border-color)'; b.classList.remove('active');
         });
-        btn.style.background = 'var(--primary)'; btn.style.color = 'white'; btn.style.borderColor = 'var(--primary)'; btn.classList.add('active');
+        btn.style.background = 'var(--gradient-primary)'; btn.style.color = 'white'; btn.style.borderColor = 'transparent'; btn.classList.add('active');
         filterThreads(btn.dataset.category);
       });
     }
     const active = container ? container.querySelector('.cat-btn.active') : null;
     filterThreads(active ? active.dataset.category : 'all');
+  }
+
+  function renderThreads(list) {
+    const container = document.getElementById('threadList');
+    if (!container) return;
+    container.innerHTML = list.map((t, i) =>
+      '<div class="thread-card" data-category="' + t.category + '" data-id="' + i + '">' +
+        '<div class="flex flex-wrap items-start justify-between gap-3">' +
+          '<div class="flex-1 min-w-0">' +
+            '<div class="flex flex-wrap items-center gap-2 mb-1">' +
+              '<span class="category-tag ' + t.category + '"><i class="fas ' + getIcon(t.category) + '"></i> ' + catLabel(t.category) + '</span>' +
+              '<span class="text-xs text-slate-400 dark:text-slate-500">' + t.time + '</span>' +
+            '</div>' +
+            '<h3 class="font-bold text-base mb-1 text-slate-900 dark:text-slate-100">' + t.title + '</h3>' +
+            '<p class="text-sm truncate text-slate-500 dark:text-slate-400">' + t.subtitle + '</p>' +
+            '<div class="flex items-center gap-4 mt-2 text-xs text-slate-400 dark:text-slate-500">' +
+              '<span><i class="fas fa-user mr-1"></i>' + t.author + '</span>' +
+              '<span><i class="fas fa-comment mr-1"></i> ' + t.replies + ' balasan</span>' +
+              '<span><i class="fas fa-arrow-up mr-1"></i> ' + t.votes + ' suara</span>' +
+            '</div>' +
+          '</div>' +
+          '<span class="status-tag flex-shrink-0">' + t.status + '</span>' +
+        '</div>' +
+      '</div>'
+    ).join('');
   }
 
   function filterThreads(category) {
@@ -65,24 +93,19 @@ export const Forum = (() => {
     Auth.showToast('Fitur membuat thread baru segera hadir!', 'info');
   }
 
-  function openDiscussionModal(cardOrTitle) {
+  function openDiscussionModal(card) {
+    let id = card && card.dataset ? parseInt(card.dataset.id, 10) : 0;
+    if (isNaN(id)) id = 0;
+    openThread(id);
+  }
+
+  function openThread(id) {
+    const thread = ForumData[id] || ForumData[0];
     const modal = document.getElementById('discussionModal');
     const body = document.getElementById('discussionModalBody');
     if (!modal || !body) return;
-    let thread;
-    if (typeof cardOrTitle === 'string') {
-      thread = ForumData.find(t => t.title === cardOrTitle) || ForumData[0];
-    } else if (cardOrTitle && cardOrTitle.dataset) {
-      const cat = cardOrTitle.dataset.category;
-      const titleEl = cardOrTitle.querySelector('h3');
-      const title = titleEl ? titleEl.textContent.trim() : '';
-      thread = ForumData.find(t => t.title === title) || (cat ? ForumData.filter(t => t.category === cat)[0] : ForumData[0]);
-    } else {
-      thread = ForumData[0];
-    }
-    if (!thread) thread = ForumData[0];
     body.innerHTML = '<div class="discussion-detail">' +
-      '<div class="flex flex-wrap items-center gap-2 mb-3"><span class="category-tag ' + thread.category + ' in-modal"><i class="fas ' + getIcon(thread.category) + '"></i> ' + capitalize(thread.category) + '</span><span class="text-xs" style="color:var(--text-muted);">' + thread.time + '</span></div>' +
+      '<div class="flex flex-wrap items-center gap-2 mb-3"><span class="category-tag ' + thread.category + ' in-modal"><i class="fas ' + getIcon(thread.category) + '"></i> ' + catLabel(thread.category) + '</span><span class="text-xs" style="color:var(--text-muted);">' + thread.time + '</span></div>' +
       '<h2 class="text-xl font-bold mb-3" style="color:var(--text-primary);">' + thread.title + '</h2>' +
       '<p class="text-sm leading-relaxed mb-4" style="color:var(--text-secondary);">' + thread.subtitle + '</p>' +
       '<div class="flex items-center gap-4 text-sm mb-6" style="color:var(--text-muted);"><span><i class="fas fa-user mr-1"></i>' + thread.author + '</span><span><i class="fas fa-comment mr-1"></i>' + thread.replies + ' balasan</span><span><i class="fas fa-arrow-up mr-1"></i>' + thread.votes + ' suara</span></div>' +
@@ -118,7 +141,9 @@ export const Forum = (() => {
 
   function getIcon(cat) { return { matematika:'fa-calculator', fisika:'fa-atom', kimia:'fa-flask', biologi:'fa-dna', sejarah:'fa-landmark', bahasa:'fa-language', ips:'fa-globe' }[cat] || 'fa-book'; }
 
+  function catLabel(cat) { return CAT_LABELS[cat] || capitalize(cat); }
+
   function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-  return { refresh, openDiscussionModal, openNewThread, toggleVote, submitComment };
+  return { refresh, openThread, openDiscussionModal, openNewThread, toggleVote, submitComment };
 })();

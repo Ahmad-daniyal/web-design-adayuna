@@ -9,10 +9,6 @@ export function renderSidebar() { return `
       <a href="#/faq" data-link="faq" class="sidebar-link"><i class="fas fa-question-circle"></i><span>FAQ</span></a>
     </nav>
     <div class="sidebar-footer">
-      <div class="sidebar-theme-toggle" id="sidebarDarkToggle">
-        <i class="fas fa-sun"></i>
-        <span>Dark Mode</span>
-      </div>
       <button onclick="Settings.openModal()" class="sidebar-link w-full" style="border:none;cursor:pointer;background:transparent;font-size:inherit;">
         <i class="fas fa-gear"></i><span>Settings</span>
       </button>

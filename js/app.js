@@ -18,12 +18,16 @@ export const App = (() => {
     initUserDropdown();
     initIceBreakerCopy();
     initSmoothScroll();
+    initEscapeClose();
     initPageHandlers();
   }
 
   function initPageHandlers() {
     window.addEventListener('pageChanged', (e) => {
       const page = e.detail.pageName;
+      document.body.style.overflow = '';
+      const sm = document.getElementById('settingsModal');
+      if (sm) Settings.closeModal();
       setTimeout(() => {
         if (page === 'forum') Forum.refresh();
         if (page === 'friend') Matching.init();
@@ -32,23 +36,34 @@ export const App = (() => {
     });
   }
 
+  function initEscapeClose() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      const dm = document.getElementById('discussionModal');
+      if (dm && dm.classList.contains('active')) {
+        dm.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+      Settings.closeModal();
+      Auth.closeModal();
+    });
+  }
+
   function initDarkMode() {
     const apply = (isDark) => {
       document.documentElement.classList.toggle('dark', isDark);
       localStorage.setItem('edquest_dark', isDark);
-      const toggles = document.querySelectorAll('#darkModeToggle, #sidebarDarkToggle');
-      toggles.forEach(t => {
-        t.classList.toggle('is-dark', isDark);
-        if (t.id === 'darkModeToggle') t.setAttribute('aria-checked', isDark);
-      });
+      const toggle = document.getElementById('darkModeToggle');
+      if (toggle) {
+        toggle.classList.toggle('is-dark', isDark);
+        toggle.setAttribute('aria-checked', isDark);
+      }
     };
     const toggle = document.getElementById('darkModeToggle');
-    const sidebarToggle = document.getElementById('sidebarDarkToggle');
     const saved = localStorage.getItem('edquest_dark');
     const isDark = saved === 'true' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
     apply(isDark);
     if (toggle) toggle.addEventListener('click', () => apply(!document.documentElement.classList.contains('dark')));
-    if (sidebarToggle) sidebarToggle.addEventListener('click', () => apply(!document.documentElement.classList.contains('dark')));
   }
 
   function initNavbarScroll() {
@@ -137,6 +152,8 @@ export const App = (() => {
     const closeSearch = () => {
       overlay.classList.remove('open');
       if (input) input.blur();
+      if (input) input.value = '';
+      if (results) results.innerHTML = '<p class="text-sm" style="color:var(--text-muted);">Ketik untuk mencari...</p>';
     };
     btn.addEventListener('click', openSearch);
     if (close) close.addEventListener('click', closeSearch);
@@ -151,7 +168,7 @@ export const App = (() => {
           results.innerHTML = '<p class="text-sm" style="color:var(--text-muted);">Tidak ditemukan</p>';
         } else {
           results.innerHTML = filtered.slice(0, 6).map(t => `
-            <div class="p-3 rounded-lg cursor-pointer" style="background:var(--bg-body);border:1px solid var(--border-color);" onclick="Router.navigate('forum'); document.getElementById('searchOverlay').classList.remove('open')">
+            <div class="p-3 rounded-lg cursor-pointer" style="background:var(--bg-body);border:1px solid var(--border-color);" onclick="Router.navigate('forum'); setTimeout(function(){ Forum.openThread(${ForumData.indexOf(t)}); document.getElementById('searchOverlay').classList.remove('open') }, 120)">
               <p class="text-sm font-medium" style="color:var(--text-primary);">${t.title}</p>
               <p class="text-xs" style="color:var(--text-muted);">${t.subtitle}</p>
             </div>

@@ -23,11 +23,11 @@ export const Settings = (() => {
       '<hr style="border-color:var(--border-color);margin:1.5rem 0;">' +
       '<div class="mb-4"><label class="flex items-center justify-between cursor-pointer"><span class="text-sm font-medium" style="color:var(--text-primary);">Notifikasi</span>' +
       '<div class="relative"><input type="checkbox" id="settingsNotif" class="sr-only peer" checked>' +
-      '<div class="w-10 h-5 rounded-full bg-gray-300 peer-checked:bg-green-500 transition-colors"></div>' +
+      '<div class="w-10 h-5 rounded-full bg-slate-200 dark:bg-slate-700 peer-checked:bg-slate-900 dark:peer-checked:bg-slate-100 transition-colors"></div>' +
       '<div class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-5 shadow-sm"></div></div></label></div>' +
       '<div class="mb-4"><label class="flex items-center justify-between cursor-pointer"><span class="text-sm font-medium" style="color:var(--text-primary);">Mode Anonim (default)</span>' +
       '<div class="relative"><input type="checkbox" id="settingsAnon" class="sr-only peer" checked>' +
-      '<div class="w-10 h-5 rounded-full bg-gray-300 peer-checked:bg-green-500 transition-colors"></div>' +
+      '<div class="w-10 h-5 rounded-full bg-slate-200 dark:bg-slate-700 peer-checked:bg-slate-900 dark:peer-checked:bg-slate-100 transition-colors"></div>' +
       '<div class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-5 shadow-sm"></div></div></label></div>' +
       '<hr style="border-color:var(--border-color);margin:1.5rem 0;">' +
       '<button type="submit" class="btn-edquest btn-primary-grad w-full"><i class="fas fa-save"></i> Simpan Perubahan</button>' +
@@ -45,7 +45,8 @@ export const Settings = (() => {
       if (!name || !email) { Auth.showToast('Nama dan email wajib diisi', 'error'); return; }
       currentUser.name = name; currentUser.email = email; currentUser.school = school;
       currentUser.avatar = name[0].toUpperCase();
-      localStorage.setItem('edquest_user', JSON.stringify(currentUser));
+      Auth.persistUser(currentUser);
+      Auth.refreshUI();
       Auth.showToast('Pengaturan disimpan!', 'success');
       closeModal();
     });

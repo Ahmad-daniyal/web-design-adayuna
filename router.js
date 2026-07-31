@@ -46,7 +46,7 @@ export const Router = (() => {
 
     updateNavActive(pageName);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    window.dispatchEvent(new CustomEvent('pageChanged', { detail: { pageName } }));
+    setTimeout(() => window.dispatchEvent(new CustomEvent('pageChanged', { detail: { pageName } })), 0);
 
     if (window.innerWidth < 768) {
       const sidebar = document.getElementById('sidebar');

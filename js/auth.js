@@ -105,6 +105,15 @@ export const Auth = (() => {
     updateUIForLoggedInUser();
   }
 
+  function persistUser(user) {
+    if (localStorage.getItem('edquest_user')) localStorage.setItem('edquest_user', JSON.stringify(user));
+    if (sessionStorage.getItem('edquest_user')) sessionStorage.setItem('edquest_user', JSON.stringify(user));
+  }
+
+  function refreshUI() {
+    updateUIForLoggedInUser();
+  }
+
   function updateUIForLoggedInUser() {
     document.querySelectorAll('[data-action="login"],[data-action="register"]').forEach(el => el.style.display = currentUser ? 'none' : '');
     document.querySelectorAll('.user-menu').forEach(el => { el.style.display = currentUser ? 'flex' : 'none'; });
@@ -140,12 +149,12 @@ export const Auth = (() => {
     const toast = document.createElement('div');
     toast.className = 'toast ' + (type || 'info');
     const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
-    toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '" style="color:' + (type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : 'var(--primary)') + ';font-size:1.25rem;"></i>' +
+    toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '" style="color:' + (type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#3b82f6') + ';font-size:1.25rem;"></i>' +
       '<span style="flex:1;font-size:0.875rem;font-weight:500;">' + message + '</span>' +
       '<button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;padding:0.25rem;"><i class="fas fa-times"></i></button>';
     container.appendChild(toast);
     setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(100%)'; toast.style.transition = 'all 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 4000);
   }
 
-  return { init, openModal, closeModal, getUser, isLoggedIn, clearSession, showToast };
+  return { init, openModal, closeModal, getUser, isLoggedIn, clearSession, showToast, persistUser, refreshUI };
 })();

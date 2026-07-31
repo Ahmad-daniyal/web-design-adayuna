@@ -2,6 +2,10 @@ import { Auth } from './auth.js';
 
 export const Profile = (() => {
 
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  }
+
   function init() {
     syncUser();
     bindJournalForm();
@@ -29,6 +33,7 @@ export const Profile = (() => {
     if (entryForm) {
       entryForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        if (!Auth.isLoggedIn()) { Auth.openModal('register'); return; }
         const mapel = document.getElementById('journalMapel').value;
         const text = document.getElementById('journalText').value.trim();
         if (!text) { Auth.showToast('Catatan tidak boleh kosong', 'error'); return; }
@@ -37,7 +42,7 @@ export const Profile = (() => {
         const entry = document.createElement('div');
         entry.className = 'progress-card';
         entry.innerHTML = '<div class="flex items-center justify-between mb-2"><span class="text-xs font-semibold px-2 py-1 rounded-full" style="background:' + c.bg + ';color:' + c.color + ';">' + (mapel.charAt(0).toUpperCase() + mapel.slice(1)) + '</span><span class="text-xs" style="color:var(--text-muted);">Baru saja</span></div>' +
-          '<p class="text-sm leading-relaxed" style="color:var(--text-secondary);">' + text + '</p><div class="flex items-center gap-2 mt-2 text-xs" style="color:var(--primary);"><i class="fas fa-circle-check"></i> +5 poin</div>';
+          '<p class="text-sm leading-relaxed" style="color:var(--text-secondary);">' + esc(text) + '</p><div class="flex items-center gap-2 mt-2 text-xs" style="color:var(--primary);"><i class="fas fa-circle-check"></i> +5 poin</div>';
         const container = document.getElementById('journalEntries');
         if (container) container.insertBefore(entry, container.firstChild);
         document.getElementById('journalText').value = '';

@@ -9,14 +9,14 @@ export function renderHome() { return `
         </div>
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-white mb-4">
           Mulai Perjalanan
-          <span class="block text-transparent bg-clip-text" style="background:linear-gradient(135deg,#fbbf24,#f59e0b);">Belajarmu</span>
+          <span class="block text-transparent bg-clip-text" style="background:linear-gradient(135deg,#FDB515,#E8A200);">Belajarmu</span>
           Tanpa Rasa Malu
         </h1>
         <p class="text-lg sm:text-xl text-white/80 mb-8 max-w-xl mx-auto md:mx-0 leading-relaxed">
           Banyak siswa punya mimpi besar, tapi ragu untuk memulai. Di <strong>Edquest</strong>, kamu bisa belajar, dan berdiskusi dengan teman sebaya- tanpa takut dihakimi. Semua orang di sini sama-sama belajar, jadi nggak ada yang merasa paling pintar. 
         </p>
         <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-6">
-          <a href="#/forum" class="btn-edquest text-base" style="background:white; color:var(--primary-dark); font-weight:700; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+          <a href="#/forum" class="btn-edquest text-base" style="background:white; color:#182235; font-weight:700; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
             <i class="fas fa-comments"></i> Mulai Diskusi
           </a>
           <a href="#/friend" class="btn-edquest text-base" style="background:rgba(255,255,255,0.12); color:white; border:1.5px solid rgba(255,255,255,0.25); backdrop-filter:blur(8px);">
@@ -35,19 +35,19 @@ export function renderHome() { return `
             <div class="grid grid-cols-2 gap-4 p-4">
               <div class="glass-card !p-5 text-center" style="animation:float 6s ease-in-out infinite;">
                 <i class="fas fa-comment-dots text-3xl" style="color:var(--primary);"></i>
-                <p class="text-xs font-medium mt-2 text-white/80">Forum Diskusi</p>
+                <p class="text-xs font-medium mt-2" style="color:var(--text-secondary);">Forum Diskusi</p>
               </div>
               <div class="glass-card !p-5 text-center mt-8" style="animation:float 6s ease-in-out infinite; animation-delay:1s;">
                 <i class="fas fa-user-graduate text-3xl" style="color:var(--accent);"></i>
-                <p class="text-xs font-medium mt-2 text-white/80">Study Buddy</p>
+                <p class="text-xs font-medium mt-2" style="color:var(--text-secondary);">Study Buddy</p>
               </div>
               <div class="glass-card !p-5 text-center" style="animation:float 6s ease-in-out infinite; animation-delay:2s;">
-                <i class="fas fa-trophy text-3xl" style="color:#fbbf24;"></i>
-                <p class="text-xs font-medium mt-2 text-white/80">Badge & Poin</p>
+                <i class="fas fa-trophy text-3xl" style="color:var(--accent);"></i>
+                <p class="text-xs font-medium mt-2" style="color:var(--text-secondary);">Badge & Poin</p>
               </div>
               <div class="glass-card !p-5 text-center mt-8" style="animation:float 6s ease-in-out infinite; animation-delay:0.5s;">
-                <i class="fas fa-book-open text-3xl" style="color:#a78bfa;"></i>
-                <p class="text-xs font-medium mt-2 text-white/80">Progress Journal</p>
+                <i class="fas fa-book-open text-3xl" style="color:var(--accent);"></i>
+                <p class="text-xs font-medium mt-2" style="color:var(--text-secondary);">Progress Journal</p>
               </div>
             </div>
           </div>
@@ -68,10 +68,10 @@ export function renderHome() { return `
   </div>
 </section>
 
-<section class="py-16 lg:py-20" style="background:var(--bg-section);">
+<section class="py-16 lg:py-20" style="background:var(--bg-body);">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="text-center mb-12">
-      <span class="inline-flex items-center gap-2 text-sm font-semibold px-4 py-1.5 rounded-full" style="background:var(--primary-light); color:var(--primary);"><i class="fas fa-sparkles"></i> Ice Breaker</span>
+      <span class="section-badge"><i class="fas fa-sparkles"></i> Ice Breaker</span>
       <h2 class="text-3xl sm:text-4xl font-extrabold mt-4 mb-3" style="color:var(--text-primary);">Bingung Mau Mulai dari Mana?</h2>
       <p class="text-lg" style="color:var(--text-secondary); max-width:560px; margin:0 auto;">Tenang, kamu nggak sendirian. Coba salin kalimat ini untuk memulai diskusi di forum!</p>
     </div>
@@ -115,7 +115,7 @@ export function renderHome() { return `
 <section class="py-16 lg:py-20" style="background:var(--bg-body);">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="text-center mb-12">
-      <span class="inline-flex items-center gap-2 text-sm font-semibold px-4 py-1.5 rounded-full" style="background:var(--primary-light); color:var(--primary);"><i class="fas fa-star"></i> Fitur Unggulan</span>
+      <span class="section-badge"><i class="fas fa-star"></i> Fitur Unggulan</span>
       <h2 class="text-3xl sm:text-4xl font-extrabold mt-4 mb-3" style="color:var(--text-primary);">Belajar Lebih Seru Bareng Edquest</h2>
       <p class="text-lg" style="color:var(--text-secondary);">Semua fitur dirancang untuk membuatmu nyaman belajar</p>
     </div>
@@ -139,12 +139,12 @@ export function renderHome() { return `
   </div>
 </section>
 
-<section class="py-16 lg:py-20" style="background:var(--gradient-hero);">
+<section class="py-16 lg:py-20 cta-section" style="background:var(--gradient-hero);">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
     <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Siap Memulai Perjalanan Belajar?</h2>
     <p class="text-lg text-white/80 mb-8 max-w-lg mx-auto">Ribuan siswa lainnya sudah memulai. Giliranmu sekarang!</p>
     <div class="flex flex-wrap justify-center gap-3">
-      <button data-action="register" class="btn-edquest text-base" style="background:white; color:var(--primary-dark); font-weight:700;"><i class="fas fa-user-plus"></i> Daftar Gratis</button>
+      <button data-action="register" class="btn-edquest text-base" style="background:white; color:#182235; font-weight:700;"><i class="fas fa-user-plus"></i> Daftar Gratis</button>
       <a href="#/forum" class="btn-edquest text-base" style="background:rgba(255,255,255,0.12); color:white; border:1.5px solid rgba(255,255,255,0.25);"><i class="fas fa-eye"></i> Lihat Forum</a>
     </div>
   </div>

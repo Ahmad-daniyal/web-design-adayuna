@@ -3,7 +3,7 @@ export function renderProfile() { return `
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="grid lg:grid-cols-3 gap-8">
       <div class="lg:col-span-1">
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-center mb-6">
+        <div class="card-panel p-6 text-center mb-6">
           <div id="profileAvatar" class="user-avatar w-20 h-20 rounded-full flex items-center justify-center text-2xl font-extrabold text-white mx-auto mb-3" style="background:var(--gradient-primary);">D</div>
           <h2 id="profileName" class="text-xl font-bold text-slate-900 dark:text-slate-100">Tamu</h2>
           <p class="text-sm mt-1 text-slate-400 dark:text-slate-500">Siswa &middot; <span class="text-sm font-medium" style="color:var(--primary);">Mode Panggilan</span></p>
@@ -15,7 +15,7 @@ export function renderProfile() { return `
             <div class="text-center"><div class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">12</div><div class="text-xs text-slate-400 dark:text-slate-500">Kontribusi</div></div>
           </div>
         </div>
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 mb-6">
+        <div class="card-panel p-6 mb-6">
           <h4 class="font-bold text-sm mb-4 text-slate-900 dark:text-slate-100"><i class="fas fa-award mr-2 text-slate-500 dark:text-slate-400"></i>Badge</h4>
           <div class="flex flex-wrap gap-3">
             <div class="badge-item earned" title="Pertama Kali Bertanya"><i class="fas fa-question text-slate-600 dark:text-slate-300"></i></div>
@@ -27,7 +27,7 @@ export function renderProfile() { return `
           </div>
           <p class="text-xs mt-3 text-slate-400 dark:text-slate-500">3 dari 6 badge diraih</p>
         </div>
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4">
+        <div class="card-panel p-4">
           <label class="flex items-center justify-between cursor-pointer">
             <span class="text-sm font-medium text-slate-900 dark:text-slate-100"><i class="fas fa-eye-slash mr-2 text-slate-400 dark:text-slate-500"></i>Mode Anonim</span>
             <div class="relative">
@@ -44,7 +44,7 @@ export function renderProfile() { return `
           <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100"><i class="fas fa-book-open mr-2 text-slate-500 dark:text-slate-400"></i>Jurnal Belajar</h2>
           <button id="addJournalBtn" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4"><i class="fas fa-plus"></i> Catat Hari Ini</button>
         </div>
-        <div id="journalForm" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 mb-6" style="display:none;">
+        <div id="journalForm" class="card-panel p-5 mb-6" style="display:none;">
           <h4 class="font-bold mb-3 text-slate-900 dark:text-slate-100">Apa yang sudah kamu pelajari?</h4>
           <form id="journalEntryForm">
             <div class="mb-3">
@@ -76,7 +76,7 @@ export function renderProfile() { return `
         <div id="journalEntries" class="space-y-4">
           <div class="progress-card">
             <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-semibold px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Matematika</span>
+              <span class="status-tag">Matematika</span>
               <span class="text-xs text-slate-400 dark:text-slate-500">Hari ini</span>
             </div>
             <p class="text-sm leading-relaxed text-slate-500 dark:text-slate-400">Belajar tentang turunan fungsi trigonometri. Aku mulai ngerti konsep d/dx (sin x) = cos x.</p>
@@ -84,7 +84,7 @@ export function renderProfile() { return `
           </div>
           <div class="progress-card">
             <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-semibold px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Fisika</span>
+              <span class="status-tag">Fisika</span>
               <span class="text-xs text-slate-400 dark:text-slate-500">Kemarin</span>
             </div>
             <p class="text-sm leading-relaxed text-slate-500 dark:text-slate-400">Mencoba soal Hukum Newton nomor 5. Aku masih kadung keliru antara gaya gesek dan gaya normal.</p>
@@ -92,7 +92,7 @@ export function renderProfile() { return `
           </div>
           <div class="progress-card">
             <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-semibold px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Biologi</span>
+              <span class="status-tag">Biologi</span>
               <span class="text-xs text-slate-400 dark:text-slate-500">2 hari lalu</span>
             </div>
             <p class="text-sm leading-relaxed text-slate-500 dark:text-slate-400">Ikut bantu teman tentang sel mitosis. Aku jadi lebih paham juga sama materinya karena ngajarin.</p>
