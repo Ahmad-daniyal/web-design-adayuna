@@ -1,4 +1,4 @@
-function renderFriend() { return `
+export function renderFriend() { return `
 <section class="pt-16 md:pt-20 pb-4">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="max-w-3xl">

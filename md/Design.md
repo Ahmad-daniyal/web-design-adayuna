@@ -4,31 +4,24 @@
 
 ---
 
-## CSS — Aturan Ukuran File
+## Pendekatan Styling
 
-CSS must use expanded format — one property per line, one blank line between rules.
+- **Tailwind CSS via CDN** — utility class untuk layout/space/typography (`flex`, `gap-4`, `text-sm`, `dark:*`, dst.).
+- **CSS variables** di `css/style.css` — untuk warna adaptif light/dark: `--bg-body`, `--bg-card`, `--bg-section`, `--text-primary`, `--text-secondary`, `--text-muted`, `--border-color`, `--primary`, `--primary-dark`, `--primary-light`, `--accent`, `--gradient-hero`, `--gradient-primary`.
+- **Class custom** di `css/style.css` — untuk komponen yang dipakai berulang (`btn-edquest`, `glass-card`, `sidebar-link`, `modal-edquest`, `thread-card`, dst.).
+- Mode gelap aktif dengan class `dark` di `<html>`; gunakan `dark:` utility Tailwind **atau** CSS variables — jangan hardcode warna yang tidak adaptif.
 
-| Tipe file | Batas |
-|---|---|
-| CSS fitur utama | ~100 baris |
-| CSS partial (`_*.css`) | ~150 baris |
-| CSS komponen shared | ~100 baris |
-| Global CSS | ~200 baris |
+## Aturan CSS
 
-Jika file melebihi batasnya, ekstrak ke partial dengan prefix `_`:
-
-```js
-injectStyle('/src/modules/[nama]/[nama].css');
-injectStyle('/src/modules/[nama]/_[nama]-section.css');
-```
-
-CSS partial (prefix `_`) hanya di-inject dari file JS fiturnya — tidak standalone.
-
----
+- CSS must use expanded format — one property per line, one blank line between rules.
+- `css/style.css` adalah satu-satunya file CSS. Kelompokkan dengan komentar section (`/* ===== Modal ===== */`).
+- Hapus class yang sudah tidak dipakai (dead CSS) — jangan menumpuk.
+- Jika `style.css` membengkak, ekstrak aturan komponen baru ke section terpisah dalam file yang sama.
 
 ## Library yang Diizinkan
 
-- Tidak ada framework (React, Vue, Svelte, dll)
+- Tidak ada framework (React, Vue, Svelte, dll.)
 - Tidak ada build tool untuk JS — ES Modules native via `type="module"`
+- CDN yang dipakai: Tailwind CSS, Font Awesome 6, Google Fonts (Inter)
 
-> **Catatan:** Vanilla JS selalu diutamakan. jQuery hanya digunakan jika memberikan manfaat nyata yang tidak bisa dicapai dengan vanilla JS secara wajar. Jangan gunakan jQuery hanya untuk mempersingkat selector.
+> **Catatan:** Vanilla JS selalu diutamakan. jQuery tidak digunakan.

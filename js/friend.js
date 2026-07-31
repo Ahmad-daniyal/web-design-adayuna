@@ -1,18 +1,23 @@
-const Matching = (() => {
-  const buddies = [
-    { name:'Sari', initials:'S', mapel:'matematika', minat:'diskusi', kelas:'11', color:'linear-gradient(135deg,#334155,#0f172a)', online:true },
-    { name:'Rizki', initials:'R', mapel:'fisika', minat:'soal', kelas:'12', color:'linear-gradient(135deg,#475569,#1e293b)', online:true },
-    { name:'Anisa', initials:'A', mapel:'biologi', minat:'materi', kelas:'10', color:'linear-gradient(135deg,#64748b,#334155)', online:false },
-    { name:'Fajar', initials:'F', mapel:'kimia', minat:'kreatif', kelas:'11', color:'linear-gradient(135deg,#475569,#0f172a)', online:true },
-    { name:'Dinda', initials:'D', mapel:'matematika', minat:'diskusi', kelas:'12', color:'linear-gradient(135deg,#94a3b8,#475569)', online:false },
-    { name:'Gilang', initials:'G', mapel:'ips', minat:'diskusi', kelas:'11', color:'linear-gradient(135deg,#64748b,#1e293b)', online:true },
-    { name:'Putri', initials:'P', mapel:'bahasa', minat:'materi', kelas:'10', color:'linear-gradient(135deg,#334155,#475569)', online:true },
-    { name:'Raka', initials:'R', mapel:'sejarah', minat:'soal', kelas:'12', color:'linear-gradient(135deg,#1e293b,#0f172a)', online:false }
-  ];
+import { buddies } from './data.js';
+import { Auth } from './auth.js';
+
+export const Matching = (() => {
 
   function init() {
     renderBuddies(buddies);
-    bindFormEvents();
+    const form = document.getElementById('matchingForm');
+    if (!form) return;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const mapel = document.getElementById('matchMapel').value;
+      const minat = document.getElementById('matchMinat').value;
+      const kelas = document.getElementById('matchKelas').value;
+      let filtered = buddies;
+      if (mapel !== 'all') filtered = filtered.filter(b => b.mapel === mapel);
+      if (minat !== 'all') filtered = filtered.filter(b => b.minat === minat);
+      if (kelas !== 'all') filtered = filtered.filter(b => b.kelas === kelas);
+      renderBuddies(filtered);
+    });
   }
 
   function renderBuddies(list) {
@@ -36,29 +41,9 @@ const Matching = (() => {
     ).join('');
   }
 
-  function bindFormEvents() {
-    const form = document.getElementById('matchingForm');
-    if (!form) return;
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const mapel = document.getElementById('matchMapel').value;
-      const minat = document.getElementById('matchMinat').value;
-      const kelas = document.getElementById('matchKelas').value;
-      let filtered = buddies;
-      if (mapel !== 'all') filtered = filtered.filter(b => b.mapel === mapel);
-      if (minat !== 'all') filtered = filtered.filter(b => b.minat === minat);
-      if (kelas !== 'all') filtered = filtered.filter(b => b.kelas === kelas);
-      renderBuddies(filtered);
-    });
-  }
-
   function requestBuddy(name) { Auth.showToast('Permintaan pertemanan dikirim ke ' + name + '!', 'success'); }
   function viewProfile(name) { Auth.showToast('Membuka profil ' + name + '...', 'info'); }
   function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
   return { init, requestBuddy, viewProfile };
 })();
-
-window.addEventListener('pageChanged', (e) => {
-  if (e.detail.pageName === 'friend') setTimeout(() => Matching.init(), 50);
-});

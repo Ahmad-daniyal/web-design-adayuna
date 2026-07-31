@@ -1,4 +1,4 @@
-function renderNavbar() { return `
+export function renderNavbar() { return `
 <div id="readingProgress" class="reading-progress" aria-hidden="true"></div>
 
 <nav class="top-navbar">
@@ -82,7 +82,7 @@ function renderNavbar() { return `
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl shadow-slate-900/10 dark:shadow-black/40 !p-6 search-modal">
       <div class="flex items-center gap-3 mb-4">
         <i class="fas fa-search" style="color:var(--text-muted);"></i>
-        <input id="searchInput" type="text" class="flex-1 bg-transparent border-none outline-none text-lg" style="color:var(--text-primary);" placeholder="Cari kursus, forum, atau topik..." autofocus>
+        <input id="searchInput" type="text" class="flex-1 bg-transparent border-none outline-none text-lg" style="color:var(--text-primary);" placeholder="Cari forum atau topik..." autofocus>
         <button id="searchClose" class="btn-ghost !p-2 rounded-lg"><i class="fas fa-times"></i></button>
       </div>
       <div id="searchResults" class="search-results max-h-80 overflow-y-auto space-y-2">

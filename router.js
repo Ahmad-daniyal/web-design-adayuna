@@ -1,14 +1,23 @@
-const Router = (() => {
+import { renderNavbar } from './component/navbar.js';
+import { renderSidebar } from './component/sidebar.js';
+import { renderFooter } from './component/footer.js';
+import { renderAuthModal } from './component/auth-modal.js';
+import { renderHome } from './page/home.js';
+import { renderForum } from './page/forum.js';
+import { renderFriend } from './page/friend.js';
+import { renderAbout } from './page/about.js';
+import { renderFaq } from './page/faq.js';
+import { renderProfile } from './page/profile.js';
+
+export const Router = (() => {
   const routes = {
-    '/': 'home', 'home': 'home',
-    'kursus': 'kursus',
-    'jadwal': 'jadwal',
-    'nilai': 'nilai',
-    'about': 'about',
-    'forum': 'forum',
-    'friend': 'friend',
-    'faq': 'faq',
-    'profile': 'profile'
+    '/': renderHome,
+    'home': renderHome,
+    'forum': renderForum,
+    'friend': renderFriend,
+    'about': renderAbout,
+    'faq': renderFaq,
+    'profile': renderProfile
   };
 
   let currentPage = null;
@@ -19,9 +28,6 @@ const Router = (() => {
     document.getElementById('footer-slot').innerHTML = renderFooter();
     document.getElementById('auth-slot').innerHTML = renderAuthModal();
 
-    App.init();
-    Auth.init();
-
     handleRoute();
     window.addEventListener('hashchange', handleRoute);
   }
@@ -29,14 +35,14 @@ const Router = (() => {
   function handleRoute() {
     const hash = window.location.hash.slice(1) || '/';
     const path = hash.split('?')[0].replace(/^\/+/, '');
-    const pageName = routes[path] || 'home';
+    const render = routes[path] || routes.home;
+    const pageName = path === '' ? 'home' : (routes[path] ? path : 'home');
 
     if (pageName === currentPage && pageName !== 'home') return;
     currentPage = pageName;
 
-    const fn = window['render' + capitalize(pageName)];
     const app = document.getElementById('app');
-    if (fn && app) app.innerHTML = fn();
+    if (render && app) app.innerHTML = render();
 
     updateNavActive(pageName);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -56,20 +62,12 @@ const Router = (() => {
 
   function updateNavActive(pageName) {
     document.querySelectorAll('[data-link]').forEach(link => {
-      const isActive = link.dataset.link === pageName;
-      link.classList.toggle('active', isActive);
+      link.classList.toggle('active', link.dataset.link === pageName);
     });
     document.querySelectorAll('.sidebar-link').forEach(link => {
-      const isActive = link.dataset && link.dataset.link === pageName;
-      if (link.dataset && link.dataset.link) link.classList.toggle('active', isActive);
+      if (link.dataset && link.dataset.link) link.classList.toggle('active', link.dataset.link === pageName);
     });
-  }
-
-  function capitalize(s) {
-    return s.charAt(0).toUpperCase() + s.slice(1);
   }
 
   return { init, navigate };
 })();
-
-document.addEventListener('DOMContentLoaded', () => Router.init());

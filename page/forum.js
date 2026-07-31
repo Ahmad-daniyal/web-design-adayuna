@@ -1,4 +1,4 @@
-function renderForum() { return `
+export function renderForum() { return `
 <section class="pt-16 md:pt-20 pb-4">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="max-w-3xl">
@@ -8,7 +8,7 @@ function renderForum() { return `
           <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">Diskusi Bebas, Belajar Seru</h1>
           <p class="mt-1 text-sm sm:text-base text-slate-500 dark:text-slate-400">Pilih kategori mapel, gulir thread-nya, dan bergabung tanpa rasa malu.</p>
         </div>
-        <button data-action="register" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4"><i class="fas fa-plus"></i> Thread Baru</button>
+        <button onclick="Forum.openNewThread()" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4"><i class="fas fa-plus"></i> Thread Baru</button>
       </div>
     </div>
   </div>
@@ -188,21 +188,11 @@ function renderForum() { return `
       <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl !p-8">
         <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-slate-100">Punya topik ingin didiskusikan?</h3>
         <p class="text-sm mb-4 text-slate-500 dark:text-slate-400">Mulai thread baru dan dapatkan jawaban dari teman-teman di sini.</p>
-        <button data-action="register" class="btn-edquest btn-primary-grad"><i class="fas fa-pen"></i> Buat Thread Baru</button>
+        <button onclick="Forum.openNewThread()" class="btn-edquest btn-primary-grad"><i class="fas fa-pen"></i> Buat Thread Baru</button>
       </div>
     </div>
   </div>
 </section>
-
-<div id="categoryModal" class="modal-edquest" role="dialog" aria-modal="true" aria-labelledby="categoryModalTitle">
-  <div class="modal-content" style="max-width:600px;">
-    <div class="modal-header">
-      <h3 id="categoryModalTitle" class="text-xl font-bold" style="color:var(--text-primary);"></h3>
-      <button class="modal-close" data-action="close-modal" aria-label="Tutup"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="modal-body" id="categoryModalBody"></div>
-  </div>
-</div>
 
 <div id="discussionModal" class="modal-edquest" role="dialog" aria-modal="true" aria-labelledby="discussionModalTitle">
   <div class="modal-content" style="max-width:700px;">

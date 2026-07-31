@@ -1,4 +1,12 @@
-const App = (() => {
+import { Router } from '../router.js';
+import { Auth } from './auth.js';
+import { Forum } from './forum.js';
+import { Matching } from './friend.js';
+import { Profile } from './profile.js';
+import { Settings } from './settings.js';
+import { ForumData } from './data.js';
+
+export const App = (() => {
   function init() {
     initDarkMode();
     initNavbarScroll();
@@ -10,29 +18,37 @@ const App = (() => {
     initUserDropdown();
     initIceBreakerCopy();
     initSmoothScroll();
+    initPageHandlers();
   }
 
-  function initDarkMode() {
-    const toggle = document.getElementById('darkModeToggle');
-    if (!toggle) return;
-    const saved = localStorage.getItem('edquest_dark');
-    if (saved === 'true' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-      updateToggleIcon(true);
-    }
-    toggle.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.toggle('dark');
-      localStorage.setItem('edquest_dark', isDark);
-      updateToggleIcon(isDark);
+  function initPageHandlers() {
+    window.addEventListener('pageChanged', (e) => {
+      const page = e.detail.pageName;
+      setTimeout(() => {
+        if (page === 'forum') Forum.refresh();
+        if (page === 'friend') Matching.init();
+        if (page === 'profile') Profile.init();
+      }, 50);
     });
   }
 
-  function updateToggleIcon(isDark) {
+  function initDarkMode() {
+    const apply = (isDark) => {
+      document.documentElement.classList.toggle('dark', isDark);
+      localStorage.setItem('edquest_dark', isDark);
+      const toggles = document.querySelectorAll('#darkModeToggle, #sidebarDarkToggle');
+      toggles.forEach(t => {
+        t.classList.toggle('is-dark', isDark);
+        if (t.id === 'darkModeToggle') t.setAttribute('aria-checked', isDark);
+      });
+    };
     const toggle = document.getElementById('darkModeToggle');
-    if (toggle) {
-      toggle.classList.toggle('is-dark', isDark);
-      toggle.setAttribute('aria-checked', isDark);
-    }
+    const sidebarToggle = document.getElementById('sidebarDarkToggle');
+    const saved = localStorage.getItem('edquest_dark');
+    const isDark = saved === 'true' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    apply(isDark);
+    if (toggle) toggle.addEventListener('click', () => apply(!document.documentElement.classList.contains('dark')));
+    if (sidebarToggle) sidebarToggle.addEventListener('click', () => apply(!document.documentElement.classList.contains('dark')));
   }
 
   function initNavbarScroll() {
@@ -130,8 +146,7 @@ const App = (() => {
       input.addEventListener('input', () => {
         const q = input.value.toLowerCase().trim();
         if (!q) { results.innerHTML = '<p class="text-sm" style="color:var(--text-muted);">Ketik untuk mencari...</p>'; return; }
-        const forumData = window.ForumData || [];
-        const filtered = forumData.filter(t => t.title.toLowerCase().includes(q) || t.subtitle.toLowerCase().includes(q));
+        const filtered = ForumData.filter(t => t.title.toLowerCase().includes(q) || t.subtitle.toLowerCase().includes(q));
         if (filtered.length === 0) {
           results.innerHTML = '<p class="text-sm" style="color:var(--text-muted);">Tidak ditemukan</p>';
         } else {
@@ -199,3 +214,14 @@ const App = (() => {
 
   return { init, submitContact };
 })();
+
+window.Auth = Auth;
+window.Settings = Settings;
+window.Forum = Forum;
+window.Matching = Matching;
+window.App = App;
+window.Router = Router;
+
+Router.init();
+App.init();
+Auth.init();

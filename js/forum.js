@@ -1,44 +1,49 @@
-const ForumData = [
-  { category:'matematika', title:'Turunan fungsi trigonometri itu kayak gimana sih?', subtitle:'Aku masih bingung sama rumus turunan sin, cos, dan tan...', author:'MathExplorer', replies:5, votes:12, time:'2 jam lalu', status:'Aktif' },
-  { category:'matematika', title:'Cara cepat tentukan turunan fungsi aljabar', subtitle:'Mau share tips cepat buat turunan aljabar kelas 10.', author:'KakakKelas', replies:8, votes:25, time:'5 jam lalu', status:'Aktif' },
-  { category:'fisika', title:'Hukum Newton mana yang paling sering keluar di UN?', subtitle:'Mau panduan persiapan UN dari hukum Newton.', author:'FisikawanMuda', replies:3, votes:7, time:'1 hari lalu', status:'Populer' },
-  { category:'fisika', title:'Konsep gerak parabola butuh banget buat UTS', subtitle:'Masih bingung kapan benda itu parabola dan kapan nggak.', author:'RoboStudent', replies:6, votes:15, time:'2 hari lalu', status:'Aktif' },
-  { category:'kimia', title:'Reaksi redoks: cara cepat tentukan teroksidasi', subtitle:'Trik nentuin zat teroksidasi dan tereduksi biar gampang.', author:'KimiaFun', replies:4, votes:9, time:'3 hari lalu', status:'Aktif' },
-  { category:'biologi', title:'Saya salah paham tentang mitosis dan meiosis', subtitle:'Akhirnya ngerti perbedaannya! Mau share rangkuman.', author:'BioNerd', replies:11, votes:30, time:'4 hari lalu', status:'Populer' },
-  { category:'sejarah', title:'Pemanfaatan teknologi di era Kemerdekaan Indonesia', subtitle:'Teknologi apa aja yang dipakai waktu era kemerdekaan?', author:'SejarawanCilik', replies:2, votes:5, time:'5 hari lalu', status:'Aktif' },
-  { category:'bahasa', title:'Cara menulis teks eksplanasi biar dapet nilai A', subtitle:'Sering dapat nilai kurang di teks eksplanasi. Bagi tips!', author:'KataJuara', replies:7, votes:18, time:'1 minggu lalu', status:'Aktif' }
-];
+import { ForumData } from './data.js';
+import { Auth } from './auth.js';
 
-const Forum = (() => {
-  let initialized = false;
+export const Forum = (() => {
+  let globalBound = false;
 
-  function init() {
-    if (initialized) return;
-    initialized = true;
-    bindFilterEvents();
-    bindCategoryTags();
-    bindAllThreadCards();
-    initCategoryModal();
-    initDiscussionModal();
+  function bindGlobal() {
+    if (globalBound) return;
+    globalBound = true;
+    document.addEventListener('click', (e) => {
+      const tag = e.target.closest('.category-tag:not(.in-modal)');
+      if (tag) {
+        const card = tag.closest('.thread-card');
+        if (card) openDiscussionModal(card);
+        return;
+      }
+      const card = e.target.closest('.thread-card');
+      if (card && !e.target.closest('button')) {
+        openDiscussionModal(card);
+        return;
+      }
+      const close = e.target.closest('#discussionModal [data-action="close-modal"]');
+      const overlay = e.target.closest('#discussionModal');
+      if ((close || (overlay && e.target === overlay)) && document.getElementById('discussionModal')) {
+        document.getElementById('discussionModal').classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
   }
 
   function refresh() {
-    init();
-    if (document.getElementById('categoryFilter')) filterThreads('all');
-  }
-
-  function bindFilterEvents() {
+    bindGlobal();
     const container = document.getElementById('categoryFilter');
-    if (!container) return;
-    container.addEventListener('click', (e) => {
-      const btn = e.target.closest('.cat-btn');
-      if (!btn) return;
-      container.querySelectorAll('.cat-btn').forEach(b => {
-        b.style.background = 'transparent'; b.style.color = 'var(--text-secondary)'; b.style.borderColor = 'var(--border-color)'; b.classList.remove('active');
+    if (container) {
+      container.addEventListener('click', (e) => {
+        const btn = e.target.closest('.cat-btn');
+        if (!btn) return;
+        container.querySelectorAll('.cat-btn').forEach(b => {
+          b.style.background = 'transparent'; b.style.color = 'var(--text-secondary)'; b.style.borderColor = 'var(--border-color)'; b.classList.remove('active');
+        });
+        btn.style.background = 'var(--primary)'; btn.style.color = 'white'; btn.style.borderColor = 'var(--primary)'; btn.classList.add('active');
+        filterThreads(btn.dataset.category);
       });
-      btn.style.background = 'var(--primary)'; btn.style.color = 'white'; btn.style.borderColor = 'var(--primary)'; btn.classList.add('active');
-      filterThreads(btn.dataset.category);
-    });
+    }
+    const active = container ? container.querySelector('.cat-btn.active') : null;
+    filterThreads(active ? active.dataset.category : 'all');
   }
 
   function filterThreads(category) {
@@ -52,58 +57,12 @@ const Forum = (() => {
     if (counter) counter.textContent = count + ' thread ditemukan';
   }
 
-  function bindCategoryTags() {
-    document.addEventListener('click', (e) => {
-      const tag = e.target.closest('.category-tag:not(.in-modal)');
-      if (!tag) return;
-      const card = tag.closest('.thread-card');
-      if (card) openDiscussionModal(card);
-    });
-  }
-
-  function bindAllThreadCards() {
-    document.addEventListener('click', (e) => {
-      const card = e.target.closest('.thread-card');
-      if (!card || e.target.closest('.category-tag') || e.target.closest('button')) return;
-      openDiscussionModal(card);
-    });
-  }
-
-  function initCategoryModal() {
-    const modal = document.getElementById('categoryModal');
-    if (!modal) return;
-    modal.querySelectorAll('.category-tag').forEach(tag => tag.style.cursor = 'pointer');
-  }
-
-  function openCategoryModal(category) {
-    const modal = document.getElementById('categoryModal');
-    const title = document.getElementById('categoryModalTitle');
-    const body = document.getElementById('categoryModalBody');
-    if (!modal || !title || !body) return;
-    const meta = { matematika:{title:'Matematika',icon:'fa-calculator'}, fisika:{title:'Fisika',icon:'fa-atom'}, kimia:{title:'Kimia',icon:'fa-flask'}, biologi:{title:'Biologi',icon:'fa-dna'}, sejarah:{title:'Sejarah',icon:'fa-landmark'}, bahasa:{title:'Bahasa Indonesia',icon:'fa-language'}, ips:{title:'IPS',icon:'fa-globe'} };
-    const m = meta[category];
-    const threads = ForumData.filter(t => t.category === category);
-    title.innerHTML = m ? '<i class="fas ' + m.icon + ' mr-2"></i>' + m.title + ' — Sub Thread' : category;
-    body.innerHTML = threads.length === 0
-      ? '<p class="text-sm" style="color:var(--text-muted);">Belum ada sub-thread untuk kategori ini.</p>'
-      : threads.map(t => '<div class="thread-item p-3 rounded-lg mb-2 cursor-pointer" style="background:var(--bg-body);border:1px solid var(--border-color);" onclick="Forum.openDiscussionModal(\'' + t.title.replace(/'/g, "\\'") + '\');document.getElementById(\'categoryModal\').classList.remove(\'active\');document.body.style.overflow=\'\'">' +
-        '<div class="flex items-start justify-between gap-3"><div class="flex-1 min-w-0"><h4 class="font-semibold text-sm mb-1" style="color:var(--text-primary);">' + t.title + '</h4>' +
-        '<p class="text-xs truncate" style="color:var(--text-secondary);">' + t.subtitle + '</p>' +
-        '<div class="flex items-center gap-3 mt-1 text-xs" style="color:var(--text-muted);"><span><i class="fas fa-user mr-1"></i>' + t.author + '</span><span><i class="fas fa-comment mr-1"></i>' + t.replies + '</span><span><i class="fas fa-arrow-up mr-1"></i>' + t.votes + '</span></div></div>' +
-        '<span class="text-xs whitespace-nowrap" style="color:var(--text-muted);">' + t.time + '</span></div></div>').join('');
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function initDiscussionModal() {
-    document.addEventListener('click', (e) => {
-      const close = e.target.closest('#discussionModal [data-action="close-modal"]');
-      const overlay = e.target.closest('#discussionModal');
-      if ((close || (overlay && e.target === overlay)) && document.getElementById('discussionModal')) {
-        document.getElementById('discussionModal').classList.remove('active');
-        document.body.style.overflow = '';
-      }
-    });
+  function openNewThread() {
+    if (!Auth.isLoggedIn()) {
+      Auth.openModal('register');
+      return;
+    }
+    Auth.showToast('Fitur membuat thread baru segera hadir!', 'info');
   }
 
   function openDiscussionModal(cardOrTitle) {
@@ -161,9 +120,5 @@ const Forum = (() => {
 
   function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-  return { init, refresh, openDiscussionModal, openCategoryModal, toggleVote, submitComment };
+  return { refresh, openDiscussionModal, openNewThread, toggleVote, submitComment };
 })();
-
-window.addEventListener('pageChanged', (e) => {
-  if (e.detail.pageName === 'forum') setTimeout(() => Forum.refresh(), 50);
-});

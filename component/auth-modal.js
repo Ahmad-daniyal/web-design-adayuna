@@ -1,4 +1,4 @@
-function renderAuthModal() { return `
+export function renderAuthModal() { return `
 <div id="authModal" class="modal-edquest" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
   <div class="modal-content">
     <div class="modal-header">

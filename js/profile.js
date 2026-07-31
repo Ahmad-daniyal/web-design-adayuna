@@ -1,11 +1,21 @@
-const Profile = (() => {
-  let bound = false;
+import { Auth } from './auth.js';
+
+export const Profile = (() => {
 
   function init() {
-    if (bound) return;
+    syncUser();
     bindJournalForm();
     bindAnonToggle();
-    bound = true;
+  }
+
+  function syncUser() {
+    const user = Auth.getUser();
+    const nameEl = document.getElementById('profileName');
+    const avatarEl = document.getElementById('profileAvatar');
+    const pointsEl = document.getElementById('profilePoints');
+    if (nameEl) nameEl.textContent = user ? user.name : 'Tamu';
+    if (avatarEl) avatarEl.textContent = user ? user.avatar : '?';
+    if (pointsEl) pointsEl.textContent = user ? (user.points || 0) : 0;
   }
 
   function bindJournalForm() {
@@ -32,9 +42,21 @@ const Profile = (() => {
         if (container) container.insertBefore(entry, container.firstChild);
         document.getElementById('journalText').value = '';
         form.style.display = 'none';
-        Auth.showToast('Progress tercatat! +5 poin', 'success');
+        const gained = addPoints(5);
+        Auth.showToast(gained ? 'Progress tercatat! +5 poin' : 'Progress tercatat!', 'success');
       });
     }
+  }
+
+  function addPoints(amount) {
+    const user = Auth.getUser();
+    if (!user) return false;
+    user.points = (user.points || 0) + amount;
+    if (localStorage.getItem('edquest_user')) localStorage.setItem('edquest_user', JSON.stringify(user));
+    if (sessionStorage.getItem('edquest_user')) sessionStorage.setItem('edquest_user', JSON.stringify(user));
+    const pointsEl = document.getElementById('profilePoints');
+    if (pointsEl) pointsEl.textContent = user.points;
+    return true;
   }
 
   function bindAnonToggle() {
@@ -52,7 +74,3 @@ const Profile = (() => {
 
   return { init };
 })();
-
-window.addEventListener('pageChanged', (e) => {
-  if (e.detail.pageName === 'profile') setTimeout(() => Profile.init(), 50);
-});

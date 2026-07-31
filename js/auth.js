@@ -1,11 +1,11 @@
-const Auth = (() => {
+export const Auth = (() => {
   let currentUser = null;
 
   function init() {
-    const saved = localStorage.getItem('edquest_user');
+    const saved = localStorage.getItem('edquest_user') || sessionStorage.getItem('edquest_user');
     if (saved) {
       try { currentUser = JSON.parse(saved); updateUIForLoggedInUser(); }
-      catch { localStorage.removeItem('edquest_user'); }
+      catch { clearSession(); }
     }
     bindEvents();
   }
@@ -94,11 +94,15 @@ const Auth = (() => {
   }
 
   function handleLogout() {
+    clearSession();
+    showToast('Berhasil keluar', 'info');
+  }
+
+  function clearSession() {
     currentUser = null;
     localStorage.removeItem('edquest_user');
     sessionStorage.removeItem('edquest_user');
     updateUIForLoggedInUser();
-    showToast('Berhasil keluar', 'info');
   }
 
   function updateUIForLoggedInUser() {
@@ -124,6 +128,8 @@ const Auth = (() => {
 
   function getUser() { return currentUser; }
 
+  function isLoggedIn() { return !!currentUser; }
+
   function showToast(message, type) {
     let container = document.querySelector('.toast-container');
     if (!container) {
@@ -141,5 +147,5 @@ const Auth = (() => {
     setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(100%)'; toast.style.transition = 'all 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 4000);
   }
 
-  return { init, openModal, closeModal, getUser, showToast };
+  return { init, openModal, closeModal, getUser, isLoggedIn, clearSession, showToast };
 })();

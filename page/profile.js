@@ -1,14 +1,14 @@
-function renderProfile() { return `
+export function renderProfile() { return `
 <section class="pt-16 md:pt-20 pb-10">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="grid lg:grid-cols-3 gap-8">
       <div class="lg:col-span-1">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-center mb-6">
-          <div class="user-avatar w-20 h-20 rounded-full flex items-center justify-center text-2xl font-extrabold text-white mx-auto mb-3" style="background:var(--gradient-primary);">D</div>
-          <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100">Dani</h2>
+          <div id="profileAvatar" class="user-avatar w-20 h-20 rounded-full flex items-center justify-center text-2xl font-extrabold text-white mx-auto mb-3" style="background:var(--gradient-primary);">D</div>
+          <h2 id="profileName" class="text-xl font-bold text-slate-900 dark:text-slate-100">Tamu</h2>
           <p class="text-sm mt-1 text-slate-400 dark:text-slate-500">Siswa &middot; <span class="text-sm font-medium" style="color:var(--primary);">Mode Panggilan</span></p>
           <div class="flex items-center justify-center gap-4 mt-4">
-            <div class="text-center"><div class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">120</div><div class="text-xs text-slate-400 dark:text-slate-500">Poin</div></div>
+            <div class="text-center"><div id="profilePoints" class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">0</div><div class="text-xs text-slate-400 dark:text-slate-500">Poin</div></div>
             <div class="w-px h-10" style="background:var(--border-color);"></div>
             <div class="text-center"><div class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">3</div><div class="text-xs text-slate-400 dark:text-slate-500">Badge</div></div>
             <div class="w-px h-10" style="background:var(--border-color);"></div>

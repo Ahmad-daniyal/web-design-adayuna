@@ -1,4 +1,4 @@
-function renderFooter() { return `
+export function renderFooter() { return `
 <footer class="footer-edquest py-12">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">

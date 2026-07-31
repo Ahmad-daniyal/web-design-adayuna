@@ -1,7 +1,15 @@
-const Settings = (() => {
+import { Auth } from './auth.js';
+
+export const Settings = (() => {
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  }
+
   function openModal() {
     const existing = document.getElementById('settingsModal');
     if (existing) { existing.classList.add('active'); document.body.style.overflow = 'hidden'; return; }
+    const user = Auth.getUser();
     const div = document.createElement('div');
     div.id = 'settingsModal';
     div.className = 'modal-edquest active';
@@ -9,9 +17,9 @@ const Settings = (() => {
     div.setAttribute('aria-modal', 'true');
     div.innerHTML = '<div class="modal-content"><div class="modal-header"><h3 class="text-xl font-bold" style="color:var(--text-primary);">Pengaturan</h3><button class="modal-close" onclick="Settings.closeModal()" aria-label="Tutup"><i class="fas fa-times"></i></button></div>' +
       '<div class="modal-body"><form id="settingsForm">' +
-      '<div class="mb-4"><label class="form-label">Nama Panggilan</label><input id="settingsName" type="text" class="form-input" value="' + (Auth.getUser() ? Auth.getUser().name : '') + '" placeholder="Nama kamu"></div>' +
-      '<div class="mb-4"><label class="form-label">Email</label><input id="settingsEmail" type="email" class="form-input" value="' + (Auth.getUser() ? Auth.getUser().email : '') + '" placeholder="email@domain.com"></div>' +
-      '<div class="mb-4"><label class="form-label">Sekolah</label><input id="settingsSchool" type="text" class="form-input" value="' + (Auth.getUser() && Auth.getUser().school ? Auth.getUser().school : '') + '" placeholder="Nama sekolah"></div>' +
+      '<div class="mb-4"><label class="form-label">Nama Panggilan</label><input id="settingsName" type="text" class="form-input" value="' + esc(user ? user.name : '') + '" placeholder="Nama kamu"></div>' +
+      '<div class="mb-4"><label class="form-label">Email</label><input id="settingsEmail" type="email" class="form-input" value="' + esc(user ? user.email : '') + '" placeholder="email@domain.com"></div>' +
+      '<div class="mb-4"><label class="form-label">Sekolah</label><input id="settingsSchool" type="text" class="form-input" value="' + esc(user && user.school ? user.school : '') + '" placeholder="Nama sekolah"></div>' +
       '<hr style="border-color:var(--border-color);margin:1.5rem 0;">' +
       '<div class="mb-4"><label class="flex items-center justify-between cursor-pointer"><span class="text-sm font-medium" style="color:var(--text-primary);">Notifikasi</span>' +
       '<div class="relative"><input type="checkbox" id="settingsNotif" class="sr-only peer" checked>' +
@@ -32,12 +40,12 @@ const Settings = (() => {
       const name = document.getElementById('settingsName').value.trim();
       const email = document.getElementById('settingsEmail').value.trim();
       const school = document.getElementById('settingsSchool').value.trim();
-      const user = Auth.getUser();
-      if (!user) { Auth.showToast('Kamu belum login', 'error'); return; }
+      const currentUser = Auth.getUser();
+      if (!currentUser) { Auth.showToast('Kamu belum login', 'error'); return; }
       if (!name || !email) { Auth.showToast('Nama dan email wajib diisi', 'error'); return; }
-      user.name = name; user.email = email; user.school = school;
-      user.avatar = name[0].toUpperCase();
-      localStorage.setItem('edquest_user', JSON.stringify(user));
+      currentUser.name = name; currentUser.email = email; currentUser.school = school;
+      currentUser.avatar = name[0].toUpperCase();
+      localStorage.setItem('edquest_user', JSON.stringify(currentUser));
       Auth.showToast('Pengaturan disimpan!', 'success');
       closeModal();
     });
@@ -51,11 +59,9 @@ const Settings = (() => {
 
   function deleteAccount() {
     if (confirm('Yakin ingin menghapus akun? Semua data akan hilang.')) {
-      localStorage.removeItem('edquest_user');
-      sessionStorage.removeItem('edquest_user');
+      Auth.clearSession();
       Auth.showToast('Akun berhasil dihapus', 'info');
       closeModal();
-      window.dispatchEvent(new CustomEvent('pageChanged', { detail: { pageName: 'home' } }));
       window.location.hash = '#/home';
     }
   }
