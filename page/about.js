@@ -16,7 +16,7 @@ function renderAbout() { return `
         <span class="inline-flex items-center gap-2 text-sm font-semibold px-4 py-1.5 rounded-full" style="background:var(--primary-light);color:var(--primary);"><i class="fas fa-question-circle"></i> Latar Belakang</span>
         <h2 class="text-3xl sm:text-4xl font-extrabold mt-4 mb-6" style="color:var(--text-primary);">Kenapa Edquest Dibuat?</h2>
         <div class="space-y-4 text-sm leading-relaxed" style="color:var(--text-secondary);">
-          <p>Setiap siswa punya potensi, tapi tidak semua punya keberanian untuk bertanya. Rasa malu, takut dinilai bodoh, atau khawatir dihakimi teman membuat banyak siswa memilih diam — padahal di dalam kepala mereka penuh rasa ingin tahu.</p>
+          <p>Setiap siswa punya potensi, tapi tidak semua punya keberanian untuk bertanya. Rasa malu, takut dinilai kurang memahami, atau khawatir dihakimi teman membuat banyak siswa memilih diam — padahal di dalam kepala mereka penuh rasa ingin tahu.</p>
           <p>Di sisi lain, belajar sendiri terasa berat. Tanpa teman diskusi, materi sulit dipahami dan motivasi mudah menurun. Siswa butuh ruang yang aman untuk bertanya, berpendapat, dan belajar dari teman sebaya.</p>
           <p><strong>Edquest</strong> hadir sebagai solusi: sebuah komunitas belajar digital di mana siswa SMA/SMK bisa berdiskusi, mencari teman belajar, dan melacak progress mereka — tanpa rasa malu dan tanpa tekanan.</p>
         </div>
