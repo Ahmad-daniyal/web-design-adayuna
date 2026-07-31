@@ -692,23 +692,102 @@ body {
 
 /* ===== Dark Mode Toggle ===== */
 .dark-mode-toggle {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: none;
+  position: relative;
+  width: 52px;
+  height: 28px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
   background: var(--bg-section);
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
-  transition: all var(--transition);
-  font-size: 1.125rem;
+  flex-shrink: 0;
+  transition: background var(--transition), border-color var(--transition);
 }
 
 .dark-mode-toggle:hover {
-  background: var(--border-color);
-  color: var(--text-primary);
+  border-color: var(--primary);
+}
+
+.dark-mode-toggle .dm-track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 7px;
+  font-size: 0.65rem;
+}
+
+.dark-mode-toggle .dm-track-sun { color: #f59e0b; }
+.dark-mode-toggle .dm-track-moon { color: #818cf8; }
+
+.dark-mode-toggle .dm-track-moon,
+.dark-mode-toggle.is-dark .dm-track-sun { opacity: 0.3; transition: opacity var(--transition); }
+.dark-mode-toggle .dm-track-sun,
+.dark-mode-toggle.is-dark .dm-track-moon { opacity: 1; transition: opacity var(--transition); }
+
+.dark-mode-toggle .dm-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: transform var(--transition);
+}
+
+.dark-mode-toggle.is-dark .dm-knob {
+  transform: translateX(24px);
+}
+
+.dark-mode-toggle .dm-knob i {
+  position: absolute;
+  font-size: 0.7rem;
+  transition: opacity var(--transition), transform var(--transition);
+}
+
+.dark-mode-toggle .dm-knob-sun { color: #f59e0b; opacity: 1; transform: rotate(0) scale(1); }
+.dark-mode-toggle .dm-knob-moon { color: #6366f1; opacity: 0; transform: rotate(90deg) scale(0.3); }
+
+.dark-mode-toggle.is-dark .dm-knob-sun { opacity: 0; transform: rotate(-90deg) scale(0.3); }
+.dark-mode-toggle.is-dark .dm-knob-moon { opacity: 1; transform: rotate(0) scale(1); }
+
+/* ===== Search Overlay & Modal ===== */
+.search-overlay {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+
+.search-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.search-modal {
+  opacity: 0;
+  transform: translateY(-16px) scale(0.97);
+  transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.search-overlay.open .search-modal {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.search-results {
+  opacity: 0;
+  transition: opacity 0.3s ease 0.15s;
+}
+
+.search-overlay.open .search-results {
+  opacity: 1;
 }
 
 /* ===== Baca Dulu Badge ===== */
@@ -851,21 +930,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-}
-
-.sidebar-theme-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.625rem 0.875rem;
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-}
-
-.sidebar-theme-toggle i:first-child {
-  width: 20px;
-  text-align: center;
-  font-size: 1rem;
 }
 
 .sidebar-branding {

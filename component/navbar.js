@@ -13,8 +13,15 @@ function renderNavbar() { return `
     <button id="searchBtn" class="btn-ghost !p-2 rounded-lg text-base" aria-label="Cari diskusi">
       <i class="fas fa-search" style="color:var(--text-secondary);"></i>
     </button>
-    <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
-      <i class="fas fa-moon"></i>
+    <button id="darkModeToggle" class="dark-mode-toggle" role="switch" aria-checked="false" aria-label="Toggle dark mode">
+      <span class="dm-track">
+        <i class="fas fa-sun dm-track-sun"></i>
+        <i class="fas fa-moon dm-track-moon"></i>
+      </span>
+      <span class="dm-knob">
+        <i class="fas fa-sun dm-knob-sun"></i>
+        <i class="fas fa-moon dm-knob-moon"></i>
+      </span>
     </button>
     <div class="guest-menu flex items-center gap-2">
       <button data-action="login" class="btn-ghost text-sm font-medium rounded-lg px-4 py-2" style="color:var(--text-secondary);">Masuk</button>
@@ -46,15 +53,15 @@ function renderNavbar() { return `
   </div>
 </nav>
 
-<div id="searchOverlay" class="fixed inset-0 z-50 hidden" style="background:rgba(0,0,0,0.5); backdrop-filter:blur(8px);">
+<div id="searchOverlay" class="fixed inset-0 z-50 search-overlay" style="background:rgba(0,0,0,0.5); backdrop-filter:blur(8px);">
   <div class="max-w-2xl mx-auto pt-24 px-4">
-    <div class="glass-card !p-6">
+    <div class="glass-card !p-6 search-modal">
       <div class="flex items-center gap-3 mb-4">
         <i class="fas fa-search" style="color:var(--text-muted);"></i>
         <input id="searchInput" type="text" class="flex-1 bg-transparent border-none outline-none text-lg" style="color:var(--text-primary);" placeholder="Cari diskusi, teman, atau topik..." autofocus>
         <button id="searchClose" class="btn-ghost !p-2 rounded-lg"><i class="fas fa-times"></i></button>
       </div>
-      <div id="searchResults" class="max-h-80 overflow-y-auto space-y-2">
+      <div id="searchResults" class="search-results max-h-80 overflow-y-auto space-y-2">
         <p class="text-sm" style="color:var(--text-muted);">Ketik untuk mencari...</p>
       </div>
     </div>

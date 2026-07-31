@@ -11,7 +11,6 @@ const App = (() => {
 
   function initDarkMode() {
     const toggle = document.getElementById('darkModeToggle');
-    const sidebarToggle = document.getElementById('sidebarDarkToggle');
     if (!toggle) return;
     const saved = localStorage.getItem('edquest_dark');
     if (saved === 'true' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -23,20 +22,14 @@ const App = (() => {
       localStorage.setItem('edquest_dark', isDark);
       updateToggleIcon(isDark);
     });
-    if (sidebarToggle) {
-      sidebarToggle.addEventListener('click', () => {
-        const isDark = document.documentElement.classList.toggle('dark');
-        localStorage.setItem('edquest_dark', isDark);
-        updateToggleIcon(isDark);
-      });
-    }
   }
 
   function updateToggleIcon(isDark) {
-    const t1 = document.getElementById('darkModeToggle');
-    const t2 = document.getElementById('sidebarDarkToggle');
-    if (t1) t1.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-    if (t2) t2.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    const toggle = document.getElementById('darkModeToggle');
+    if (toggle) {
+      toggle.classList.toggle('is-dark', isDark);
+      toggle.setAttribute('aria-checked', isDark);
+    }
   }
 
   function initNavbarScroll() {
@@ -71,12 +64,18 @@ const App = (() => {
     const input = document.getElementById('searchInput');
     const results = document.getElementById('searchResults');
     if (!btn || !overlay) return;
-    btn.addEventListener('click', () => {
-      overlay.classList.remove('hidden');
-      setTimeout(() => { if (input) input.focus(); }, 100);
-    });
-    if (close) close.addEventListener('click', () => overlay.classList.add('hidden'));
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.add('hidden'); });
+    const openSearch = () => {
+      overlay.classList.add('open');
+      setTimeout(() => { if (input) input.focus(); }, 150);
+    };
+    const closeSearch = () => {
+      overlay.classList.remove('open');
+      if (input) input.blur();
+    };
+    btn.addEventListener('click', openSearch);
+    if (close) close.addEventListener('click', closeSearch);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeSearch(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSearch(); });
     if (input && results) {
       input.addEventListener('input', () => {
         const q = input.value.toLowerCase().trim();
@@ -87,7 +86,7 @@ const App = (() => {
           results.innerHTML = '<p class="text-sm" style="color:var(--text-muted);">Tidak ditemukan</p>';
         } else {
           results.innerHTML = filtered.slice(0, 6).map(t => `
-            <div class="p-3 rounded-lg cursor-pointer" style="background:var(--bg-body);border:1px solid var(--border-color);" onclick="Router.navigate('forum'); document.getElementById('searchOverlay').classList.add('hidden')">
+            <div class="p-3 rounded-lg cursor-pointer" style="background:var(--bg-body);border:1px solid var(--border-color);" onclick="Router.navigate('forum'); document.getElementById('searchOverlay').classList.remove('open')">
               <p class="text-sm font-medium" style="color:var(--text-primary);">${t.title}</p>
               <p class="text-xs" style="color:var(--text-muted);">${t.subtitle}</p>
             </div>

@@ -12,12 +12,6 @@ function renderSidebar() { return `
       <button onclick="Settings.openModal()" class="sidebar-link w-full" style="border:none;cursor:pointer;background:transparent;font-size:inherit;">
         <i class="fas fa-cog"></i><span>Settings</span>
       </button>
-      <div class="sidebar-theme-toggle">
-        <i class="fas fa-moon"></i><span>Dark Mode</span>
-        <button id="sidebarDarkToggle" class="ml-auto w-9 h-9 rounded-lg flex items-center justify-center" style="background:var(--bg-section);color:var(--text-secondary);border:none;cursor:pointer;">
-          <i class="fas fa-moon"></i>
-        </button>
-      </div>
     </div>
     <div class="sidebar-branding">
       <p class="text-xs" style="color:var(--text-muted);">Edquest &mdash; INVENTION 2026</p>
