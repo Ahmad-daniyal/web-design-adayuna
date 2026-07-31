@@ -55,7 +55,7 @@ function renderNavbar() { return `
         <button id="searchClose" class="btn-ghost !p-2 rounded-lg"><i class="fas fa-times"></i></button>
       </div>
       <div id="searchResults" class="max-h-80 overflow-y-auto space-y-2">
-        <p class="text-sm" style="color:var(--text-muted);">Ketik untuk mencari...</p>
+        <p class="text-sm" style="color:var(--text-muted);">Ketik untuk mencariiiiiiia...</p>
       </div>
     </div>
   </div>
