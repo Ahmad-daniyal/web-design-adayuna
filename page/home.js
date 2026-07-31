@@ -13,7 +13,7 @@ function renderHome() { return `
           Tanpa Rasa Malu
         </h1>
         <p class="text-lg sm:text-xl text-white/80 mb-8 max-w-xl mx-auto md:mx-0 leading-relaxed">
-          Banyak siswa punya mimpi besar, tapi ragu untuk memulai. Di <strong>Edquest</strong>, kamu bisa belajar, bertanya, dan berdiskusi dengan teman sebaya — tanpa takut dihakimi.
+          Banyak siswa punya mimpi besar, tapi ragu untuk memulai. Di <strong>Edquest</strong>, HALO SAYA ARDI
         </p>
         <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-6">
           <a href="#/forum" class="btn-edquest text-base" style="background:white; color:var(--primary-dark); font-weight:700; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
