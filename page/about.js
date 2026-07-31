@@ -25,7 +25,7 @@ function renderAbout() { return `
         <div class="glass-card !p-8 text-center max-w-sm">
           <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl" style="background:var(--primary-light);color:var(--primary);"><i class="fas fa-lightbulb"></i></div>
           <blockquote class="text-sm italic leading-relaxed" style="color:var(--text-secondary);">"Keberanian untuk bertanya adalah awal dari semua pengetahuan."</blockquote>
-          <p class="text-xs font-medium mt-3" style="color:var(--text-muted);">— Semua siswa berhak belajar tanpa rasa takut</p>
+          <p class="text-xs font-medium mt-3" style="color:var(--text-muted);">— Semua siswa berhak belajar tanpa rasa takut lagi</p>
         </div>
       </div>
     </div>
@@ -69,7 +69,7 @@ function renderAbout() { return `
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="text-center mb-12">
       <span class="inline-flex items-center gap-2 text-sm font-semibold px-4 py-1.5 rounded-full" style="background:var(--primary-light);color:var(--primary);"><i class="fas fa-cogs"></i> Cara Kerja</span>
-      <h2 class="text-3xl sm:text-4xl font-extrabold mt-4 mb-3" style="color:var(--text-primary);">Gampang, Kok!</h2>
+      <h2 class="text-3xl sm:text-4xl font-extrabold mt-4 mb-3" style="color:var(--text-primary);">mudah, Kok!</h2>
       <p class="text-lg" style="color:var(--text-secondary);">Cuma 3 langkah buat mulai belajar di Edquest</p>
     </div>
     <div class="grid sm:grid-cols-3 gap-8 max-w-4xl mx-auto">
