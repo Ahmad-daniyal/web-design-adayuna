@@ -144,7 +144,7 @@ const App = (() => {
   function submitContact(e) {
     e.preventDefault();
     const name = document.getElementById('contactName').value.trim();
-    Auth.showToast('Terima kasih, ' + name + '! Pesan kamu sudah dikirim.', 'success');
+    Auth.showToast('Terima kasih, ' + name + '! Pesan lu sudah dikirim.', 'success');
     e.target.reset();
   }
 
