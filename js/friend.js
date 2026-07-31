@@ -1,13 +1,13 @@
 const Matching = (() => {
   const buddies = [
-    { name:'Sari', initials:'S', mapel:'matematika', minat:'diskusi', kelas:'11', color:'linear-gradient(135deg,#0ea5e9,#3b82f6)', online:true },
-    { name:'Rizki', initials:'R', mapel:'fisika', minat:'soal', kelas:'12', color:'linear-gradient(135deg,#10b981,#059669)', online:true },
-    { name:'Anisa', initials:'A', mapel:'biologi', minat:'materi', kelas:'10', color:'linear-gradient(135deg,#f59e0b,#d97706)', online:false },
-    { name:'Fajar', initials:'F', mapel:'kimia', minat:'kreatif', kelas:'11', color:'linear-gradient(135deg,#8b5cf6,#6d28d9)', online:true },
-    { name:'Dinda', initials:'D', mapel:'matematika', minat:'diskusi', kelas:'12', color:'linear-gradient(135deg,#ec4899,#db2777)', online:false },
-    { name:'Gilang', initials:'G', mapel:'ips', minat:'diskusi', kelas:'11', color:'linear-gradient(135deg,#14b8a6,#0d9488)', online:true },
-    { name:'Putri', initials:'P', mapel:'bahasa', minat:'materi', kelas:'10', color:'linear-gradient(135deg,#6366f1,#4f46e5)', online:true },
-    { name:'Raka', initials:'R', mapel:'sejarah', minat:'soal', kelas:'12', color:'linear-gradient(135deg,#f97316,#ea580c)', online:false }
+    { name:'Sari', initials:'S', mapel:'matematika', minat:'diskusi', kelas:'11', color:'linear-gradient(135deg,#334155,#0f172a)', online:true },
+    { name:'Rizki', initials:'R', mapel:'fisika', minat:'soal', kelas:'12', color:'linear-gradient(135deg,#475569,#1e293b)', online:true },
+    { name:'Anisa', initials:'A', mapel:'biologi', minat:'materi', kelas:'10', color:'linear-gradient(135deg,#64748b,#334155)', online:false },
+    { name:'Fajar', initials:'F', mapel:'kimia', minat:'kreatif', kelas:'11', color:'linear-gradient(135deg,#475569,#0f172a)', online:true },
+    { name:'Dinda', initials:'D', mapel:'matematika', minat:'diskusi', kelas:'12', color:'linear-gradient(135deg,#94a3b8,#475569)', online:false },
+    { name:'Gilang', initials:'G', mapel:'ips', minat:'diskusi', kelas:'11', color:'linear-gradient(135deg,#64748b,#1e293b)', online:true },
+    { name:'Putri', initials:'P', mapel:'bahasa', minat:'materi', kelas:'10', color:'linear-gradient(135deg,#334155,#475569)', online:true },
+    { name:'Raka', initials:'R', mapel:'sejarah', minat:'soal', kelas:'12', color:'linear-gradient(135deg,#1e293b,#0f172a)', online:false }
   ];
 
   function init() {
@@ -28,7 +28,7 @@ const Matching = (() => {
         '<div class="flex items-center gap-3 mb-4"><div class="buddy-avatar" style="background:' + b.color + ';">' + b.initials + '</div>' +
         '<div class="flex-1"><h4 class="font-bold text-sm" style="color:var(--text-primary);">' + b.name + '</h4>' +
         '<span class="text-xs" style="color:var(--text-muted);">Kelas ' + b.kelas + '</span>' +
-        (b.online ? '<span class="inline-block w-2 h-2 rounded-full bg-green-500 ml-2" title="Online"></span>' : '') + '</div></div>' +
+        (b.online ? '<span class="inline-block w-2 h-2 rounded-full bg-slate-400 ml-2" title="Online"></span>' : '') + '</div></div>' +
         '<div class="flex flex-wrap gap-2 mb-3"><span class="category-tag ' + b.mapel + '"><i class="fas fa-book"></i> ' + capitalize(b.mapel) + '</span>' +
         '<span class="text-xs px-3 py-1 rounded-full font-semibold" style="background:var(--bg-section);color:var(--text-secondary);">' + b.minat + '</span></div>' +
         '<div class="flex gap-2"><button class="btn-edquest btn-primary-grad text-xs !py-2 !px-3 flex-1" onclick="Matching.requestBuddy(\'' + b.name + '\')"><i class="fas fa-paper-plane"></i> Ajak Berteman</button>' +

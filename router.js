@@ -1,6 +1,9 @@
 const Router = (() => {
   const routes = {
     '/': 'home', 'home': 'home',
+    'kursus': 'kursus',
+    'jadwal': 'jadwal',
+    'nilai': 'nilai',
     'about': 'about',
     'forum': 'forum',
     'friend': 'friend',

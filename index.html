@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edquest — Komunitas Belajar Cerdas</title>
-  <meta name="description" content="Mulai perjalanan belajarmu tanpa rasa malu. Forum diskusi, study buddy, dan progress tracking untuk siswa SMA/SMK.">
+  <title>Edquest — LMS Pembelajaran</title>
+  <meta name="description" content="Learning Management System Edquest. Kelola kursus, jadwal, dan nilai dalam satu tempat yang fokus dan nyaman.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -12,6 +12,18 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = { darkMode: 'class', theme: { extend: {} } }
+  </script>
+  <script>
+    (function () {
+      var saved = localStorage.getItem('edquest_dark');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'true' || (!saved && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      }
+      if (localStorage.getItem('edquest_focus') === 'true') {
+        document.documentElement.classList.add('focus-mode-ready');
+      }
+    })();
   </script>
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -32,6 +44,9 @@
   <script src="component/auth-modal.js"></script>
 
   <script src="page/home.js"></script>
+  <script src="page/kursus.js"></script>
+  <script src="page/jadwal.js"></script>
+  <script src="page/nilai.js"></script>
   <script src="page/about.js"></script>
   <script src="page/forum.js"></script>
   <script src="page/friend.js"></script>

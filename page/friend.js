@@ -1,16 +1,18 @@
 function renderFriend() { return `
-<section class="page-header">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
-    <span class="inline-flex items-center gap-2 text-sm font-semibold px-4 py-1.5 rounded-full bg-white/15 text-white/90 backdrop-blur-sm mb-4"><i class="fas fa-user-friends"></i> Study Buddy Matching</span>
-    <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-4">Cari Teman Belajar?</h1>
-    <p class="text-lg text-white/80 max-w-2xl">Pilih mapel dan minatmu, kami akan mencocokkanmu dengan teman belajar yang cocok.</p>
+<section class="pt-16 md:pt-20 pb-4">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="max-w-3xl">
+      <span class="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"><i class="fas fa-user-friends"></i> Study Buddy Matching</span>
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-3 text-slate-900 dark:text-slate-100">Cari Teman Belajar?</h1>
+      <p class="mt-1 text-sm sm:text-base text-slate-500 dark:text-slate-400">Pilih mapel dan minatmu, kami akan mencocokkanmu dengan teman belajar yang cocok.</p>
+    </div>
   </div>
 </section>
 
-<section class="py-8 -mt-8 relative z-10">
+<section class="py-6">
   <div class="max-w-5xl mx-auto px-4 sm:px-6">
-    <div class="glass-card !p-6">
-      <h3 class="text-lg font-bold mb-4" style="color:var(--text-primary);"><i class="fas fa-sliders-h mr-2"></i>Filter Pencarian</h3>
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6">
+      <h3 class="text-lg font-bold mb-4 text-slate-900 dark:text-slate-100"><i class="fas fa-sliders-h mr-2"></i>Filter Pencarian</h3>
       <form id="matchingForm" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
         <div>
           <label class="form-label" for="matchMapel">Mapel Utama</label>
@@ -52,17 +54,17 @@ function renderFriend() { return `
   </div>
 </section>
 
-<section class="py-8 pb-16" style="background:var(--bg-body);">
+<section class="py-6 pb-16">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="flex items-center justify-between mb-6">
-      <h2 class="text-xl font-bold" style="color:var(--text-primary);">Teman Belajar yang Cocok</h2>
-      <span class="text-sm" style="color:var(--text-muted);" id="resultCount">8 teman ditemukan</span>
+      <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100">Teman Belajar yang Cocok</h2>
+      <span class="text-sm text-slate-400 dark:text-slate-500" id="resultCount">8 teman ditemukan</span>
     </div>
     <div id="buddyResults" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     <div id="emptyState" class="hidden text-center py-16">
-      <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl" style="background:var(--bg-section);color:var(--text-muted);"><i class="fas fa-search"></i></div>
-      <h3 class="text-xl font-bold mb-2" style="color:var(--text-primary);">Tidak ada hasil</h3>
-      <p class="text-sm" style="color:var(--text-secondary);">Coba ubah filter pencarianmu ya.</p>
+      <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500"><i class="fas fa-search"></i></div>
+      <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-slate-100">Tidak ada hasil</h3>
+      <p class="text-sm text-slate-500 dark:text-slate-400">Coba ubah filter pencarianmu ya.</p>
     </div>
   </div>
 </section>

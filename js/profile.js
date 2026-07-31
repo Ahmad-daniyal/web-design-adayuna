@@ -22,7 +22,7 @@ const Profile = (() => {
         const mapel = document.getElementById('journalMapel').value;
         const text = document.getElementById('journalText').value.trim();
         if (!text) { Auth.showToast('Catatan tidak boleh kosong', 'error'); return; }
-        const colors = { matematika:{bg:'var(--primary-light)',color:'var(--primary)'}, fisika:{bg:'#fce7f3',color:'#be185d'}, kimia:{bg:'#dbeafe',color:'#1d4ed8'}, biologi:{bg:'#dcfce7',color:'#15803d'}, sejarah:{bg:'#fef3c7',color:'#b45309'}, bahasa:{bg:'#ede9fe',color:'#7c3aed'}, ips:{bg:'#ffedd5',color:'#c2410c'}, umum:{bg:'#e2e8f0',color:'#475569'} };
+        const colors = { matematika:{bg:'var(--primary-light)',color:'var(--primary)'}, fisika:{bg:'var(--bg-section)',color:'var(--text-secondary)'}, kimia:{bg:'var(--bg-section)',color:'var(--text-secondary)'}, biologi:{bg:'var(--bg-section)',color:'var(--text-secondary)'}, sejarah:{bg:'var(--bg-section)',color:'var(--text-secondary)'}, bahasa:{bg:'var(--bg-section)',color:'var(--text-secondary)'}, ips:{bg:'var(--bg-section)',color:'var(--text-secondary)'}, umum:{bg:'var(--bg-section)',color:'var(--text-secondary)'} };
         const c = colors[mapel] || colors.umum;
         const entry = document.createElement('div');
         entry.className = 'progress-card';

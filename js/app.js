@@ -2,6 +2,9 @@ const App = (() => {
   function init() {
     initDarkMode();
     initNavbarScroll();
+    initReadingProgress();
+    initFocusMode();
+    initHelpDropdown();
     initSidebarToggle();
     initSearch();
     initUserDropdown();
@@ -38,6 +41,53 @@ const App = (() => {
     const check = () => navbar.classList.toggle('scrolled', window.scrollY > 10);
     window.addEventListener('scroll', check, { passive: true });
     check();
+  }
+
+  function initReadingProgress() {
+    const bar = document.getElementById('readingProgress');
+    if (!bar) return;
+    const update = () => {
+      const doc = document.documentElement;
+      const total = doc.scrollHeight - doc.clientHeight;
+      const pct = total > 0 ? (doc.scrollTop / total) * 100 : 0;
+      bar.style.width = pct + '%';
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+
+  function initFocusMode() {
+    const btn = document.getElementById('focusModeToggle');
+    if (!btn) return;
+    const apply = (active) => {
+      document.body.classList.toggle('focus-mode', active);
+      document.documentElement.classList.remove('focus-mode-ready');
+      const icon = btn.querySelector('i');
+      if (icon) icon.className = active ? 'fas fa-compress' : 'fas fa-expand';
+      btn.title = active ? 'Keluar Mode Fokus' : 'Mode Fokus';
+    };
+    apply(localStorage.getItem('edquest_focus') === 'true');
+    btn.addEventListener('click', () => {
+      const active = !document.body.classList.contains('focus-mode');
+      localStorage.setItem('edquest_focus', active);
+      apply(active);
+      Auth.showToast(active ? 'Mode Fokus aktif, sidebar disembunyikan' : 'Mode Fokus nonaktif', 'info');
+    });
+  }
+
+  function initHelpDropdown() {
+    const btn = document.getElementById('helpBtn');
+    const dd = document.getElementById('helpDropdown');
+    if (!btn || !dd) return;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dd.classList.toggle('hidden');
+    });
+    document.addEventListener('click', (e) => {
+      if (!dd.contains(e.target) && e.target !== btn) dd.classList.add('hidden');
+    });
+    document.addEventListener('pageChanged', () => dd.classList.add('hidden'));
   }
 
   function initSidebarToggle() {
