@@ -7,11 +7,32 @@
   <meta name="description" content="Mulai perjalanan belajarmu tanpa rasa malu. Forum diskusi, study buddy, dan progress tracking untuk siswa SMA/SMK.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = { darkMode: 'class', theme: { extend: {} } };
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            slate: {
+              50: '#F7F8FB',
+              100: '#EEF1F8',
+              200: '#E4E7F0',
+              300: '#D0D5E4',
+              400: '#9AA3B8',
+              500: '#6B7280',
+              600: '#4B5563',
+              700: '#374151',
+              800: '#232847',
+              900: '#171A23',
+              950: '#0B0E1A'
+            }
+          }
+        }
+      }
+    };
     (function () {
       if (localStorage.getItem('edquest_dark') === 'true' ||
           (!localStorage.getItem('edquest_dark') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {

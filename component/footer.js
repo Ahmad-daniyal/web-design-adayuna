@@ -4,7 +4,7 @@ export function renderFooter() { return `
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
       <div>
         <a href="#/home" class="flex items-center gap-2 text-xl font-extrabold tracking-tight no-underline mb-4" style="color:var(--text-primary);">
-          <span class="flex items-center justify-center w-9 h-9 rounded-xl text-white text-base" style="background:var(--gradient-primary);">E</span> Edquest
+          <span class="flex items-center justify-center w-9 h-9 rounded-xl text-white text-base" style="background:var(--gradient-primary); box-shadow:0 4px 10px rgba(79,70,229,0.35);">E</span> Edquest
         </a>
         <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Komunitas belajar untuk siswa SMA/SMK. Belajar bareng, tumbuh bareng, tanpa rasa malu.</p>
       </div>

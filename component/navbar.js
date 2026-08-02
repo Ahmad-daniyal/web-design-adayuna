@@ -7,7 +7,7 @@ export function renderNavbar() { return `
       <i class="fas fa-bars"></i>
     </button>
     <a href="#/home" class="flex items-center gap-2 text-xl font-extrabold tracking-tight no-underline" style="color:var(--text-primary);">
-      <span class="flex items-center justify-center w-9 h-9 rounded-xl text-lg text-white dark:text-slate-900 bg-slate-900 dark:bg-slate-100 shadow-sm">E</span>
+      <span class="flex items-center justify-center w-9 h-9 rounded-xl text-lg text-white shadow-sm" style="background:var(--gradient-primary); box-shadow:0 4px 10px rgba(79,70,229,0.35);">E</span>
       <span class="hidden sm:inline">Edquest</span>
     </a>
   </div>
@@ -54,7 +54,7 @@ export function renderNavbar() { return `
     <div class="user-menu items-center gap-2" style="display:none;">
       <div class="relative">
         <button id="userMenuBtn" class="flex items-center gap-2 btn-ghost !p-1 rounded-lg" aria-label="Menu pengguna">
-          <span class="user-avatar w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white dark:text-slate-900 bg-slate-900 dark:bg-slate-100"></span>
+          <span class="user-avatar w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-sm" style="background:var(--gradient-primary);"></span>
           <span class="user-name text-sm font-medium hidden sm:inline" style="color:var(--text-primary);"></span>
           <i class="fas fa-chevron-down text-xs" style="color:var(--text-muted);"></i>
         </button>

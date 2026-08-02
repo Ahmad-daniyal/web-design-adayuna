@@ -10,12 +10,12 @@ export const ForumData = [
 ];
 
 export const buddies = [
-  { name:'Sari', initials:'S', mapel:'matematika', minat:'diskusi', kelas:'11', color:'linear-gradient(135deg,#334155,#0f172a)', online:true },
-  { name:'Rizki', initials:'R', mapel:'fisika', minat:'soal', kelas:'12', color:'linear-gradient(135deg,#475569,#1e293b)', online:true },
-  { name:'Anisa', initials:'A', mapel:'biologi', minat:'materi', kelas:'10', color:'linear-gradient(135deg,#64748b,#334155)', online:false },
-  { name:'Fajar', initials:'F', mapel:'kimia', minat:'kreatif', kelas:'11', color:'linear-gradient(135deg,#475569,#0f172a)', online:true },
-  { name:'Dinda', initials:'D', mapel:'matematika', minat:'diskusi', kelas:'12', color:'linear-gradient(135deg,#94a3b8,#475569)', online:false },
-  { name:'Gilang', initials:'G', mapel:'ips', minat:'diskusi', kelas:'11', color:'linear-gradient(135deg,#64748b,#1e293b)', online:true },
-  { name:'Putri', initials:'P', mapel:'bahasa', minat:'materi', kelas:'10', color:'linear-gradient(135deg,#334155,#475569)', online:true },
-  { name:'Raka', initials:'R', mapel:'sejarah', minat:'soal', kelas:'12', color:'linear-gradient(135deg,#1e293b,#0f172a)', online:false }
+  { name:'Sari', initials:'S', mapel:'matematika', minat:'diskusi', kelas:'11', color:'linear-gradient(135deg,#818CF8,#4F46E5)', online:true },
+  { name:'Rizki', initials:'R', mapel:'fisika', minat:'soal', kelas:'12', color:'linear-gradient(135deg,#6366F1,#4338CA)', online:true },
+  { name:'Anisa', initials:'A', mapel:'biologi', minat:'materi', kelas:'10', color:'linear-gradient(135deg,#4F46E5,#4338CA)', online:false },
+  { name:'Fajar', initials:'F', mapel:'kimia', minat:'kreatif', kelas:'11', color:'linear-gradient(135deg,#4338CA,#312E81)', online:true },
+  { name:'Dinda', initials:'D', mapel:'matematika', minat:'diskusi', kelas:'12', color:'linear-gradient(135deg,#A5B4FC,#6366F1)', online:false },
+  { name:'Gilang', initials:'G', mapel:'ips', minat:'diskusi', kelas:'11', color:'linear-gradient(135deg,#6366F1,#3730A3)', online:true },
+  { name:'Putri', initials:'P', mapel:'bahasa', minat:'materi', kelas:'10', color:'linear-gradient(135deg,#818CF8,#4338CA)', online:true },
+  { name:'Raka', initials:'R', mapel:'sejarah', minat:'soal', kelas:'12', color:'linear-gradient(135deg,#4F46E5,#312E81)', online:false }
 ];
