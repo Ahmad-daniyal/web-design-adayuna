@@ -1,0 +1,134 @@
+/* ===== Sidebar Layout ===== */
+.sidebar {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  width: 256px;
+  height: calc(100vh - 56px);
+  z-index: 40;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition), background-color var(--transition), border-color var(--transition);
+}
+
+.dark .sidebar {
+  background: rgba(11, 14, 26, 0.85);
+}
+
+.sidebar-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem 0.75rem;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all var(--transition);
+}
+
+.sidebar-link i {
+  width: 20px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.sidebar-link:hover {
+  background: var(--navy-hover);
+  color: var(--text-primary);
+}
+
+.sidebar-link.active,
+.sidebar-link[data-link].active {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.sidebar-link.active i {
+  color: var(--primary);
+}
+
+.sidebar-footer {
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sidebar-branding {
+  padding: 1rem 0.875rem 0.5rem;
+  text-align: center;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 14, 26, 0.45);
+  z-index: 39;
+}
+
+.main-content {
+  margin-left: 256px;
+  padding-top: 56px;
+  min-height: 100vh;
+}
+
+/* ===== Focus Mode ===== */
+html.focus-mode-ready .sidebar,
+body.focus-mode .sidebar {
+  transform: translateX(-100%);
+}
+
+html.focus-mode-ready .main-content,
+body.focus-mode .main-content {
+  margin-left: 0;
+}
+
+@media (max-width: 767px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar-overlay {
+    display: block;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition);
+  }
+  .sidebar-overlay:not(.hidden) {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .sidebar-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .main-content {
+    margin-left: 0;
+  }
+}

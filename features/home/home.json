@@ -1,0 +1,14 @@
+{
+  "stats": [
+    { "value": "500+", "label": "Siswa Aktif" },
+    { "value": "120+", "label": "Thread Diskusi" },
+    { "value": "45+", "label": "Study Buddy" },
+    { "value": "8", "label": "Kategori Mapel" }
+  ],
+  "iceBreakers": [
+    { "copy": "Aku masih bingung sama materi [Mapel] nih, ada yang bisa bantu jelasin? Mungkin teman-teman di sini ada yang paham.", "text": "Aku masih bingung sama materi <strong>[Mapel]</strong> nih, ada yang bisa bantu jelasin?", "tags": ["matematika", "fisika"] },
+    { "copy": "Ada yang mau belajar bareng topik [Topik]? Kita bisa saling bantu dan diskusi bareng biar lebih paham.", "text": "Ada yang mau belajar bareng topik <strong>[Topik]</strong>? Yuk kita bahas bareng!", "tags": ["semua"] },
+    { "copy": "Menurutku, [Topik] itu sebenarnya menarik kalau kita paham konsep dasarnya. Gimana pendapat kalian?", "text": "Menurutku, <strong>[Topik]</strong> itu menarik kalau kita paham konsep dasarnya. Gimana pendapat kalian?", "tags": ["biologi", "kimia"] },
+    { "copy": "Halo semua! Aku baru di Edquest. Ada rekomendasi thread atau topik yang seru untuk didiskusikan?", "text": "Halo semua! Aku baru di Edquest. Ada rekomendasi thread atau topik yang seru?", "tags": ["perkenalan"] }
+  ]
+}

@@ -1,0 +1,35 @@
+/* ===== Study Buddy Cards ===== */
+.buddy-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
+}
+
+.buddy-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(79, 70, 229, 0.25);
+}
+
+.buddy-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 6px 16px rgba(23, 26, 35, 0.18);
+  border: 2px solid var(--bg-card);
+}
+
+.dark .buddy-avatar {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  border: 2px solid var(--bg-card);
+}

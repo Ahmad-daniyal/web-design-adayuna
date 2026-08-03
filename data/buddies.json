@@ -1,0 +1,10 @@
+[
+  { "name":"Sari", "initials":"S", "mapel":"matematika", "minat":"diskusi", "kelas":"11", "color":"linear-gradient(135deg,#818CF8,#4F46E5)", "online":true },
+  { "name":"Rizki", "initials":"R", "mapel":"fisika", "minat":"soal", "kelas":"12", "color":"linear-gradient(135deg,#6366F1,#4338CA)", "online":true },
+  { "name":"Anisa", "initials":"A", "mapel":"biologi", "minat":"materi", "kelas":"10", "color":"linear-gradient(135deg,#4F46E5,#4338CA)", "online":false },
+  { "name":"Fajar", "initials":"F", "mapel":"kimia", "minat":"kreatif", "kelas":"11", "color":"linear-gradient(135deg,#4338CA,#312E81)", "online":true },
+  { "name":"Dinda", "initials":"D", "mapel":"matematika", "minat":"diskusi", "kelas":"12", "color":"linear-gradient(135deg,#A5B4FC,#6366F1)", "online":false },
+  { "name":"Gilang", "initials":"G", "mapel":"ips", "minat":"diskusi", "kelas":"11", "color":"linear-gradient(135deg,#6366F1,#3730A3)", "online":true },
+  { "name":"Putri", "initials":"P", "mapel":"bahasa", "minat":"materi", "kelas":"10", "color":"linear-gradient(135deg,#818CF8,#4338CA)", "online":true },
+  { "name":"Raka", "initials":"R", "mapel":"sejarah", "minat":"soal", "kelas":"12", "color":"linear-gradient(135deg,#4F46E5,#312E81)", "online":false }
+]

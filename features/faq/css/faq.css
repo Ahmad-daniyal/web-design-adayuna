@@ -1,0 +1,4 @@
+/* ===== FAQ Accordion ===== */
+.faq-toggle:hover {
+  background: var(--bg-section);
+}
