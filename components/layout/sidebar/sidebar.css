@@ -13,7 +13,7 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  transition: transform var(--transition), background-color var(--transition), border-color var(--transition);
+  transition: transform var(--transition), opacity var(--transition), background-color var(--transition), border-color var(--transition);
 }
 
 .dark .sidebar {
@@ -94,12 +94,14 @@
   margin-left: 256px;
   padding-top: 56px;
   min-height: 100vh;
+  transition: margin-left var(--transition);
 }
 
 /* ===== Focus Mode ===== */
 html.focus-mode-ready .sidebar,
 body.focus-mode .sidebar {
   transform: translateX(-100%);
+  opacity: 0;
 }
 
 html.focus-mode-ready .main-content,

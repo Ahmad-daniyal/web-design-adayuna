@@ -1,6 +1,7 @@
 export const CONFIG = {
   STORAGE_KEYS: {
     USER: 'edquest_user',
+    REGISTERED_USERS: 'edquest_registered',
     DARK: 'edquest_dark',
     FOCUS: 'edquest_focus'
   },

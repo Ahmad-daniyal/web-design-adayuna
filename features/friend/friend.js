@@ -17,43 +17,54 @@ export function renderFriend() { return `
   <div class="max-w-5xl mx-auto px-4 sm:px-6">
     <div class="card-panel p-5 sm:p-6">
       <h3 class="text-lg font-bold mb-4 text-slate-900 dark:text-slate-100"><i class="fas fa-sliders-h mr-2"></i>Filter Pencarian</h3>
-      <form id="matchingForm" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+      <div id="matchingPanel" class="space-y-4">
         <div>
-          <label class="form-label" for="matchMapel">Mapel Utama</label>
-          <select id="matchMapel" class="form-input" style="cursor:pointer;">
-            <option value="all">Semua Mapel</option>
-            <option value="matematika">Matematika</option>
-            <option value="fisika">Fisika</option>
-            <option value="kimia">Kimia</option>
-            <option value="biologi">Biologi</option>
-            <option value="sejarah">Sejarah</option>
-            <option value="bahasa">Bahasa Indonesia</option>
-            <option value="ips">IPS</option>
-          </select>
+          <label class="form-label" for="matchSearch">Cari Teman</label>
+          <div class="relative">
+            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-sm" style="color:var(--text-muted);"></i>
+            <input id="matchSearch" type="text" class="form-input !pl-10" placeholder="Cari nama atau ID teman (mis. 482910)...">
+          </div>
         </div>
-        <div>
-          <label class="form-label" for="matchMinat">Minat / Gaya Belajar</label>
-          <select id="matchMinat" class="form-input" style="cursor:pointer;">
-            <option value="all">Semua</option>
-            <option value="diskusi">Suka diskusi</option>
-            <option value="materi">Suka materi lengkap</option>
-            <option value="soal">Suka tryout & soal</option>
-            <option value="kreatif">Suka cara kreatif</option>
-          </select>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div>
+            <label class="form-label" for="matchMapel">Mapel Utama</label>
+            <select id="matchMapel" class="form-input" style="cursor:pointer;">
+              <option value="all">Semua Mapel</option>
+              <option value="matematika">Matematika</option>
+              <option value="fisika">Fisika</option>
+              <option value="kimia">Kimia</option>
+              <option value="biologi">Biologi</option>
+              <option value="sejarah">Sejarah</option>
+              <option value="bahasa">Bahasa Indonesia</option>
+              <option value="ips">IPS</option>
+              <option value="umum">Umum</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label" for="matchMinat">Minat / Gaya Belajar</label>
+            <select id="matchMinat" class="form-input" style="cursor:pointer;">
+              <option value="all">Semua</option>
+              <option value="diskusi">Suka diskusi</option>
+              <option value="materi">Suka materi lengkap</option>
+              <option value="soal">Suka tryout & soal</option>
+              <option value="kreatif">Suka cara kreatif</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label" for="matchKelas">Kelas</label>
+            <select id="matchKelas" class="form-input" style="cursor:pointer;">
+              <option value="all">Semua</option>
+              <option value="10">Kelas 10</option>
+              <option value="11">Kelas 11</option>
+              <option value="12">Kelas 12</option>
+            </select>
+          </div>
         </div>
-        <div>
-          <label class="form-label" for="matchKelas">Kelas</label>
-          <select id="matchKelas" class="form-input" style="cursor:pointer;">
-            <option value="all">Semua</option>
-            <option value="10">Kelas 10</option>
-            <option value="11">Kelas 11</option>
-            <option value="12">Kelas 12</option>
-          </select>
+        <div class="flex items-center justify-between">
+          <span class="text-xs" style="color:var(--text-muted);"><i class="fas fa-mouse-pointer mr-1"></i>Klik opsi untuk langsung memfilter</span>
+          <button id="resetFilter" type="button" class="btn-ghost text-sm !py-1.5 !px-3"><i class="fas fa-rotate-left mr-1"></i> Reset</button>
         </div>
-        <div>
-          <button type="submit" class="btn-edquest btn-primary-grad w-full !mt-0"><i class="fas fa-search"></i> Cari Teman</button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 </section>

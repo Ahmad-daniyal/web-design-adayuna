@@ -17,9 +17,11 @@ export const Profile = (() => {
   function syncUser() {
     const user = Auth.getUser();
     const nameEl = document.getElementById('profileName');
+    const idEl = document.getElementById('profileId');
     const avatarEl = document.getElementById('profileAvatar');
     const pointsEl = document.getElementById('profilePoints');
     if (nameEl) nameEl.textContent = user ? user.name : 'Tamu';
+    if (idEl) idEl.textContent = user && user.id ? 'ID: ' + user.id : 'ID: —';
     if (avatarEl) avatarEl.textContent = user ? user.avatar : '?';
     if (pointsEl) pointsEl.textContent = user ? (user.points || 0) : 0;
   }

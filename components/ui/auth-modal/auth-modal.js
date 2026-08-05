@@ -22,7 +22,10 @@ export function renderAuthModal() { return `
         </div>
         <div class="mb-4">
           <label class="form-label" for="loginPassword">Password</label>
-          <input id="loginPassword" type="password" class="form-input" placeholder="Minimal 8 karakter" autocomplete="current-password">
+          <div class="relative">
+            <input id="loginPassword" type="password" class="form-input pr-10" placeholder="Minimal 8 karakter" autocomplete="current-password">
+            <button type="button" class="password-toggle" data-toggle-password="loginPassword" aria-label="Tampilkan password" tabindex="-1"><i class="fas fa-eye"></i></button>
+          </div>
           <span class="form-error"></span>
         </div>
         <div class="flex items-center justify-between mb-6">
@@ -49,13 +52,54 @@ export function renderAuthModal() { return `
           <span class="form-error"></span>
         </div>
         <div class="mb-4">
+          <label class="form-label" for="regMapel">Mapel Utama</label>
+          <select id="regMapel" class="form-input" style="cursor:pointer;">
+            <option value="" disabled selected>Pilih mapel utama</option>
+            <option value="matematika">Matematika</option>
+            <option value="fisika">Fisika</option>
+            <option value="kimia">Kimia</option>
+            <option value="biologi">Biologi</option>
+            <option value="sejarah">Sejarah</option>
+            <option value="bahasa">Bahasa Indonesia</option>
+            <option value="ips">IPS</option>
+          </select>
+          <span class="form-error"></span>
+        </div>
+        <div class="mb-4">
+          <label class="form-label" for="regMinat">Gaya Belajar</label>
+          <select id="regMinat" class="form-input" style="cursor:pointer;">
+            <option value="" disabled selected>Pilih gaya belajar</option>
+            <option value="diskusi">Suka diskusi</option>
+            <option value="materi">Suka materi lengkap</option>
+            <option value="soal">Suka tryout & soal</option>
+            <option value="kreatif">Suka cara kreatif</option>
+          </select>
+          <span class="form-error"></span>
+        </div>
+        <div class="mb-4">
+          <label class="form-label" for="regKelas">Kelas</label>
+          <select id="regKelas" class="form-input" style="cursor:pointer;">
+            <option value="" disabled selected>Pilih kelas</option>
+            <option value="10">Kelas 10</option>
+            <option value="11">Kelas 11</option>
+            <option value="12">Kelas 12</option>
+          </select>
+          <span class="form-error"></span>
+        </div>
+        <div class="mb-4">
           <label class="form-label" for="regPassword">Password</label>
-          <input id="regPassword" type="password" class="form-input" placeholder="Minimal 8 karakter" autocomplete="new-password">
+          <div class="relative">
+            <input id="regPassword" type="password" class="form-input pr-10" placeholder="Minimal 8 karakter" autocomplete="new-password">
+            <button type="button" class="password-toggle" data-toggle-password="regPassword" aria-label="Tampilkan password" tabindex="-1"><i class="fas fa-eye"></i></button>
+          </div>
           <span class="form-error"></span>
         </div>
         <div class="mb-6">
           <label class="form-label" for="regConfirm">Konfirmasi Password</label>
-          <input id="regConfirm" type="password" class="form-input" placeholder="Ketik ulang password" autocomplete="new-password">
+          <div class="relative">
+            <input id="regConfirm" type="password" class="form-input pr-10" placeholder="Ketik ulang password" autocomplete="new-password">
+            <button type="button" class="password-toggle" data-toggle-password="regConfirm" aria-label="Tampilkan password" tabindex="-1"><i class="fas fa-eye"></i></button>
+          </div>
           <span class="form-error"></span>
         </div>
         <button type="submit" class="btn-edquest btn-primary-grad w-full">Daftar</button>

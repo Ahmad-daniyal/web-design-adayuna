@@ -100,6 +100,35 @@
   box-shadow: var(--shadow-sm);
 }
 
+/* ===== Password Toggle ===== */
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all var(--transition);
+}
+
+.password-toggle:hover {
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+.password-toggle:active {
+  transform: translateY(-50%) scale(0.92);
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
   .modal-edquest .modal-content {
