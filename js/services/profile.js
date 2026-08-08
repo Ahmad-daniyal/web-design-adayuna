@@ -1,5 +1,7 @@
 import { CONFIG } from '../core/config.js';
 import { Auth } from './auth.js';
+import { Match } from './match.js';
+import { Notifications } from './notifications.js';
 
 export const Profile = (() => {
   const USER_KEY = CONFIG.STORAGE_KEYS.USER;
@@ -24,6 +26,40 @@ export const Profile = (() => {
     if (idEl) idEl.textContent = user && user.id ? 'ID: ' + user.id : 'ID: —';
     if (avatarEl) avatarEl.textContent = user ? user.avatar : '?';
     if (pointsEl) pointsEl.textContent = user ? (user.points || 0) : 0;
+
+    const stats = user && user.matchStats;
+    const ratingEl = document.getElementById('profileRating');
+    const tierEl = document.getElementById('profileTier');
+    const winsEl = document.getElementById('profileWins');
+    const drawsEl = document.getElementById('profileDraws');
+    const lossesEl = document.getElementById('profileLosses');
+    if (ratingEl) ratingEl.textContent = user ? Match.rankPointsOf(user) : '—';
+    if (tierEl) {
+      const t = Match.tierOf(user ? Match.rankPointsOf(user) : 0);
+      tierEl.textContent = t;
+      tierEl.className = 'tier-chip tier-' + t.toLowerCase();
+    }
+    if (winsEl) winsEl.textContent = stats ? (stats.wins || 0) : 0;
+    if (drawsEl) drawsEl.textContent = stats ? (stats.draws || 0) : 0;
+    if (lossesEl) lossesEl.textContent = stats ? (stats.losses || 0) : 0;
+    renderBadges(user);
+  }
+
+  function renderBadges(user) {
+    const wrap = document.getElementById('profileBadges');
+    const countEl = document.getElementById('profileBadgeCount');
+    const textEl = document.getElementById('profileBadgeCountText');
+    if (!wrap) return;
+    const owned = new Set((user && user.matchStats && user.matchStats.badges) || []);
+    const chips = Match.BADGES.map(b => {
+      const has = owned.has(b.id);
+      return '<div class="badge-item' + (has ? ' earned' : '') + '" title="' + esc(b.name) + ' — ' + esc(b.desc) + '">' +
+        '<i class="fas ' + (has ? b.icon : 'fa-lock') + '"></i></div>';
+    }).join('');
+    wrap.innerHTML = chips;
+    const count = owned.size;
+    if (countEl) countEl.textContent = count;
+    if (textEl) textEl.textContent = count + ' dari ' + Match.BADGES.length + ' badge diraih';
   }
 
   function bindJournalForm() {
@@ -53,6 +89,7 @@ export const Profile = (() => {
         form.style.display = 'none';
         const gained = addPoints(5);
         Auth.showToast(gained ? 'Progress tercatat! +5 poin' : 'Progress tercatat!', 'success');
+        if (gained) Notifications.push({ type: 'journal', title: 'Progress tercatat!', message: '+5 poin · ' + (mapel.charAt(0).toUpperCase() + mapel.slice(1)), link: '#/profile' });
       });
     }
   }

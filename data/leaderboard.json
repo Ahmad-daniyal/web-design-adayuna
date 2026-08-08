@@ -1,0 +1,12 @@
+[
+  { "id": 1001, "name": "Sari", "avatar": "S", "rating": 232, "wins": 34, "losses": 8, "draws": 3, "matches": 45 },
+  { "id": 1002, "name": "Rizki", "avatar": "R", "rating": 214, "wins": 29, "losses": 9, "draws": 5, "matches": 43 },
+  { "id": 1005, "name": "Dinda", "avatar": "D", "rating": 198, "wins": 25, "losses": 10, "draws": 4, "matches": 39 },
+  { "id": 1004, "name": "Fajar", "avatar": "F", "rating": 186, "wins": 22, "losses": 11, "draws": 3, "matches": 36 },
+  { "id": 1008, "name": "Raka", "avatar": "R", "rating": 172, "wins": 20, "losses": 12, "draws": 2, "matches": 34 },
+  { "id": 1003, "name": "Anisa", "avatar": "A", "rating": 155, "wins": 17, "losses": 13, "draws": 4, "matches": 34 },
+  { "id": 1006, "name": "Gilang", "avatar": "G", "rating": 138, "wins": 14, "losses": 14, "draws": 3, "matches": 31 },
+  { "id": 1007, "name": "Putri", "avatar": "P", "rating": 121, "wins": 12, "losses": 15, "draws": 2, "matches": 29 },
+  { "id": 1009, "name": "Dewi", "avatar": "D", "rating": 96, "wins": 9, "losses": 16, "draws": 1, "matches": 26 },
+  { "id": 1010, "name": "Bayu", "avatar": "B", "rating": 74, "wins": 6, "losses": 18, "draws": 1, "matches": 25 }
+]

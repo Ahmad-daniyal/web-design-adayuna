@@ -1,8 +1,10 @@
 import { dataStore } from '../data/index.js';
 import { Auth } from './auth.js';
+import { Notifications } from './notifications.js';
 
 export const Forum = (() => {
   let globalBound = false;
+  let currentThreadId = 0;
 
   const CAT_LABELS = { matematika:'Matematika', fisika:'Fisika', kimia:'Kimia', biologi:'Biologi', sejarah:'Sejarah', bahasa:'Bahasa Indonesia', ips:'IPS' };
 
@@ -38,10 +40,8 @@ export const Forum = (() => {
       container.addEventListener('click', (e) => {
         const btn = e.target.closest('.cat-btn');
         if (!btn) return;
-        container.querySelectorAll('.cat-btn').forEach(b => {
-          b.style.background = 'transparent'; b.style.color = 'var(--text-secondary)'; b.style.borderColor = 'var(--border-color)'; b.classList.remove('active');
-        });
-        btn.style.background = 'var(--gradient-primary)'; btn.style.color = 'white'; btn.style.borderColor = 'transparent'; btn.classList.add('active');
+        container.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
         filterThreads(btn.dataset.category);
       });
     }
@@ -101,6 +101,7 @@ export const Forum = (() => {
 
   function openThread(id) {
     const thread = dataStore.forum[id] || dataStore.forum[0];
+    currentThreadId = dataStore.forum.indexOf(thread);
     const modal = document.getElementById('discussionModal');
     const body = document.getElementById('discussionModalBody');
     if (!modal || !body || !thread) return;
@@ -135,7 +136,9 @@ export const Forum = (() => {
     e.preventDefault();
     const input = document.getElementById('discussionCommentInput');
     if (!input || !input.value.trim()) { Auth.showToast('Komentar tidak boleh kosong', 'error'); return; }
+    const thread = dataStore.forum[currentThreadId] || dataStore.forum[0];
     Auth.showToast('Komentar berhasil dikirim!', 'success');
+    Notifications.push({ type: 'forum', title: 'Komentarmu terkirim', message: 'Balasanmu diposting di thread "' + (thread ? thread.title : 'Forum Diskusi') + '".', link: '#/forum' });
     input.value = '';
   }
 

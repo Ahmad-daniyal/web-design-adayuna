@@ -15,6 +15,73 @@
   box-shadow: var(--shadow-md);
 }
 
+/* ===== Filter Kategori (cat-btn) ===== */
+.cat-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1.5px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.cat-btn::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -80%;
+  width: 55%;
+  height: 220%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: skewX(-14deg) translateX(-140%);
+  pointer-events: none;
+}
+
+.cat-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.18);
+}
+
+.cat-btn:active {
+  transform: scale(0.96);
+}
+
+.cat-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.cat-btn.active {
+  background: var(--gradient-primary);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+}
+
+.cat-btn.active::after {
+  animation: catShine 0.9s ease forwards;
+}
+
+@keyframes catShine {
+  0% { transform: skewX(-14deg) translateX(-140%); }
+  100% { transform: skewX(-14deg) translateX(420%); }
+}
+
+.cat-btn:hover::after {
+  animation: catShine 0.9s ease forwards;
+}
+
 /* ===== Comment / Discussion ===== */
 .comment-item {
   padding: 1.25rem;

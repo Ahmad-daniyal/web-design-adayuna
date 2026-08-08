@@ -67,6 +67,187 @@
   color: #FBBF24;
 }
 
+/* ===== Hero Tiles (kartu navigasi) ===== */
+.hero-tile {
+  display: block;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hero-tile-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+  will-change: transform;
+}
+
+.hero-tile-card::before {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--tile-accent) 30%, transparent) 0%, transparent 55%);
+  opacity: 0;
+  transition: opacity var(--transition);
+  pointer-events: none;
+}
+
+.hero-tile:hover .hero-tile-card::before,
+.hero-tile:focus-visible .hero-tile-card::before {
+  opacity: 1;
+}
+
+.hero-tile-card::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -80%;
+  width: 55%;
+  height: 220%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: skewX(-14deg) translateX(-140%);
+  pointer-events: none;
+}
+
+.hero-tile:hover .hero-tile-card::after,
+.hero-tile:focus-visible .hero-tile-card::after {
+  animation: heroTileShine 0.9s ease forwards;
+}
+
+@keyframes heroTileShine {
+  0% { transform: skewX(-14deg) translateX(-140%); }
+  100% { transform: skewX(-14deg) translateX(420%); }
+}
+
+.hero-tile-icon {
+  width: 46px;
+  height: 46px;
+  margin: 0 auto;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  color: var(--tile-accent);
+  background: color-mix(in srgb, var(--tile-accent) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tile-accent) 32%, transparent);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--tile-accent) 22%, transparent);
+  transition: all var(--transition);
+}
+
+.hero-tile:hover .hero-tile-icon,
+.hero-tile:focus-visible .hero-tile-icon {
+  color: #fff;
+  background: var(--tile-accent);
+  border-color: transparent;
+  transform: scale(1.12) rotate(-4deg);
+  box-shadow:
+    0 0 0 6px color-mix(in srgb, var(--tile-accent) 22%, transparent),
+    0 10px 24px color-mix(in srgb, var(--tile-accent) 45%, transparent);
+}
+
+.hero-tile-label {
+  color: var(--text-secondary);
+  font-weight: 600;
+  transition: color var(--transition);
+}
+
+.hero-tile:hover .hero-tile-label,
+.hero-tile:focus-visible .hero-tile-label {
+  color: #fff;
+}
+
+.hero-tile-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  height: 1.4rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tile-accent);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity var(--transition), transform var(--transition);
+}
+
+.hero-tile:hover .hero-tile-cta,
+.hero-tile:focus-visible .hero-tile-cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-tile:hover .hero-tile-cta i,
+.hero-tile:focus-visible .hero-tile-cta i {
+  animation: heroCtaArrow 0.8s ease infinite;
+}
+
+@keyframes heroCtaArrow {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
+.hero-tile:hover .hero-tile-card,
+.hero-tile:focus-visible .hero-tile-card {
+  transform: translateY(-10px) scale(1.06);
+  border-color: color-mix(in srgb, var(--tile-accent) 55%, transparent);
+  box-shadow: 0 18px 44px color-mix(in srgb, var(--tile-accent) 38%, transparent);
+}
+
+.hero-tile:focus-visible .hero-tile-card {
+  outline: 2px solid var(--tile-accent);
+  outline-offset: 3px;
+}
+
+.hero-tile-enter .hero-tile-card {
+  animation: heroTileIn 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-tile-enter:nth-child(1) .hero-tile-card { animation-delay: 0.05s; }
+.hero-tile-enter:nth-child(2) .hero-tile-card { animation-delay: 0.15s; }
+.hero-tile-enter:nth-child(3) .hero-tile-card { animation-delay: 0.25s; }
+.hero-tile-enter:nth-child(4) .hero-tile-card { animation-delay: 0.35s; }
+
+@keyframes heroTileIn {
+  0% { opacity: 0; transform: translateY(22px) scale(0.88); filter: blur(6px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+.dark .hero-tile-label {
+  color: rgba(203, 213, 225, 0.85);
+}
+
+.dark .hero-tile:hover .hero-tile-label,
+.dark .hero-tile:focus-visible .hero-tile-label {
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-tile-enter .hero-tile-card {
+    animation: none;
+  }
+
+  .hero-tile:hover .hero-tile-card,
+  .hero-tile:focus-visible .hero-tile-card {
+    transform: translateY(-4px);
+  }
+
+  .hero-tile:hover .hero-tile-card::after,
+  .hero-tile:focus-visible .hero-tile-card::after {
+    animation: none;
+    display: none;
+  }
+
+  .hero-tile:hover .hero-tile-cta i,
+  .hero-tile:focus-visible .hero-tile-cta i {
+    animation: none;
+  }
+}
+
 /* ===== Baca Dulu Badge ===== */
 .baca-dulu {
   display: inline-flex;

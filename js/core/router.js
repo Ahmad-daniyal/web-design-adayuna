@@ -8,6 +8,7 @@ import { renderFriend } from '../../features/friend/friend.js';
 import { renderAbout } from '../../features/about/about.js';
 import { renderFaq } from '../../features/faq/faq.js';
 import { renderProfile } from '../../features/profile/profile.js';
+import { renderMatch } from '../../features/match/match.js';
 
 export const Router = (() => {
   const routes = {
@@ -15,6 +16,7 @@ export const Router = (() => {
     'home': renderHome,
     'forum': renderForum,
     'friend': renderFriend,
+    'match': renderMatch,
     'about': renderAbout,
     'faq': renderFaq,
     'profile': renderProfile

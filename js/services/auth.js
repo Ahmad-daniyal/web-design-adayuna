@@ -16,12 +16,14 @@ export const Auth = (() => {
       if (!u.mapel) u.mapel = 'umum';
       if (!u.minat) u.minat = 'diskusi';
       if (!u.kelas) u.kelas = '10';
+      if (!u.matchStats) { u.matchStats = defaultMatchStats(); changed = true; }
     });
     if (changed) saveRegisteredUsers(registered);
     const saved = localStorage.getItem(USER_KEY) || sessionStorage.getItem(USER_KEY);
     if (saved) {
       try {
         currentUser = JSON.parse(saved);
+        if (!currentUser.matchStats) currentUser.matchStats = defaultMatchStats();
         if (!currentUser.id) {
           const acc = registered.find(u => u.email.toLowerCase() === (currentUser.email || '').toLowerCase());
           currentUser.id = (acc && acc.id) || generateUserId(registered);
@@ -135,12 +137,14 @@ export const Auth = (() => {
       joined: account.joined,
       points: account.points || 0,
       badges: account.badges || [],
+      matchStats: account.matchStats || defaultMatchStats(),
       journal: account.journal || []
     };
     if (remember) localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
     else sessionStorage.setItem(USER_KEY, JSON.stringify(currentUser));
     closeModal();
     updateUIForLoggedInUser();
+    if (window.Notifications) { window.Notifications.refresh(); window.Notifications.seedWelcome(); }
     showToast('Selamat datang, ' + currentUser.name + '!', 'success');
   }
 
@@ -185,14 +189,16 @@ export const Auth = (() => {
       joined: new Date().toISOString(),
       points: 0,
       badges: [],
+      matchStats: defaultMatchStats(),
       journal: []
     };
     registered.push(account);
     saveRegisteredUsers(registered);
-    currentUser = { name: account.name, email: account.email, school: account.school, mapel: account.mapel, minat: account.minat, kelas: account.kelas, avatar: account.avatar, id: account.id, joined: account.joined, points: 0, badges: [], journal: [] };
+    currentUser = { name: account.name, email: account.email, school: account.school, mapel: account.mapel, minat: account.minat, kelas: account.kelas, avatar: account.avatar, id: account.id, joined: account.joined, points: 0, badges: [], matchStats: defaultMatchStats(), journal: [] };
     localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
     closeModal();
     updateUIForLoggedInUser();
+    if (window.Notifications) { window.Notifications.refresh(); window.Notifications.seedWelcome(); }
     showToast('Akun berhasil dibuat! ID kamu: ' + account.id, 'success');
   }
 
@@ -208,6 +214,7 @@ export const Auth = (() => {
     pendingRegisterEmail = null;
     resetAuthForms();
     updateUIForLoggedInUser();
+    if (window.Notifications) window.Notifications.refresh();
   }
 
   function getRegisteredUsers() {
@@ -226,6 +233,10 @@ export const Auth = (() => {
     let id;
     do { id = String(Math.floor(100000 + Math.random() * 900000)); } while (taken.has(id));
     return id;
+  }
+
+  function defaultMatchStats() {
+    return { rating: 0, wins: 0, losses: 0, draws: 0, matches: 0, bestTier: 'Bronze', badges: [] };
   }
 
   function saveRegisteredUsers(users) {

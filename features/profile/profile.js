@@ -1,6 +1,7 @@
 import { injectStyle } from '../../js/utils/styleLoader.js';
 
 injectStyle('features/profile/css/profile.css');
+injectStyle('features/match/css/match.css');
 
 export function renderProfile() { return `
 <section class="pt-16 md:pt-20 pb-10">
@@ -15,22 +16,29 @@ export function renderProfile() { return `
           <div class="flex items-center justify-center gap-4 mt-4">
             <div class="text-center"><div id="profilePoints" class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">0</div><div class="text-xs text-slate-400 dark:text-slate-500">Poin</div></div>
             <div class="w-px h-10" style="background:var(--border-color);"></div>
-            <div class="text-center"><div class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">3</div><div class="text-xs text-slate-400 dark:text-slate-500">Badge</div></div>
+            <div class="text-center"><div id="profileBadgeCount" class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">0</div><div class="text-xs text-slate-400 dark:text-slate-500">Badge</div></div>
             <div class="w-px h-10" style="background:var(--border-color);"></div>
             <div class="text-center"><div class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">12</div><div class="text-xs text-slate-400 dark:text-slate-500">Kontribusi</div></div>
           </div>
         </div>
         <div class="card-panel p-6 mb-6">
           <h4 class="font-bold text-sm mb-4 text-slate-900 dark:text-slate-100"><i class="fas fa-award mr-2 text-slate-500 dark:text-slate-400"></i>Badge</h4>
-          <div class="flex flex-wrap gap-3">
-            <div class="badge-item earned" title="Pertama Kali Bertanya"><i class="fas fa-question text-slate-600 dark:text-slate-300"></i></div>
-            <div class="badge-item earned" title="5 Kontribusi"><i class="fas fa-star text-slate-600 dark:text-slate-300"></i></div>
-            <div class="badge-item earned" title="Bantu Teman"><i class="fas fa-hands-helping text-slate-600 dark:text-slate-300"></i></div>
-            <div class="badge-item" title="Belum diraih"><i class="fas fa-lock text-slate-400 dark:text-slate-500"></i></div>
-            <div class="badge-item" title="Belum diraih"><i class="fas fa-lock text-slate-400 dark:text-slate-500"></i></div>
-            <div class="badge-item" title="Belum diraih"><i class="fas fa-lock text-slate-400 dark:text-slate-500"></i></div>
+          <div id="profileBadges" class="flex flex-wrap gap-3"></div>
+          <p class="text-xs mt-3 text-slate-400 dark:text-slate-500"><span id="profileBadgeCountText">0 dari 7</span> badge diraih</p>
+          <a href="#/match" class="btn-edquest btn-primary-grad w-full mt-4 text-sm !py-2"><i class="fas fa-bolt mr-1"></i> Raih Badge di Arena</a>
+        </div>
+        <div class="card-panel p-6 mb-6">
+          <h4 class="font-bold text-sm mb-4 text-slate-900 dark:text-slate-100"><i class="fas fa-bolt mr-2" style="color:var(--accent);"></i>Ranking Arena</h4>
+          <div class="flex items-center gap-3 mb-4">
+            <span id="profileRating" class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">—</span>
+            <span id="profileTier" class="tier-chip tier-bronze">Belum bermain</span>
           </div>
-          <p class="text-xs mt-3 text-slate-400 dark:text-slate-500">3 dari 6 badge diraih</p>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div><div id="profileWins" class="text-lg font-extrabold text-slate-900 dark:text-slate-100">0</div><div class="text-xs text-slate-400 dark:text-slate-500">Menang</div></div>
+            <div><div id="profileDraws" class="text-lg font-extrabold text-slate-900 dark:text-slate-100">0</div><div class="text-xs text-slate-400 dark:text-slate-500">Seri</div></div>
+            <div><div id="profileLosses" class="text-lg font-extrabold text-slate-900 dark:text-slate-100">0</div><div class="text-xs text-slate-400 dark:text-slate-500">Kalah</div></div>
+          </div>
+          <a href="#/match" class="btn-edquest btn-outline-glow w-full mt-4 text-sm !py-2"><i class="fas fa-bolt mr-1"></i> Masuk Arena</a>
         </div>
         <div class="card-panel p-4">
           <label class="flex items-center justify-between cursor-pointer">

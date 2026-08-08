@@ -9,6 +9,7 @@ export function renderSidebar() { return `
       <a href="#/home" data-link="home" class="sidebar-link"><i class="fas fa-th-large"></i><span>Home</span></a>
       <a href="#/forum" data-link="forum" class="sidebar-link"><i class="fas fa-comments"></i><span>Forum</span></a>
       <a href="#/friend" data-link="friend" class="sidebar-link"><i class="fas fa-users"></i><span>Friend</span></a>
+      <a href="#/match" data-link="match" class="sidebar-link"><i class="fas fa-bolt"></i><span>Arena</span></a>
       <a href="#/about" data-link="about" class="sidebar-link"><i class="fas fa-info-circle"></i><span>About</span></a>
       <a href="#/faq" data-link="faq" class="sidebar-link"><i class="fas fa-question-circle"></i><span>FAQ</span></a>
     </nav>

@@ -1,5 +1,6 @@
 import { dataStore } from '../data/index.js';
 import { Auth } from './auth.js';
+import { Notifications } from './notifications.js';
 
 export const Matching = (() => {
   let lastList = [];
@@ -94,6 +95,7 @@ export const Matching = (() => {
   function requestBuddy(index) {
     const b = lastList[index];
     Auth.showToast('Permintaan pertemanan dikirim ke ' + (b ? b.name : 'teman') + '!', 'success');
+    Notifications.push({ type: 'buddy', title: 'Permintaan pertemanan terkirim', message: 'Permintaanmu ke ' + (b ? b.name : 'teman') + ' sedang menunggu.', link: '#/friend' });
   }
 
   function viewProfile(index) {

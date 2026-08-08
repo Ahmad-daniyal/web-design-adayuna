@@ -2,6 +2,7 @@ import { CONFIG } from './config.js';
 import { Auth } from '../services/auth.js';
 import { Forum } from '../services/forum.js';
 import { Matching } from '../services/buddy.js';
+import { Match } from '../services/match.js';
 import { Profile } from '../services/profile.js';
 import { Settings } from '../services/settings.js';
 import { dataStore } from '../data/index.js';
@@ -19,6 +20,7 @@ export const App = (() => {
     initIceBreakerCopy();
     initSmoothScroll();
     initEscapeClose();
+    initFxCards();
     initPageHandlers();
   }
 
@@ -29,10 +31,74 @@ export const App = (() => {
       const sm = document.getElementById('settingsModal');
       if (sm) Settings.closeModal();
       setTimeout(() => {
+        if (page === 'home') initHomeTiles();
         if (page === 'forum') Forum.refresh();
         if (page === 'friend') Matching.init();
+        if (page === 'match') Match.init();
         if (page === 'profile') Profile.init();
       }, 50);
+    });
+  }
+
+  function initFxCards() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+    let current = null;
+    let rafId = 0;
+    const reset = () => {
+      if (current) {
+        current.style.transform = '';
+        current = null;
+      }
+    };
+    document.addEventListener('pointermove', (e) => {
+      const card = e.target.closest ? e.target.closest('.fx-card') : null;
+      if (card !== current) {
+        reset();
+        current = card;
+      }
+      if (!card) return;
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const r = card.getBoundingClientRect();
+        if (!r.width) return;
+        const px = e.clientX - r.left;
+        const py = e.clientY - r.top;
+        card.style.setProperty('--fx-x', (px / r.width) * 100 + '%');
+        card.style.setProperty('--fx-y', (py / r.height) * 100 + '%');
+        card.style.transform = 'translateY(-6px) scale(1.02)';
+      });
+    }, { passive: true });
+    document.addEventListener('pointerleave', reset);
+    document.addEventListener('scroll', reset, { passive: true, capture: true });
+  }
+
+  function initHomeTiles() {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isCoarse = window.matchMedia('(pointer: coarse)').matches;
+    const tiles = document.querySelectorAll('.hero-tile');
+    if (!tiles.length) return;
+    tiles.forEach((tile) => {
+      const card = tile.querySelector('.hero-tile-card');
+      if (!card) return;
+      card.addEventListener('animationend', (e) => {
+        if (e.animationName === 'heroTileIn') card.style.animation = 'none';
+      });
+      if (reduceMotion || isCoarse) return;
+      const BASE = 'translateY(-10px) scale(1.06) ';
+      tile.addEventListener('pointermove', (e) => {
+        const r = card.getBoundingClientRect();
+        const px = e.clientX - r.left;
+        const py = e.clientY - r.top;
+        const rx = ((py / r.height) - 0.5) * -14;
+        const ry = ((px / r.width) - 0.5) * 14;
+        card.style.setProperty('--mx', (px / r.width) * 100 + '%');
+        card.style.setProperty('--my', (py / r.height) * 100 + '%');
+        card.style.transform = `${BASE}perspective(700px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+      });
+      tile.addEventListener('pointerleave', () => {
+        card.style.transform = '';
+      });
     });
   }
 

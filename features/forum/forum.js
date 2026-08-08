@@ -23,14 +23,14 @@ export function renderForum() { return `
     <div class="card-panel p-4 sm:p-6">
       <p class="text-sm font-semibold mb-3 text-slate-600 dark:text-slate-300"><i class="fas fa-filter mr-2"></i>Filter Kategori:</p>
       <div class="flex flex-wrap gap-2" id="categoryFilter">
-        <button class="cat-btn active px-4 py-2 rounded-full text-sm font-semibold border transition-all" data-category="all" style="background:var(--gradient-primary);color:white;border-color:transparent;">Semua</button>
-        <button class="cat-btn px-4 py-2 rounded-full text-sm font-semibold border transition-all" data-category="matematika" style="border-color:var(--border-color);color:var(--text-secondary);background:transparent;"><i class="fas fa-calculator mr-1"></i> Matematika</button>
-        <button class="cat-btn px-4 py-2 rounded-full text-sm font-semibold border transition-all" data-category="fisika" style="border-color:var(--border-color);color:var(--text-secondary);background:transparent;"><i class="fas fa-atom mr-1"></i> Fisika</button>
-        <button class="cat-btn px-4 py-2 rounded-full text-sm font-semibold border transition-all" data-category="kimia" style="border-color:var(--border-color);color:var(--text-secondary);background:transparent;"><i class="fas fa-flask mr-1"></i> Kimia</button>
-        <button class="cat-btn px-4 py-2 rounded-full text-sm font-semibold border transition-all" data-category="biologi" style="border-color:var(--border-color);color:var(--text-secondary);background:transparent;"><i class="fas fa-dna mr-1"></i> Biologi</button>
-        <button class="cat-btn px-4 py-2 rounded-full text-sm font-semibold border transition-all" data-category="sejarah" style="border-color:var(--border-color);color:var(--text-secondary);background:transparent;"><i class="fas fa-landmark mr-1"></i> Sejarah</button>
-        <button class="cat-btn px-4 py-2 rounded-full text-sm font-semibold border transition-all" data-category="bahasa" style="border-color:var(--border-color);color:var(--text-secondary);background:transparent;"><i class="fas fa-language mr-1"></i> Bahasa</button>
-        <button class="cat-btn px-4 py-2 rounded-full text-sm font-semibold border transition-all" data-category="ips" style="border-color:var(--border-color);color:var(--text-secondary);background:transparent;"><i class="fas fa-globe mr-1"></i> IPS</button>
+        <button class="cat-btn active" data-category="all">Semua</button>
+        <button class="cat-btn" data-category="matematika"><i class="fas fa-calculator mr-1"></i> Matematika</button>
+        <button class="cat-btn" data-category="fisika"><i class="fas fa-atom mr-1"></i> Fisika</button>
+        <button class="cat-btn" data-category="kimia"><i class="fas fa-flask mr-1"></i> Kimia</button>
+        <button class="cat-btn" data-category="biologi"><i class="fas fa-dna mr-1"></i> Biologi</button>
+        <button class="cat-btn" data-category="sejarah"><i class="fas fa-landmark mr-1"></i> Sejarah</button>
+        <button class="cat-btn" data-category="bahasa"><i class="fas fa-language mr-1"></i> Bahasa</button>
+        <button class="cat-btn" data-category="ips"><i class="fas fa-globe mr-1"></i> IPS</button>
       </div>
     </div>
   </div>

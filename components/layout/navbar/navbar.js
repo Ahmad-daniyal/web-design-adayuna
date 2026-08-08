@@ -10,9 +10,9 @@ export function renderNavbar() { return `
     <button id="sidebarToggle" class="btn-ghost !p-2 rounded-lg text-lg md:hidden" aria-label="Toggle sidebar">
       <i class="fas fa-bars"></i>
     </button>
-    <a href="#/home" class="flex items-center gap-2 text-xl font-extrabold tracking-tight no-underline" style="color:var(--text-primary);">
-      <span class="flex items-center justify-center w-9 h-9 rounded-xl text-lg text-white shadow-sm" style="background:var(--gradient-primary); box-shadow:0 4px 10px rgba(79,70,229,0.35);">E</span>
-      <span class="hidden sm:inline">Edquest</span>
+    <a href="#/about" class="navbar-brand flex items-center gap-2 no-underline" aria-label="Edquest — Tentang Edquest" title="Tentang Edquest">
+      <span class="brand-logo flex items-center justify-center w-9 h-9 rounded-xl text-lg text-white">E</span>
+      <span class="brand-title hidden sm:inline">Edquest</span>
     </a>
   </div>
   <div class="flex items-center gap-1">
@@ -22,6 +22,23 @@ export function renderNavbar() { return `
     <button id="searchBtn" class="btn-ghost !p-2 rounded-lg text-base" aria-label="Cari">
       <i class="fas fa-search" style="color:var(--text-secondary);"></i>
     </button>
+    <div class="relative notif-wrap" id="notifWrap">
+      <button id="notifBtn" class="btn-ghost !p-2 rounded-lg relative" aria-label="Notifikasi" title="Notifikasi">
+        <i class="fas fa-bell" style="color:var(--text-secondary);"></i>
+        <span id="notifCount" class="notif-count" style="display:none;">0</span>
+      </button>
+      <div id="notifDropdown" class="notif-dropdown absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-900/5 dark:shadow-black/40 hidden" style="z-index:100;">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+          <p class="text-sm font-bold" style="color:var(--text-primary);"><i class="fas fa-bell mr-2" style="color:var(--primary);"></i>Notifikasi</p>
+          <div class="flex items-center gap-2">
+            <button id="notifMarkAll" class="text-xs font-semibold hover:opacity-80 transition-opacity" style="color:var(--primary); background:transparent; border:none; cursor:pointer;"><i class="fas fa-check-double mr-1"></i>Tandai dibaca</button>
+            <span style="color:var(--border-color);">|</span>
+            <button id="notifClearAll" class="text-xs font-semibold hover:opacity-80 transition-opacity" style="color:var(--text-muted); background:transparent; border:none; cursor:pointer;"><i class="fas fa-trash mr-1"></i>Bersihkan</button>
+          </div>
+        </div>
+        <div id="notifList" class="notif-list max-h-96 overflow-y-auto"></div>
+      </div>
+    </div>
     <div class="relative">
       <button id="helpBtn" class="btn-ghost !px-2.5 !py-1.5 rounded-lg" aria-label="Bantuan" title="Bantuan">
         <span class="flex items-center justify-center w-5 h-5 rounded-full border border-current text-xs font-bold" style="color:var(--text-secondary);">?</span>

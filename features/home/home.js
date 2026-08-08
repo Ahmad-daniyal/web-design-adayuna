@@ -21,7 +21,7 @@ function tagHTML(tag) {
 function iceCards() {
   const ice = (dataStore.home && dataStore.home.iceBreakers) || [];
   return ice.map(c =>
-    '<div class="ice-card" data-copy="' + escapeAttr(c.copy) + '">' +
+    '<div class="ice-card fx-shine" data-copy="' + escapeAttr(c.copy) + '">' +
       '<i class="fas fa-quote-right quote-icon"></i>' +
       '<p class="text-sm font-medium leading-relaxed mb-3" style="color:var(--text-primary);">"' + c.text + '"</p>' +
       '<div class="flex items-center justify-between">' +
@@ -60,6 +60,9 @@ export function renderHome() { return `
           <a href="#/friend" class="btn-edquest text-base" style="background:rgba(255,255,255,0.12); color:white; border:1.5px solid rgba(255,255,255,0.25); backdrop-filter:blur(8px);">
             <i class="fas fa-user-friends"></i> Cari Teman Belajar
           </a>
+          <a href="#/match" class="btn-edquest text-base" style="background:var(--accent); color:#fff; font-weight:700; box-shadow:0 4px 14px rgba(245,158,11,0.4);">
+            <i class="fas fa-bolt"></i> Masuk Arena
+          </a>
         </div>
         <div class="baca-dulu mx-auto md:mx-0">
           <i class="fas fa-eye"></i>
@@ -71,22 +74,34 @@ export function renderHome() { return `
           <div class="w-80 h-80 rounded-full" style="background:radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);"></div>
           <div class="absolute inset-0 flex items-center justify-center">
             <div class="grid grid-cols-2 gap-4 p-4">
-              <div class="glass-card !p-5 text-center" style="animation:float 6s ease-in-out infinite;">
-                <i class="fas fa-comment-dots text-3xl" style="color:var(--primary);"></i>
-                <p class="text-xs font-medium mt-2" style="color:var(--text-secondary);">Forum Diskusi</p>
-              </div>
-              <div class="glass-card !p-5 text-center mt-8" style="animation:float 6s ease-in-out infinite; animation-delay:1s;">
-                <i class="fas fa-user-graduate text-3xl" style="color:var(--accent);"></i>
-                <p class="text-xs font-medium mt-2" style="color:var(--text-secondary);">Study Buddy</p>
-              </div>
-              <div class="glass-card !p-5 text-center" style="animation:float 6s ease-in-out infinite; animation-delay:2s;">
-                <i class="fas fa-trophy text-3xl" style="color:var(--accent);"></i>
-                <p class="text-xs font-medium mt-2" style="color:var(--text-secondary);">Badge & Poin</p>
-              </div>
-              <div class="glass-card !p-5 text-center mt-8" style="animation:float 6s ease-in-out infinite; animation-delay:0.5s;">
-                <i class="fas fa-book-open text-3xl" style="color:var(--accent);"></i>
-                <p class="text-xs font-medium mt-2" style="color:var(--text-secondary);">Progress Journal</p>
-              </div>
+              <a href="#/forum" class="hero-tile hero-tile-enter" style="--tile-accent:#6366F1; animation:float 6s ease-in-out infinite;">
+                <div class="glass-card hero-tile-card !p-5 text-center">
+                  <div class="hero-tile-icon"><i class="fas fa-comments"></i></div>
+                  <p class="hero-tile-label text-xs font-medium mt-2">Forum Diskusi</p>
+                  <span class="hero-tile-cta"><i class="fas fa-arrow-right"></i> Buka</span>
+                </div>
+              </a>
+              <a href="#/friend" class="hero-tile hero-tile-enter" style="--tile-accent:#F59E0B; animation:float 6s ease-in-out infinite; animation-delay:1s;">
+                <div class="glass-card hero-tile-card !p-5 text-center">
+                  <div class="hero-tile-icon"><i class="fas fa-user-graduate"></i></div>
+                  <p class="hero-tile-label text-xs font-medium mt-2">Study Buddy</p>
+                  <span class="hero-tile-cta"><i class="fas fa-arrow-right"></i> Buka</span>
+                </div>
+              </a>
+              <a href="#/profile" class="hero-tile hero-tile-enter" style="--tile-accent:#FBBF24; animation:float 6s ease-in-out infinite; animation-delay:2s;">
+                <div class="glass-card hero-tile-card !p-5 text-center">
+                  <div class="hero-tile-icon"><i class="fas fa-trophy"></i></div>
+                  <p class="hero-tile-label text-xs font-medium mt-2">Badge & Poin</p>
+                  <span class="hero-tile-cta"><i class="fas fa-arrow-right"></i> Buka</span>
+                </div>
+              </a>
+              <a href="#/profile" class="hero-tile hero-tile-enter" style="--tile-accent:#10B981; animation:float 6s ease-in-out infinite; animation-delay:0.5s;">
+                <div class="glass-card hero-tile-card !p-5 text-center">
+                  <div class="hero-tile-icon"><i class="fas fa-book-open"></i></div>
+                  <p class="hero-tile-label text-xs font-medium mt-2">Progress Journal</p>
+                  <span class="hero-tile-cta"><i class="fas fa-arrow-right"></i> Buka</span>
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -126,17 +141,17 @@ export function renderHome() { return `
       <p class="text-lg" style="color:var(--text-secondary);">Semua fitur dirancang untuk membuatmu nyaman belajar</p>
     </div>
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="feature-card text-center sm:text-left">
+      <div class="feature-card fx-card text-center sm:text-left">
         <div class="feature-icon mx-auto sm:mx-0"><i class="fas fa-comments"></i></div>
         <h3 class="text-xl font-bold mt-5 mb-2" style="color:var(--text-primary);">Forum Diskusi Anonim</h3>
         <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Bertanya dan berdiskusi tanpa rasa malu. Kamu bisa pakai nama panggilan atau tetap anonim.</p>
       </div>
-      <div class="feature-card text-center sm:text-left">
+      <div class="feature-card fx-card text-center sm:text-left">
         <div class="feature-icon mx-auto sm:mx-0"><i class="fas fa-user-friends"></i></div>
         <h3 class="text-xl font-bold mt-5 mb-2" style="color:var(--text-primary);">Study Buddy Matching</h3>
         <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Cari teman belajar yang sesuai dengan minat dan mapel yang sama.</p>
       </div>
-      <div class="feature-card text-center sm:text-left">
+      <div class="feature-card fx-card text-center sm:text-left">
         <div class="feature-icon mx-auto sm:mx-0"><i class="fas fa-chart-line"></i></div>
         <h3 class="text-xl font-bold mt-5 mb-2" style="color:var(--text-primary);">Progress Journal</h3>
         <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Catat perjalanan belajarmu, dapatkan badge dan poin sebagai apresiasi.</p>
@@ -147,7 +162,7 @@ export function renderHome() { return `
 
 <section class="py-16 lg:py-20 cta-section" style="background:var(--gradient-hero);">
   <div class="max-w-4xl mx-auto px-4 sm:px-6">
-    <div class="cta-panel text-center">
+    <div class="cta-panel fx-card text-center">
       <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Siap Memulai Perjalanan Belajar?</h2>
       <p class="text-lg text-white/80 mb-8 max-w-lg mx-auto">Ribuan siswa lainnya sudah memulai. Giliranmu sekarang!</p>
       <div class="flex flex-wrap justify-center gap-3">

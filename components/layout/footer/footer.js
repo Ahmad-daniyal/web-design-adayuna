@@ -27,6 +27,7 @@ export function renderFooter() { return `
         <div class="flex flex-col gap-2">
           <a href="#/forum" data-link="forum" class="text-sm no-underline" style="color:var(--text-secondary);">Forum Diskusi</a>
           <a href="#/friend" data-link="friend" class="text-sm no-underline" style="color:var(--text-secondary);">Study Buddy</a>
+          <a href="#/match" data-link="match" class="text-sm no-underline" style="color:var(--text-secondary);">Arena Duel</a>
           <a href="#/profile" data-link="profile" class="text-sm no-underline" style="color:var(--text-secondary);">Progress Journal</a>
         </div>
       </div>
