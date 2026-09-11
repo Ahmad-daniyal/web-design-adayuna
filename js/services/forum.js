@@ -171,29 +171,190 @@ export const Forum = (() => {
   function renderThreadDetail(root) {
     const thread = dataStore.forum[state.threadId] || dataStore.forum[0];
     if (!thread) { state.screen = 'list'; renderList(root); return; }
+
+    const related = relatedThreads(thread);
+    const contributors = topContributors();
+
+    const relatedItems = related.map((t, i) =>
+      '<button class="thread-related-card thread-anim" style="animation-delay:' + (320 + i * 70) + 'ms" onclick="Forum.openThread(' + threadIndex(t) + ')">' +
+        '<div class="flex flex-wrap items-center justify-between gap-1 mb-2">' +
+          '<span class="category-tag ' + t.category + '"><i class="fas ' + getIcon(t.category) + '"></i> ' + catLabel(t.category) + '</span>' +
+          '<span class="text-[11px]" style="color:var(--text-muted);">' + t.time + '</span>' +
+        '</div>' +
+        '<p class="thread-related-title">' + t.title + '</p>' +
+        '<p class="thread-related-sub">' + t.subtitle + '</p>' +
+        '<div class="flex items-center gap-3 text-[11px] font-semibold mt-2" style="color:var(--text-muted);">' +
+          '<span><i class="fas fa-user mr-1"></i>' + t.author + '</span>' +
+          '<span><i class="fas fa-comment mr-1"></i>' + t.replies + '</span>' +
+          '<span><i class="fas fa-arrow-up mr-1"></i>' + t.votes + '</span>' +
+        '</div>' +
+      '</button>'
+    ).join('') || '<p class="text-sm" style="color:var(--text-muted);">Belum ada thread terkait.</p>';
+
+    const contributorItems = contributors.map(c =>
+      '<div class="thread-contributor">' +
+        '<div class="thread-avatar-sm" style="background:' + avatarColor(c.name) + ';">' + initialOf(c.name) + '</div>' +
+        '<div class="min-w-0 flex-1">' +
+          '<p class="text-sm font-semibold truncate" style="color:var(--text-primary);">' + c.name + '</p>' +
+          '<p class="text-[11px]" style="color:var(--text-muted);">' + c.votes + ' suara · ' + c.replies + ' balasan · ' + c.active + ' thread</p>' +
+        '</div>' +
+      '</div>'
+    ).join('');
+
     root.innerHTML = `
-      <section class="py-6 pb-16">
+      <section class="thread-view pb-16">
+
         <div class="max-w-6xl mx-auto px-4 sm:px-6">
-          <div class="max-w-3xl">
-            <button class="btn-edquest btn-outline-glow text-sm !py-2 !px-4 mb-6" onclick="Forum.backToList()"><i class="fas fa-arrow-left mr-1"></i> Kembali ke Forum</button>
-            <div class="discussion-detail">
-              <div class="flex flex-wrap items-center gap-2 mb-3"><span class="category-tag ${thread.category} in-modal"><i class="fas ${getIcon(thread.category)}"></i> ${catLabel(thread.category)}</span><span class="text-xs" style="color:var(--text-muted);">${thread.time}</span></div>
-              <h2 class="text-2xl font-bold mb-3" style="color:var(--text-primary);">${thread.title}</h2>
-              <p class="text-sm leading-relaxed mb-4" style="color:var(--text-secondary);">${thread.subtitle}</p>
-              <div class="flex items-center gap-4 text-sm mb-6" style="color:var(--text-muted);"><span><i class="fas fa-user mr-1"></i>${thread.author}</span><span><i class="fas fa-comment mr-1"></i>${thread.replies} balasan</span><span><i class="fas fa-arrow-up mr-1"></i>${thread.votes} suara</span></div>
-              <hr style="border-color:var(--border-color);margin-bottom:1.5rem;">
-              <div class="comment-item mb-4"><div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background:var(--gradient-primary);">K</div><div><span class="font-semibold text-sm" style="color:var(--text-primary);">KakakKelas</span><span class="text-xs ml-2" style="color:var(--text-muted);">1 jam lalu</span></div><span class="text-xs px-2 py-0.5 rounded-full ml-auto" style="background:var(--primary-light);color:var(--primary);">Jawab</span></div>
-              <p class="text-sm leading-relaxed mb-2" style="color:var(--text-secondary);">Gunakan aturan produk ya! (uv)' = u'v + uv'. Kalau f(x) = sin(x)·cos(x), maka:</p>
-              <div class="text-sm p-3 rounded-lg mb-2" style="background:var(--bg-section);border:1px solid var(--border-color);font-family:monospace;color:var(--primary);">f'(x) = cos(x)·cos(x) + sin(x)·(-sin(x))<br>= cos²x − sin²x<br>= cos(2x)</div>
-              <div class="flex items-center gap-4"><button class="vote-btn" onclick="Forum.toggleVote(this)"><i class="fas fa-arrow-up"></i> <span>5</span></button><span class="text-xs" style="color:var(--text-muted);">7 suara</span></div></div>
-              <div class="comment-item mb-4"><div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background:linear-gradient(135deg,#38BDF8,#2563EB);">A</div><div><span class="font-semibold text-sm" style="color:var(--text-primary);">Aisyah12</span><span class="text-xs ml-2" style="color:var(--text-muted);">45 menit lalu</span></div></div>
-              <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Ingat rumus dasar dulu ya: d(sin x)/dx = cos x, d(cos x)/dx = -sin x. Kalau ada perkalian pake aturan produk. Semangat!</p></div>
-              <div class="glass-card !p-5 mt-6"><h4 class="font-bold mb-3" style="color:var(--text-primary);">Tulis Balasan</h4>
-              <form onsubmit="Forum.submitComment(event)"><div class="mb-3"><textarea id="discussionCommentInput" rows="2" class="w-full p-3 rounded-lg text-sm border resize-none focus:outline-none focus:ring-2" style="background:var(--bg-body);border-color:var(--border-color);color:var(--text-primary);" placeholder="Tulis jawaban atau pertanyaanmu..."></textarea></div>
-              <div class="flex items-center justify-between"><div class="flex items-center gap-2"><input type="checkbox" id="anonCheck" class="accent-[var(--primary)]"><label for="anonCheck" class="text-xs" style="color:var(--text-muted);">Post sebagai anonim</label></div>
-              <button type="submit" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4">Kirim</button></div></form></div>
+          <div class="thread-hero ${thread.category} thread-anim">
+            <i class="fas ${getIcon(thread.category)} thread-hero-icon"></i>
+            <button class="thread-hero-back" onclick="Forum.backToList()"><i class="fas fa-arrow-left"></i> Kembali ke Forum</button>
+            <div class="thread-hero-top">
+              <span class="thread-hero-cat"><i class="fas ${getIcon(thread.category)}"></i> ${catLabel(thread.category)}</span>
+              <span class="thread-hero-status"><i class="fas ${thread.status === 'Populer' ? 'fa-fire' : 'fa-bolt'}"></i> ${thread.status}</span>
+            </div>
+            <h2 class="thread-hero-title">${thread.title}</h2>
+            <p class="thread-hero-sub">${thread.subtitle}</p>
+            <div class="thread-hero-meta">
+              <span><i class="fas fa-user"></i> ${thread.author}</span>
+              <span><i class="fas fa-comment"></i> ${thread.replies} balasan</span>
+              <span><i class="fas fa-arrow-up"></i> ${thread.votes} suara</span>
+              <span><i class="fas fa-eye"></i> ${getViews(thread)} dilihat</span>
+            </div>
+            <div class="thread-hero-actions">
+              <button class="thread-hero-btn primary" onclick="Forum.scrollToReply()"><i class="fas fa-reply"></i> Tulis Jawaban</button>
+              <button class="thread-hero-btn" onclick="Forum.shareThread()"><i class="fas fa-share-nodes"></i> Bagikan</button>
+              <button class="thread-hero-btn" onclick="Forum.followThread(this)"><i class="fas fa-bell"></i> Ikuti Thread</button>
             </div>
           </div>
+
+          <div class="thread-grid mt-8">
+            <div class="discussion-detail min-w-0">
+
+              <div class="thread-content-card thread-anim" style="animation-delay:80ms">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="thread-avatar" style="background:${avatarColor(thread.author)};">${initialOf(thread.author)}</div>
+                  <div class="min-w-0">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <span class="font-bold text-sm" style="color:var(--text-primary);">${thread.author}</span>
+                      <span class="thread-chip"><i class="fas fa-circle-question"></i> Pertanyaan</span>
+                    </div>
+                    <span class="text-xs" style="color:var(--text-muted);">${thread.time} · di kategori ${catLabel(thread.category)}</span>
+                  </div>
+                </div>
+                <p class="thread-body-text">${thread.subtitle}</p>
+                <div class="thread-body-meta">
+                  <span><i class="far fa-clock"></i> Diposting ${thread.time}</span>
+                  <span><i class="fas fa-eye"></i> ${getViews(thread)} kali dilihat</span>
+                </div>
+              </div>
+
+              <h3 class="text-lg font-bold mb-4 thread-anim" style="animation-delay:140ms;color:var(--text-primary);"><i class="fas fa-comments mr-2" style="color:var(--primary);"></i>Jawaban <span class="text-sm font-semibold" style="color:var(--text-muted);">(${thread.replies})</span></h3>
+
+              <div class="comment-item solusi thread-anim mb-4" style="animation-delay:180ms">
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="thread-avatar" style="background:linear-gradient(135deg,#38BDF8,#2563EB);">K</div>
+                  <div>
+                    <span class="font-semibold text-sm" style="color:var(--text-primary);">KakakKelas</span>
+                    <span class="text-xs ml-2" style="color:var(--text-muted);">1 jam lalu</span>
+                  </div>
+                  <span class="thread-solusi-badge ml-auto"><i class="fas fa-circle-check"></i> Solusi Terverifikasi</span>
+                </div>
+                <p class="text-sm leading-relaxed mb-2" style="color:var(--text-secondary);">Gunakan aturan produk ya! (uv)' = u'v + uv'. Kalau f(x) = sin(x)·cos(x), maka:</p>
+                <div class="text-sm p-3 rounded-lg mb-2" style="background:var(--bg-section);border:1px solid var(--border-color);font-family:monospace;color:var(--primary);">f'(x) = cos(x)·cos(x) + sin(x)·(-sin(x))<br>= cos²x − sin²x<br>= cos(2x)</div>
+                <div class="flex items-center gap-4">
+                  <button class="vote-btn" onclick="Forum.toggleVote(this)"><i class="fas fa-arrow-up"></i> <span>5</span></button>
+                  <span class="text-xs" style="color:var(--text-muted);">7 suara</span>
+                </div>
+              </div>
+
+              <div class="comment-item thread-anim mb-4" style="animation-delay:220ms">
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="thread-avatar" style="background:${avatarColor('Aisyah12')};">A</div>
+                  <div>
+                    <span class="font-semibold text-sm" style="color:var(--text-primary);">Aisyah12</span>
+                    <span class="text-xs ml-2" style="color:var(--text-muted);">45 menit lalu</span>
+                  </div>
+                  <span class="thread-chip ml-auto"><i class="fas fa-reply"></i> Menjawab</span>
+                </div>
+                <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Ingat rumus dasar dulu ya: d(sin x)/dx = cos x, d(cos x)/dx = -sin x. Kalau ada perkalian pake aturan produk. Semangat!</p>
+              </div>
+
+              <div class="glass-card !p-5 mt-6 thread-anim" id="threadReplyBox" style="animation-delay:260ms">
+                <h4 class="font-bold mb-3" style="color:var(--text-primary);"><i class="fas fa-reply mr-2" style="color:var(--primary);"></i>Tulis Balasan</h4>
+                <form onsubmit="Forum.submitComment(event)">
+                  <div class="mb-3">
+                    <textarea id="discussionCommentInput" rows="3" class="w-full p-3 rounded-lg text-sm border resize-none focus:outline-none focus:ring-2" style="background:var(--bg-body);border-color:var(--border-color);color:var(--text-primary);" placeholder="Tulis jawaban atau pertanyaanmu..."></textarea>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <input type="checkbox" id="anonCheck" class="accent-[var(--primary)]">
+                      <label for="anonCheck" class="text-xs" style="color:var(--text-muted);">Post sebagai anonim</label>
+                    </div>
+                    <button type="submit" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4"><i class="fas fa-paper-plane"></i> Kirim</button>
+                  </div>
+                </form>
+              </div>
+
+            </div>
+
+            <aside class="thread-side">
+
+              <div class="thread-side-card thread-anim" style="animation-delay:100ms">
+                <h4 class="thread-side-title"><i class="fas fa-chart-simple"></i> Ringkasan Thread</h4>
+                <div class="thread-summary-rows">
+                  <div class="thread-summary-row">
+                    <span class="ts-label"><i class="fas fa-tag"></i> Kategori</span>
+                    <span class="ts-value">${catLabel(thread.category)}</span>
+                  </div>
+                  <div class="thread-summary-row">
+                    <span class="ts-label"><i class="fas fa-user"></i> Penulis</span>
+                    <span class="ts-value">${thread.author}</span>
+                  </div>
+                  <div class="thread-summary-row">
+                    <span class="ts-label"><i class="fas fa-signal"></i> Status</span>
+                    <span class="ts-value">${thread.status}</span>
+                  </div>
+                </div>
+                <div class="mt-4">
+                  <div class="flex items-center justify-between text-xs mb-1">
+                    <span style="color:var(--text-muted);">Keaktifan diskusi</span>
+                    <span class="font-bold" style="color:var(--primary);">${threadActivity(thread)}%</span>
+                  </div>
+                  <div class="thread-progress"><span style="width:${threadActivity(thread)}%"></span></div>
+                </div>
+                <div class="thread-stat-grid">
+                  <div class="thread-stat"><span class="ts-num">${thread.replies}</span><span class="ts-label">Balasan</span></div>
+                  <div class="thread-stat"><span class="ts-num">${thread.votes}</span><span class="ts-label">Suara</span></div>
+                  <div class="thread-stat"><span class="ts-num">${getViews(thread)}</span><span class="ts-label">Dilihat</span></div>
+                </div>
+              </div>
+
+              <div class="thread-side-card thread-anim" style="animation-delay:160ms">
+                <h4 class="thread-side-title"><i class="fas fa-trophy"></i> Kontributor Populer</h4>
+                <div class="thread-side-list">${contributorItems}</div>
+              </div>
+
+              <div class="thread-cta thread-anim" style="animation-delay:220ms">
+                <div class="thread-cta-icon"><i class="fas fa-bullhorn"></i></div>
+                <h4 class="font-bold text-white mb-1">Punya topik seru?</h4>
+                <p class="text-sm" style="color:rgba(255,255,255,.85);">Mulai thread baru di kategori favoritmu dan bantu teman yang lain.</p>
+                <button class="thread-cta-btn" onclick="Forum.openNewThread()"><i class="fas fa-pen"></i> Buat Thread Baru</button>
+              </div>
+
+            </aside>
+          </div>
+
+          <div class="thread-related-section mt-12">
+            <div class="flex flex-wrap items-end justify-between gap-3 mb-5">
+              <div>
+                <h3 class="text-xl font-bold" style="color:var(--text-primary);"><i class="fas fa-link mr-2" style="color:var(--primary);"></i>Thread Terkait</h3>
+                <p class="text-xs mt-1" style="color:var(--text-muted);">Diskusi lain yang mungkin menarik untukmu</p>
+              </div>
+              <button class="btn-edquest btn-outline-glow text-sm !py-2 !px-4" onclick="Forum.backToList()"><i class="fas fa-list mr-1"></i> Lihat Semua Thread</button>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">${relatedItems}</div>
+          </div>
+
         </div>
       </section>
     `;
@@ -224,11 +385,76 @@ export const Forum = (() => {
     input.value = '';
   }
 
+  function threadIndex(thread) { return dataStore.forum.indexOf(thread); }
+
+  function getViews(thread) { return ((Number(thread.votes) || 0) * 7 + (Number(thread.replies) || 0) * 3 + 41) % 480 + 140; }
+
+  function threadActivity(thread) { return Math.min(100, Math.round(Number(thread.replies || 0) * 9 + Number(thread.votes || 0) * 1.2 + 16)); }
+
+  function relatedThreads(thread) {
+    return dataStore.forum
+      .filter(t => t !== thread)
+      .map(t => ({ thread: t, score: (t.category === thread.category ? 8 : 0) + Math.min(Number(t.votes) || 0, 50) }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3)
+      .map(x => x.thread);
+  }
+
+  function topContributors() {
+    const map = {};
+    dataStore.forum.forEach(t => {
+      if (!map[t.author]) map[t.author] = { name: t.author, votes: 0, replies: 0, active: 0 };
+      map[t.author].votes += Number(t.votes) || 0;
+      map[t.author].replies += Number(t.replies) || 0;
+      map[t.author].active++;
+    });
+    return Object.values(map).sort((a, b) => b.votes - a.votes).slice(0, 4);
+  }
+
+  function avatarColor(name) {
+    const colors = [
+      'linear-gradient(135deg,#2563EB,#0EA5E9)',
+      'linear-gradient(135deg,#059669,#34D399)',
+      'linear-gradient(135deg,#D97706,#FBBF24)',
+      'linear-gradient(135deg,#4F46E5,#818CF8)',
+      'linear-gradient(135deg,#B91C1C,#F87171)',
+      'linear-gradient(135deg,#0F766E,#2DD4BF)'
+    ];
+    let h = 0;
+    for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+    return colors[h % colors.length];
+  }
+
+  function initialOf(name) { return (name || '?').charAt(0).toUpperCase(); }
+
+  function scrollToReply() {
+    const box = document.getElementById('threadReplyBox');
+    if (!box) return;
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => { const el = document.getElementById('discussionCommentInput'); if (el) el.focus(); }, 450);
+  }
+
+  function shareThread() {
+    const thread = dataStore.forum[state.threadId] || dataStore.forum[0];
+    const text = (thread ? thread.title : 'Thread') + ' — Edquest';
+    if (navigator.share) {
+      navigator.share({ title: text, text: text, url: window.location.href }).catch(() => {});
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(window.location.href);
+    Auth.showToast('Link thread disalin ke clipboard', 'success');
+  }
+
+  function followThread(btn) {
+    const active = btn.classList.toggle('active');
+    Auth.showToast(active ? 'Kamu mengikuti thread ini' : 'Berhenti mengikuti thread', active ? 'success' : 'info');
+  }
+
   function getIcon(cat) { return { matematika:'fa-calculator', fisika:'fa-atom', kimia:'fa-flask', biologi:'fa-dna', sejarah:'fa-landmark', bahasa:'fa-language', ips:'fa-globe' }[cat] || 'fa-book'; }
 
   function catLabel(cat) { return CAT_LABELS[cat] || capitalize(cat); }
 
   function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-  return { refresh, openThread, openDiscussionModal: openThreadFromCard, openNewThread, backToList, toggleVote, submitComment };
+  return { refresh, openThread, openDiscussionModal: openThreadFromCard, openNewThread, backToList, toggleVote, submitComment, shareThread, scrollToReply, followThread };
 })();

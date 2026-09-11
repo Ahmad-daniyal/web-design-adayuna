@@ -97,6 +97,7 @@
 
 /* ===== Comment / Discussion ===== */
 .comment-item {
+  position: relative;
   padding: 1.25rem;
   border-radius: var(--radius-md);
   background: var(--bg-body);
@@ -150,4 +151,581 @@
   border-color: var(--primary);
   color: var(--primary);
   background: var(--primary-light);
+}
+
+/* ===== Thread Detail View (setelah klik thread) ===== */
+.thread-view {
+  animation: pageFade 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* --- Hero banner (kartu rounded) --- */
+.thread-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 2rem 1.75rem 1.75rem;
+  border-radius: 20px;
+  color: #fff;
+  background: linear-gradient(135deg, #2563EB, #0EA5E9);
+  box-shadow: 0 18px 44px rgba(37, 99, 235, 0.28);
+}
+
+@media (min-width: 640px) {
+  .thread-hero { padding: 2.5rem 2rem 2rem; }
+}
+
+.dark .thread-hero {
+  box-shadow: 0 18px 44px rgba(56, 189, 248, 0.18);
+}
+
+.thread-hero.matematika { background: linear-gradient(135deg, #2563EB, #0EA5E9); }
+.thread-hero.fisika { background: linear-gradient(135deg, #0369A1, #22D3EE); }
+.thread-hero.kimia { background: linear-gradient(135deg, #C2410C, #FBBF24); }
+.thread-hero.biologi { background: linear-gradient(135deg, #047857, #34D399); }
+.thread-hero.sejarah { background: linear-gradient(135deg, #B91C1C, #F87171); }
+.thread-hero.bahasa { background: linear-gradient(135deg, #4F46E5, #818CF8); }
+.thread-hero.ips { background: linear-gradient(135deg, #0F766E, #2DD4BF); }
+
+.thread-hero::before,
+.thread-hero::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.thread-hero::before {
+  width: 260px;
+  height: 260px;
+  right: -60px;
+  top: -90px;
+  background: rgba(255, 255, 255, 0.14);
+  filter: blur(10px);
+}
+
+.thread-hero::after {
+  width: 180px;
+  height: 180px;
+  left: -50px;
+  bottom: -70px;
+  background: rgba(255, 255, 255, 0.10);
+  filter: blur(8px);
+}
+
+.thread-hero-icon {
+  position: absolute;
+  right: -14px;
+  bottom: -22px;
+  font-size: 9rem;
+  opacity: 0.16;
+  transform: rotate(-8deg);
+  pointer-events: none;
+}
+
+.thread-hero-back {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.thread-hero-back:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateX(-2px);
+}
+
+.thread-hero-top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.thread-hero-cat,
+.thread-hero-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
+}
+
+.thread-hero-title {
+  position: relative;
+  z-index: 1;
+  font-size: 1.75rem;
+  line-height: 1.25;
+  font-weight: 800;
+  margin: 1rem 0 0.5rem;
+  max-width: 52rem;
+  color: #fff;
+}
+
+@media (min-width: 640px) {
+  .thread-hero-title { font-size: 2rem; }
+}
+
+.thread-hero-sub {
+  position: relative;
+  z-index: 1;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.92);
+  max-width: 55rem;
+  margin-bottom: 1.25rem;
+}
+
+.thread-hero-meta {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.thread-hero-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.thread-hero-actions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.thread-hero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 50px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.thread-hero-btn:hover {
+  background: rgba(255, 255, 255, 0.26);
+  transform: translateY(-1px);
+}
+
+.thread-hero-btn.primary {
+  background: #fff;
+  color: var(--primary);
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.thread-hero-btn.primary:hover { background: #F1F5F9; }
+
+.thread-hero-btn.active {
+  background: rgba(255, 255, 255, 0.26);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+/* --- Grid 2 kolom --- */
+.thread-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .thread-grid {
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 1.5rem 2rem;
+  }
+}
+
+/* --- Post utama / materi --- */
+.thread-content-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.5rem;
+}
+
+.thread-avatar,
+.thread-avatar-sm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.thread-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 0.9375rem;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.16);
+}
+
+.thread-avatar-sm {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 0.8125rem;
+}
+
+.thread-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.55rem;
+  border-radius: 50px;
+  background: var(--primary-light);
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+.thread-body-text {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.thread-body-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding-top: 0.875rem;
+  border-top: 1px dashed var(--border-color);
+}
+
+/* --- Solusi Terverifikasi --- */
+.thread-solusi-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  white-space: nowrap;
+  padding: 0.25rem 0.6rem;
+  border-radius: 50px;
+  background: rgba(16, 185, 129, 0.12);
+  color: #10B981;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.comment-item.solusi {
+  border-color: rgba(16, 185, 129, 0.35);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.08);
+}
+
+.comment-item.solusi::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 4px 0 0 4px;
+  background: linear-gradient(180deg, #10B981, #34D399);
+}
+
+/* --- Sidebar (kanan) --- */
+.thread-side {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .thread-side {
+    position: sticky;
+    top: 96px;
+  }
+}
+
+.thread-side-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
+}
+
+.thread-side-title {
+  display: flex;
+  align-items: center;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.thread-side-title i {
+  color: var(--primary);
+  font-size: 0.875rem;
+  width: 20px;
+}
+
+.thread-summary-rows {
+  display: grid;
+  gap: 0.625rem;
+}
+
+.thread-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.8125rem;
+}
+
+.ts-label {
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+}
+
+.ts-label i {
+  color: var(--primary);
+  font-size: 0.75rem;
+  width: 14px;
+}
+
+.ts-value {
+  color: var(--text-primary);
+  font-weight: 700;
+  text-align: right;
+}
+
+.thread-progress {
+  height: 8px;
+  border-radius: 50px;
+  overflow: hidden;
+  background: var(--bg-section);
+  border: 1px solid var(--border-color);
+}
+
+.thread-progress span {
+  display: block;
+  height: 100%;
+  border-radius: 50px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.thread-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border-color);
+}
+
+.thread-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.6rem 0.25rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-section);
+}
+
+.thread-stat .ts-num {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.thread-stat .ts-label {
+  font-size: 0.6875rem;
+}
+
+/* --- List sidebar (kontributor) --- */
+.thread-side-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.thread-contributor {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  transition: all var(--transition);
+}
+
+.thread-contributor:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* --- Thread Terkait (full-width section) --- */
+.thread-related-card {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.1rem 1.25rem;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.thread-related-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+.dark .thread-related-card:hover {
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: var(--glow-soft);
+}
+
+.thread-related-title {
+  color: var(--text-primary);
+  font-weight: 800;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  margin: 0 0 0.3rem;
+}
+
+.thread-related-card:hover .thread-related-title { color: var(--primary); }
+
+.thread-related-sub {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* --- CTA sidebar --- */
+.thread-cta {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 1.5rem 1.25rem;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, #2563EB, #0EA5E9);
+  color: #fff;
+  box-shadow: 0 14px 36px rgba(37, 99, 235, 0.28);
+}
+
+.dark .thread-cta {
+  box-shadow: 0 14px 36px rgba(56, 189, 248, 0.18);
+}
+
+.thread-cta::before {
+  content: '';
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  right: -70px;
+  top: -90px;
+  pointer-events: none;
+  filter: blur(6px);
+}
+
+.thread-cta-icon {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 0.75rem;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+.thread-cta-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.875rem;
+  padding: 0.55rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  background: #fff;
+  color: var(--primary);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.thread-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Animasi masuk thread --- */
+.thread-anim {
+  animation: threadUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes threadUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thread-anim { animation: none; }
 }
