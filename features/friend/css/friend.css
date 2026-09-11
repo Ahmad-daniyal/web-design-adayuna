@@ -11,7 +11,12 @@
 .buddy-card:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-lg);
-  border-color: rgba(79, 70, 229, 0.25);
+  border-color: rgba(37, 99, 235, 0.25);
+}
+
+.dark .buddy-card:hover {
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: var(--glow-soft);
 }
 
 .buddy-avatar {

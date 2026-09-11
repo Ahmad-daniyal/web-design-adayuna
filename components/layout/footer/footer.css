@@ -13,7 +13,11 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent 5%, rgba(99, 102, 241, 0.4) 30%, rgba(245, 158, 11, 0.55) 50%, rgba(99, 102, 241, 0.4) 70%, transparent 95%);
+  background: linear-gradient(90deg, transparent 5%, rgba(37, 99, 235, 0.35) 30%, rgba(56, 189, 248, 0.5) 50%, rgba(37, 99, 235, 0.35) 70%, transparent 95%);
+}
+
+.dark .footer-edquest::before {
+  background: linear-gradient(90deg, transparent 5%, rgba(56, 189, 248, 0.30) 30%, rgba(96, 165, 250, 0.45) 50%, rgba(56, 189, 248, 0.30) 70%, transparent 95%);
 }
 
 body.focus-mode .footer-edquest {

@@ -93,8 +93,8 @@ export const Match = (() => {
 
   function renderDuelPanel() {
     const modes = [
-      { key: 'classic', icon: 'fa-fire', title: 'Classic', desc: 'Tanpa rating. Kumpulkan poin & badge dengan santai.', color: '#F59E0B' },
-      { key: 'ranked', icon: 'fa-trophy', title: 'Ranked', desc: 'Naikkan rank dari Bronze hingga Diamond.', color: '#4F46E5' }
+      { key: 'classic', icon: 'fa-fire', title: 'Classic', desc: 'Tanpa rating. Kumpulkan poin & badge dengan santai.', color: '#0EA5E9' },
+      { key: 'ranked', icon: 'fa-trophy', title: 'Ranked', desc: 'Naikkan rank dari Bronze hingga Diamond.', color: '#2563EB' }
     ].map(m =>
       '<button class="mode-card fx-card' + (state.mode === m.key ? ' active' : '') + '" onclick="Match.setMode(\'' + m.key + '\')">' +
       '<span class="mode-icon" style="background:' + m.color + ';"><i class="fas ' + m.icon + '"></i></span>' +
@@ -202,7 +202,7 @@ export const Match = (() => {
     const pool = dataStore.buddies || [];
     const candidates = pool.filter(b => !current || String(b.id) !== String(current.id));
     const b = candidates[Math.floor(Math.random() * candidates.length)] ||
-      { name: 'Bot AI', initials: 'AI', color: 'linear-gradient(135deg,#818CF8,#4F46E5)', id: 0 };
+      { name: 'Bot AI', initials: 'AI', color: 'linear-gradient(135deg,#38BDF8,#2563EB)', id: 0 };
     const rp = rankPointsOf(current);
     const tIdx = Math.max(0, tierIndex(tierOf(rp)));
     const acc = Math.min(0.93, Math.max(0.45, 0.5 + tIdx * 0.07 + (Math.random() * 0.06 - 0.03)));

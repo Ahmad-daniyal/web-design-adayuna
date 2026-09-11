@@ -173,24 +173,26 @@ export const Forum = (() => {
     if (!thread) { state.screen = 'list'; renderList(root); return; }
     root.innerHTML = `
       <section class="py-6 pb-16">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6">
-          <button class="btn-edquest btn-outline-glow text-sm !py-2 !px-4 mb-6" onclick="Forum.backToList()"><i class="fas fa-arrow-left mr-1"></i> Kembali ke Forum</button>
-          <div class="discussion-detail">
-            <div class="flex flex-wrap items-center gap-2 mb-3"><span class="category-tag ${thread.category} in-modal"><i class="fas ${getIcon(thread.category)}"></i> ${catLabel(thread.category)}</span><span class="text-xs" style="color:var(--text-muted);">${thread.time}</span></div>
-            <h2 class="text-2xl font-bold mb-3" style="color:var(--text-primary);">${thread.title}</h2>
-            <p class="text-sm leading-relaxed mb-4" style="color:var(--text-secondary);">${thread.subtitle}</p>
-            <div class="flex items-center gap-4 text-sm mb-6" style="color:var(--text-muted);"><span><i class="fas fa-user mr-1"></i>${thread.author}</span><span><i class="fas fa-comment mr-1"></i>${thread.replies} balasan</span><span><i class="fas fa-arrow-up mr-1"></i>${thread.votes} suara</span></div>
-            <hr style="border-color:var(--border-color);margin-bottom:1.5rem;">
-            <div class="comment-item mb-4"><div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background:var(--gradient-primary);">K</div><div><span class="font-semibold text-sm" style="color:var(--text-primary);">KakakKelas</span><span class="text-xs ml-2" style="color:var(--text-muted);">1 jam lalu</span></div><span class="text-xs px-2 py-0.5 rounded-full ml-auto" style="background:var(--primary-light);color:var(--primary);">Jawab</span></div>
-            <p class="text-sm leading-relaxed mb-2" style="color:var(--text-secondary);">Gunakan aturan produk ya! (uv)' = u'v + uv'. Kalau f(x) = sin(x)·cos(x), maka:</p>
-            <div class="text-sm p-3 rounded-lg mb-2" style="background:var(--bg-section);border:1px solid var(--border-color);font-family:monospace;color:var(--primary);">f'(x) = cos(x)·cos(x) + sin(x)·(-sin(x))<br>= cos²x − sin²x<br>= cos(2x)</div>
-            <div class="flex items-center gap-4"><button class="vote-btn" onclick="Forum.toggleVote(this)"><i class="fas fa-arrow-up"></i> <span>5</span></button><span class="text-xs" style="color:var(--text-muted);">7 suara</span></div></div>
-            <div class="comment-item mb-4"><div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background:linear-gradient(135deg,#f59e0b,#d97706);">A</div><div><span class="font-semibold text-sm" style="color:var(--text-primary);">Aisyah12</span><span class="text-xs ml-2" style="color:var(--text-muted);">45 menit lalu</span></div></div>
-            <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Ingat rumus dasar dulu ya: d(sin x)/dx = cos x, d(cos x)/dx = -sin x. Kalau ada perkalian pake aturan produk. Semangat!</p></div>
-            <div class="glass-card !p-5 mt-6"><h4 class="font-bold mb-3" style="color:var(--text-primary);">Tulis Balasan</h4>
-            <form onsubmit="Forum.submitComment(event)"><div class="mb-3"><textarea id="discussionCommentInput" rows="2" class="w-full p-3 rounded-lg text-sm border resize-none focus:outline-none focus:ring-2" style="background:var(--bg-body);border-color:var(--border-color);color:var(--text-primary);" placeholder="Tulis jawaban atau pertanyaanmu..."></textarea></div>
-            <div class="flex items-center justify-between"><div class="flex items-center gap-2"><input type="checkbox" id="anonCheck" class="accent-[var(--primary)]"><label for="anonCheck" class="text-xs" style="color:var(--text-muted);">Post sebagai anonim</label></div>
-            <button type="submit" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4">Kirim</button></div></form></div>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+          <div class="max-w-3xl">
+            <button class="btn-edquest btn-outline-glow text-sm !py-2 !px-4 mb-6" onclick="Forum.backToList()"><i class="fas fa-arrow-left mr-1"></i> Kembali ke Forum</button>
+            <div class="discussion-detail">
+              <div class="flex flex-wrap items-center gap-2 mb-3"><span class="category-tag ${thread.category} in-modal"><i class="fas ${getIcon(thread.category)}"></i> ${catLabel(thread.category)}</span><span class="text-xs" style="color:var(--text-muted);">${thread.time}</span></div>
+              <h2 class="text-2xl font-bold mb-3" style="color:var(--text-primary);">${thread.title}</h2>
+              <p class="text-sm leading-relaxed mb-4" style="color:var(--text-secondary);">${thread.subtitle}</p>
+              <div class="flex items-center gap-4 text-sm mb-6" style="color:var(--text-muted);"><span><i class="fas fa-user mr-1"></i>${thread.author}</span><span><i class="fas fa-comment mr-1"></i>${thread.replies} balasan</span><span><i class="fas fa-arrow-up mr-1"></i>${thread.votes} suara</span></div>
+              <hr style="border-color:var(--border-color);margin-bottom:1.5rem;">
+              <div class="comment-item mb-4"><div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background:var(--gradient-primary);">K</div><div><span class="font-semibold text-sm" style="color:var(--text-primary);">KakakKelas</span><span class="text-xs ml-2" style="color:var(--text-muted);">1 jam lalu</span></div><span class="text-xs px-2 py-0.5 rounded-full ml-auto" style="background:var(--primary-light);color:var(--primary);">Jawab</span></div>
+              <p class="text-sm leading-relaxed mb-2" style="color:var(--text-secondary);">Gunakan aturan produk ya! (uv)' = u'v + uv'. Kalau f(x) = sin(x)·cos(x), maka:</p>
+              <div class="text-sm p-3 rounded-lg mb-2" style="background:var(--bg-section);border:1px solid var(--border-color);font-family:monospace;color:var(--primary);">f'(x) = cos(x)·cos(x) + sin(x)·(-sin(x))<br>= cos²x − sin²x<br>= cos(2x)</div>
+              <div class="flex items-center gap-4"><button class="vote-btn" onclick="Forum.toggleVote(this)"><i class="fas fa-arrow-up"></i> <span>5</span></button><span class="text-xs" style="color:var(--text-muted);">7 suara</span></div></div>
+              <div class="comment-item mb-4"><div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background:linear-gradient(135deg,#38BDF8,#2563EB);">A</div><div><span class="font-semibold text-sm" style="color:var(--text-primary);">Aisyah12</span><span class="text-xs ml-2" style="color:var(--text-muted);">45 menit lalu</span></div></div>
+              <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Ingat rumus dasar dulu ya: d(sin x)/dx = cos x, d(cos x)/dx = -sin x. Kalau ada perkalian pake aturan produk. Semangat!</p></div>
+              <div class="glass-card !p-5 mt-6"><h4 class="font-bold mb-3" style="color:var(--text-primary);">Tulis Balasan</h4>
+              <form onsubmit="Forum.submitComment(event)"><div class="mb-3"><textarea id="discussionCommentInput" rows="2" class="w-full p-3 rounded-lg text-sm border resize-none focus:outline-none focus:ring-2" style="background:var(--bg-body);border-color:var(--border-color);color:var(--text-primary);" placeholder="Tulis jawaban atau pertanyaanmu..."></textarea></div>
+              <div class="flex items-center justify-between"><div class="flex items-center gap-2"><input type="checkbox" id="anonCheck" class="accent-[var(--primary)]"><label for="anonCheck" class="text-xs" style="color:var(--text-muted);">Post sebagai anonim</label></div>
+              <button type="submit" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4">Kirim</button></div></form></div>
+            </div>
           </div>
         </div>
       </section>

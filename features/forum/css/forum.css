@@ -15,6 +15,11 @@
   box-shadow: var(--shadow-md);
 }
 
+.dark .thread-card:hover {
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: var(--glow-soft);
+}
+
 /* ===== Filter Kategori (cat-btn) ===== */
 .cat-btn {
   display: inline-flex;
@@ -50,7 +55,11 @@
   color: var(--primary);
   background: var(--primary-light);
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.18);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.16);
+}
+
+.dark .cat-btn:hover {
+  box-shadow: 0 6px 16px rgba(56, 189, 248, 0.2);
 }
 
 .cat-btn:active {
@@ -66,7 +75,11 @@
   background: var(--gradient-primary);
   color: #fff;
   border-color: transparent;
-  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+}
+
+.dark .cat-btn.active {
+  box-shadow: var(--glow-primary);
 }
 
 .cat-btn.active::after {

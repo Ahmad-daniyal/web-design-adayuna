@@ -4,7 +4,7 @@
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgba(11, 14, 26, 0.55);
+  background: rgba(9, 13, 22, 0.55);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   align-items: center;
@@ -106,7 +106,11 @@
 .auth-tab.active {
   background: var(--gradient-primary);
   color: #fff;
-  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.32);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.28);
+}
+
+.dark .auth-tab.active {
+  box-shadow: 0 6px 16px rgba(56, 189, 248, 0.3);
 }
 
 /* ===== Password Toggle ===== */

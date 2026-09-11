@@ -49,7 +49,7 @@ export const Matching = (() => {
         mapel: u.mapel || 'umum',
         minat: u.minat || 'diskusi',
         kelas: u.kelas || '10',
-        color: 'linear-gradient(135deg,#818CF8,#4F46E5)',
+        color: 'linear-gradient(135deg,#38BDF8,#2563EB)',
         online: true
       }));
     return accounts.concat(dataStore.buddies);

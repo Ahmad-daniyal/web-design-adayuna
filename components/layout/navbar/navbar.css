@@ -19,7 +19,7 @@
 }
 
 .dark .top-navbar {
-  background: rgba(11, 14, 26, 0.72);
+  background: rgba(9, 13, 22, 0.72);
 }
 
 .top-navbar.scrolled {
@@ -28,7 +28,7 @@
 }
 
 .dark .top-navbar.scrolled {
-  background: rgba(11, 14, 26, 0.9);
+  background: rgba(9, 13, 22, 0.9);
 }
 
 /* ===== Dark Mode Toggle ===== */
@@ -149,10 +149,10 @@
 .brand-logo {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #6366F1, #8B5CF6, #4F46E5, #6366F1);
+  background: linear-gradient(135deg, #2563EB, #0284C7, #38BDF8, #2563EB);
   background-size: 300% 300%;
   animation: brandGradShift 6s ease-in-out infinite;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.45);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
   transition: transform var(--transition), box-shadow var(--transition);
 }
 
@@ -170,7 +170,7 @@
 
 .navbar-brand:hover .brand-logo {
   transform: scale(1.08) rotate(-6deg);
-  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.55);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
 }
 
 .navbar-brand:hover .brand-logo::after {
@@ -192,7 +192,7 @@
 }
 
 .navbar-brand:hover .brand-title {
-  filter: drop-shadow(0 0 6px rgba(99, 102, 241, 0.45));
+  filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.45));
 }
 
 @keyframes brandGradShift {
@@ -301,8 +301,8 @@
 }
 
 .notif-item[data-type="badge"] .notif-icon { background: rgba(245, 158, 11, 0.16); color: #F59E0B; }
-.notif-item[data-type="rank"] .notif-icon { background: rgba(99, 102, 241, 0.16); color: #6366F1; }
-.notif-item[data-type="match"] .notif-icon { background: rgba(79, 70, 229, 0.14); color: var(--primary); }
+.notif-item[data-type="rank"] .notif-icon { background: rgba(37, 99, 235, 0.14); color: #2563EB; }
+.notif-item[data-type="match"] .notif-icon { background: rgba(37, 99, 235, 0.14); color: var(--primary); }
 .notif-item[data-type="journal"] .notif-icon { background: rgba(16, 185, 129, 0.16); color: #10B981; }
 .notif-item[data-type="forum"] .notif-icon { background: rgba(59, 130, 246, 0.16); color: #3B82F6; }
 .notif-item[data-type="buddy"] .notif-icon { background: rgba(236, 72, 153, 0.15); color: #EC4899; }
@@ -318,7 +318,7 @@
   margin-top: -0.225rem;
   border-radius: 50%;
   background: var(--primary);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.18);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
 }
 
 .notif-empty {

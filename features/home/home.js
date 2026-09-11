@@ -45,57 +45,57 @@ export function renderHome() { return `
           <i class="fas fa-sparkles text-sm"></i>
           Komunitas Belajar #UntukKita
         </div>
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-white mb-6">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6" style="color:var(--text-primary);">
           Mulai Perjalanan<br>
           <span class="hero-accent">Belajarmu</span><br>
           Tanpa Rasa Malu
         </h1>
-        <p class="text-lg sm:text-xl text-white/80 mb-8 max-w-xl mx-auto md:mx-0 leading-relaxed">
+        <p class="text-lg sm:text-xl mb-8 max-w-xl mx-auto md:mx-0 leading-relaxed" style="color:var(--text-secondary);">
           Banyak siswa punya mimpi besar, tapi ragu untuk memulai. Di <strong>Edquest</strong>, kamu bisa belajar dan berdiskusi dengan teman sebaya — tanpa takut dihakimi. Semua orang di sini sama-sama belajar, jadi nggak ada yang merasa paling pintar.
         </p>
         <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-6">
-          <a href="#/forum" class="btn-edquest text-base" style="background:white; color:#4338CA; font-weight:700; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+          <a href="#/forum" class="btn-edquest text-base" style="background:var(--gradient-primary); color:#fff; font-weight:700; box-shadow:0 4px 14px rgba(37,99,235,0.35);">
             <i class="fas fa-comments"></i> Mulai Diskusi
           </a>
-          <a href="#/friend" class="btn-edquest text-base" style="background:rgba(255,255,255,0.12); color:white; border:1.5px solid rgba(255,255,255,0.25); backdrop-filter:blur(8px);">
+          <a href="#/friend" class="btn-edquest text-base" style="background:var(--primary-light); color:var(--primary); border:1.5px solid rgba(37,99,235,0.3);">
             <i class="fas fa-user-friends"></i> Cari Teman Belajar
           </a>
-          <a href="#/match" class="btn-edquest text-base" style="background:var(--accent); color:#fff; font-weight:700; box-shadow:0 4px 14px rgba(245,158,11,0.4);">
+          <a href="#/match" class="btn-edquest text-base" style="background:var(--accent); color:#fff; font-weight:700; box-shadow:0 4px 14px rgba(2,132,199,0.35);">
             <i class="fas fa-bolt"></i> Masuk Arena
           </a>
         </div>
         <div class="baca-dulu mx-auto md:mx-0">
           <i class="fas fa-eye"></i>
-          Ingin lihat-lihat dulu? <a href="#/forum" style="color:white; font-weight:600; text-decoration:underline; text-underline-offset:2px;">Jelajahi Forum</a>
+          Ingin lihat-lihat dulu? <a href="#/forum" style="font-weight:600; text-decoration:underline; text-underline-offset:2px;">Jelajahi Forum</a>
         </div>
       </div>
       <div class="hidden md:flex items-center justify-center">
         <div class="relative">
-          <div class="w-80 h-80 rounded-full" style="background:radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);"></div>
+          <div class="w-80 h-80 rounded-full" style="background:radial-gradient(circle, rgba(37,99,235,0.10) 0%, transparent 70%);"></div>
           <div class="absolute inset-0 flex items-center justify-center">
             <div class="grid grid-cols-2 gap-4 p-4">
-              <a href="#/forum" class="hero-tile hero-tile-enter" style="--tile-accent:#6366F1; animation:float 6s ease-in-out infinite;">
+              <a href="#/forum" class="hero-tile hero-tile-enter" style="--tile-accent:#2563EB; animation:float 6s ease-in-out infinite;">
                 <div class="glass-card hero-tile-card !p-5 text-center">
                   <div class="hero-tile-icon"><i class="fas fa-comments"></i></div>
                   <p class="hero-tile-label text-xs font-medium mt-2">Forum Diskusi</p>
                   <span class="hero-tile-cta"><i class="fas fa-arrow-right"></i> Buka</span>
                 </div>
               </a>
-              <a href="#/friend" class="hero-tile hero-tile-enter" style="--tile-accent:#F59E0B; animation:float 6s ease-in-out infinite; animation-delay:1s;">
+              <a href="#/friend" class="hero-tile hero-tile-enter" style="--tile-accent:#0EA5E9; animation:float 6s ease-in-out infinite; animation-delay:1s;">
                 <div class="glass-card hero-tile-card !p-5 text-center">
                   <div class="hero-tile-icon"><i class="fas fa-user-graduate"></i></div>
                   <p class="hero-tile-label text-xs font-medium mt-2">Study Buddy</p>
                   <span class="hero-tile-cta"><i class="fas fa-arrow-right"></i> Buka</span>
                 </div>
               </a>
-              <a href="#/profile" class="hero-tile hero-tile-enter" style="--tile-accent:#FBBF24; animation:float 6s ease-in-out infinite; animation-delay:2s;">
+              <a href="#/profile" class="hero-tile hero-tile-enter" style="--tile-accent:#38BDF8; animation:float 6s ease-in-out infinite; animation-delay:2s;">
                 <div class="glass-card hero-tile-card !p-5 text-center">
                   <div class="hero-tile-icon"><i class="fas fa-trophy"></i></div>
                   <p class="hero-tile-label text-xs font-medium mt-2">Badge & Poin</p>
                   <span class="hero-tile-cta"><i class="fas fa-arrow-right"></i> Buka</span>
                 </div>
               </a>
-              <a href="#/profile" class="hero-tile hero-tile-enter" style="--tile-accent:#10B981; animation:float 6s ease-in-out infinite; animation-delay:0.5s;">
+              <a href="#/profile" class="hero-tile hero-tile-enter" style="--tile-accent:#14B8A6; animation:float 6s ease-in-out infinite; animation-delay:0.5s;">
                 <div class="glass-card hero-tile-card !p-5 text-center">
                   <div class="hero-tile-icon"><i class="fas fa-book-open"></i></div>
                   <p class="hero-tile-label text-xs font-medium mt-2">Progress Journal</p>
@@ -163,11 +163,11 @@ export function renderHome() { return `
 <section class="py-16 lg:py-20 cta-section" style="background:var(--gradient-hero);">
   <div class="max-w-4xl mx-auto px-4 sm:px-6">
     <div class="cta-panel fx-card text-center">
-      <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Siap Memulai Perjalanan Belajar?</h2>
-      <p class="text-lg text-white/80 mb-8 max-w-lg mx-auto">Ribuan siswa lainnya sudah memulai. Giliranmu sekarang!</p>
+      <h2 class="text-3xl sm:text-4xl font-extrabold mb-4" style="color:var(--text-primary);">Siap Memulai Perjalanan Belajar?</h2>
+      <p class="text-lg mb-8 max-w-lg mx-auto" style="color:var(--text-secondary);">Ribuan siswa lainnya sudah memulai. Giliranmu sekarang!</p>
       <div class="flex flex-wrap justify-center gap-3">
-        <button data-action="register" class="btn-edquest text-base" style="background:white; color:#4338CA; font-weight:700;"><i class="fas fa-user-plus"></i> Daftar Gratis</button>
-        <a href="#/forum" class="btn-edquest text-base" style="background:rgba(255,255,255,0.12); color:white; border:1.5px solid rgba(255,255,255,0.25);"><i class="fas fa-eye"></i> Lihat Forum</a>
+        <button data-action="register" class="btn-edquest text-base" style="background:var(--gradient-primary); color:#fff; font-weight:700;"><i class="fas fa-user-plus"></i> Daftar Gratis</button>
+        <a href="#/forum" class="btn-edquest text-base" style="background:var(--primary-light); color:var(--primary); border:1.5px solid rgba(37,99,235,0.3);"><i class="fas fa-eye"></i> Lihat Forum</a>
       </div>
     </div>
   </div>
