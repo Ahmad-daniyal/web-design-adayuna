@@ -105,11 +105,6 @@ export const App = (() => {
   function initEscapeClose() {
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
-      const dm = document.getElementById('discussionModal');
-      if (dm && dm.classList.contains('active')) {
-        dm.classList.remove('active');
-        document.body.style.overflow = '';
-      }
       Settings.closeModal();
       Auth.closeModal();
     });
