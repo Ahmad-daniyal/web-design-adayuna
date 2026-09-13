@@ -10,5 +10,54 @@
     { "copy": "Ada yang mau belajar bareng topik [Topik]? Kita bisa saling bantu dan diskusi bareng biar lebih paham.", "text": "Ada yang mau belajar bareng topik <strong>[Topik]</strong>? Yuk kita bahas bareng!", "tags": ["semua"] },
     { "copy": "Menurutku, [Topik] itu sebenarnya menarik kalau kita paham konsep dasarnya. Gimana pendapat kalian?", "text": "Menurutku, <strong>[Topik]</strong> itu menarik kalau kita paham konsep dasarnya. Gimana pendapat kalian?", "tags": ["biologi", "kimia"] },
     { "copy": "Halo semua! Aku baru di Edquest. Ada rekomendasi thread atau topik yang seru untuk didiskusikan?", "text": "Halo semua! Aku baru di Edquest. Ada rekomendasi thread atau topik yang seru?", "tags": ["perkenalan"] }
-  ]
+  ],
+  "hero": {
+    "badge": "Komunitas Belajar #UntukKita",
+    "icon": "fa-sparkles",
+    "titleLines": ["Mulai Perjalanan", "Belajarmu", "Tanpa Rasa Malu"],
+    "highlightIndex": 1,
+    "description": "Banyak siswa punya mimpi besar, tapi ragu untuk memulai. Di <strong>Edquest</strong>, kamu bisa belajar dan berdiskusi dengan teman sebaya — tanpa takut dihakimi. Semua orang di sini sama-sama belajar, jadi nggak ada yang merasa paling pintar.",
+    "ctas": [
+      { "label": "Mulai Diskusi", "href": "#/forum", "icon": "fa-comments", "style": "primary" },
+      { "label": "Cari Teman Belajar", "href": "#/friend", "icon": "fa-user-friends", "style": "light" },
+      { "label": "Masuk Arena", "href": "#/match", "icon": "fa-bolt", "style": "accent" }
+    ],
+    "bacaDulu": {
+      "icon": "fa-eye",
+      "text": "Ingin lihat-lihat dulu?",
+      "linkText": "Jelajahi Forum",
+      "href": "#/forum"
+    },
+    "tiles": [
+      { "label": "Forum Diskusi", "href": "#/forum", "icon": "fa-comments", "accent": "#2563EB", "delay": "0s" },
+      { "label": "Study Buddy", "href": "#/friend", "icon": "fa-user-graduate", "accent": "#0EA5E9", "delay": "1s" },
+      { "label": "Badge & Poin", "href": "#/profile", "icon": "fa-trophy", "accent": "#38BDF8", "delay": "2s" },
+      { "label": "Progress Journal", "href": "#/profile", "icon": "fa-book-open", "accent": "#14B8A6", "delay": "0.5s" }
+    ]
+  },
+  "iceBreakerSection": {
+    "badge": "fa-sparkles",
+    "badgeText": "Ice Breaker",
+    "title": "Bingung Mau Mulai dari Mana?",
+    "subtitle": "Tenang, kamu nggak sendirian. Coba salin kalimat ini untuk memulai diskusi di forum!"
+  },
+  "featuresSection": {
+    "badge": "fa-star",
+    "badgeText": "Fitur Unggulan",
+    "title": "Belajar Lebih Seru Bareng Edquest",
+    "subtitle": "Semua fitur dirancang untuk membuatmu nyaman belajar",
+    "features": [
+      { "icon": "fa-comments", "title": "Forum Diskusi Anonim", "desc": "Bertanya dan berdiskusi tanpa rasa malu. Kamu bisa pakai nama panggilan atau tetap anonim." },
+      { "icon": "fa-user-friends", "title": "Study Buddy Matching", "desc": "Cari teman belajar yang sesuai dengan minat dan mapel yang sama." },
+      { "icon": "fa-chart-line", "title": "Progress Journal", "desc": "Catat perjalanan belajarmu, dapatkan badge dan poin sebagai apresiasi." }
+    ]
+  },
+  "ctaSection": {
+    "title": "Siap Memulai Perjalanan Belajar?",
+    "subtitle": "Ribuan siswa lainnya sudah memulai. Giliranmu sekarang!",
+    "buttons": [
+      { "label": "Daftar Gratis", "icon": "fa-user-plus", "action": "register", "style": "primary" },
+      { "label": "Lihat Forum", "icon": "fa-eye", "href": "#/forum", "style": "light" }
+    ]
+  }
 }

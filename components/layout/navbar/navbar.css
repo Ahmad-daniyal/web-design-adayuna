@@ -347,3 +347,43 @@
     animation: none;
   }
 }
+
+/* ===== Mobile Navbar ===== */
+@media (hover: none) and (pointer: coarse) {
+  .dark-mode-toggle::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: inherit;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-navbar {
+    padding: 0 0.75rem;
+  }
+
+  .top-navbar > div:last-child {
+    gap: 0.125rem;
+  }
+
+  #notifDropdown,
+  #helpDropdown,
+  #userDropdown {
+    max-width: calc(100vw - 1rem);
+  }
+}
+
+@media (max-width: 400px) {
+  #helpBtn {
+    display: none;
+  }
+
+  .guest-menu .btn-edquest {
+    padding: 0.4375rem 0.875rem;
+  }
+
+  .guest-menu .btn-ghost {
+    padding: 0.4375rem 0.625rem;
+  }
+}

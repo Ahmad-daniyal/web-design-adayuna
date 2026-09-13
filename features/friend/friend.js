@@ -1,6 +1,25 @@
 import { injectStyle } from '../../js/utils/styleLoader.js';
+import { CONFIG } from '../../js/core/config.js';
 
 injectStyle('features/friend/css/friend.css');
+
+function mapelOptions() {
+  return CONFIG.MAPELS.map(m =>
+    '<option value="' + m.key + '">' + m.label + '</option>'
+  ).join('\n                ');
+}
+
+function minatOptions() {
+  return CONFIG.MINAT.map(m =>
+    '<option value="' + m.key + '">' + m.label + '</option>'
+  ).join('\n                ');
+}
+
+function kelasOptions() {
+  return ['10', '11', '12'].map(k =>
+    '<option value="' + k + '">Kelas ' + k + '</option>'
+  ).join('\n                ');
+}
 
 export function renderFriend() { return `
 <section class="pt-16 md:pt-20 pb-4">
@@ -30,13 +49,7 @@ export function renderFriend() { return `
             <label class="form-label" for="matchMapel">Mapel Utama</label>
             <select id="matchMapel" class="form-input" style="cursor:pointer;">
               <option value="all">Semua Mapel</option>
-              <option value="matematika">Matematika</option>
-              <option value="fisika">Fisika</option>
-              <option value="kimia">Kimia</option>
-              <option value="biologi">Biologi</option>
-              <option value="sejarah">Sejarah</option>
-              <option value="bahasa">Bahasa Indonesia</option>
-              <option value="ips">IPS</option>
+              ${mapelOptions()}
               <option value="umum">Umum</option>
             </select>
           </div>
@@ -44,19 +57,14 @@ export function renderFriend() { return `
             <label class="form-label" for="matchMinat">Minat / Gaya Belajar</label>
             <select id="matchMinat" class="form-input" style="cursor:pointer;">
               <option value="all">Semua</option>
-              <option value="diskusi">Suka diskusi</option>
-              <option value="materi">Suka materi lengkap</option>
-              <option value="soal">Suka tryout & soal</option>
-              <option value="kreatif">Suka cara kreatif</option>
+              ${minatOptions()}
             </select>
           </div>
           <div>
             <label class="form-label" for="matchKelas">Kelas</label>
             <select id="matchKelas" class="form-input" style="cursor:pointer;">
               <option value="all">Semua</option>
-              <option value="10">Kelas 10</option>
-              <option value="11">Kelas 11</option>
-              <option value="12">Kelas 12</option>
+              ${kelasOptions()}
             </select>
           </div>
         </div>

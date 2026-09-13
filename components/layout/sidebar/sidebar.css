@@ -142,3 +142,9 @@ body.focus-mode .main-content {
     margin-left: 0;
   }
 }
+
+@media (hover: none) and (pointer: coarse) {
+  .sidebar-link {
+    min-height: 44px;
+  }
+}

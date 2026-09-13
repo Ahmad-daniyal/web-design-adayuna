@@ -6,7 +6,7 @@ import { Notifications } from './notifications.js';
 const M = CONFIG.MATCH;
 const TIERS = M.TIERS;
 const POINTS = M.POINTS;
-const MAPELS = ['matematika', 'fisika', 'kimia', 'biologi', 'sejarah', 'bahasa', 'ips'];
+const MAPELS = CONFIG.MAPELS.map(m => m.key);
 
 export const BADGES = [
   { id: 'langkah-pertama', name: 'Langkah Pertama', icon: 'fa-shoe-prints', desc: 'Mainkan tanding pertamamu' },

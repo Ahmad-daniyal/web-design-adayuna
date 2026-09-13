@@ -946,3 +946,54 @@
   min-width: 48px;
   text-align: right;
 }
+
+/* ===== Mobile Arena ===== */
+@media (max-width: 640px) {
+  .match-topbar {
+    gap: 0.5rem;
+  }
+
+  .timer-block {
+    width: auto;
+    min-width: 52px;
+    max-width: 72px;
+  }
+
+  .opp-avatar {
+    width: 34px;
+    height: 34px;
+    font-size: 0.8125rem;
+  }
+
+  .scoreboard {
+    gap: 1rem;
+  }
+
+  .score-num {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .opponent-chip .text-xs {
+    display: none;
+  }
+
+  .opponent-chip > div {
+    min-width: 0;
+  }
+
+  .opponent-chip .font-bold {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 72px;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .match-tab,
+  .mode-card {
+    min-height: 44px;
+  }
+}

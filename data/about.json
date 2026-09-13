@@ -1,0 +1,45 @@
+{
+  "hero": {
+    "badge": "fa-info-circle",
+    "badgeText": "Tentang Edquest",
+    "title": "Belajar Bareng,<br class=\"sm:hidden\">&nbsp;&nbsp;Tumbuh Bareng",
+    "subtitle": "Edquest lahir dari keprihatinan bahwa banyak siswa pintar tapi ragu bertanya. Kami hadir sebagai solusi."
+  },
+  "latarBelakang": {
+    "badge": "fa-question-circle",
+    "badgeText": "Latar Belakang",
+    "title": "Kenapa Edquest Dibuat?",
+    "paragraphs": [
+      "Setiap siswa punya potensi, tapi tidak semua punya keberanian untuk bertanya. Rasa malu, takut dinilai kurang memahami, atau khawatir dihakimi teman membuat banyak siswa memilih diam — padahal di dalam kepala mereka penuh rasa ingin tahu.",
+      "Di sisi lain, belajar sendiri terasa berat. Tanpa teman diskusi, materi sulit dipahami dan motivasi mudah menurun. Siswa butuh ruang yang aman untuk bertanya, berpendapat, dan belajar dari teman sebaya.",
+      "<strong>Edquest</strong> hadir sebagai solusi: sebuah komunitas belajar digital di mana siswa SMA/SMK bisa berdiskusi, mencari teman belajar, dan melacak progress mereka — tanpa rasa malu dan tanpa tekanan."
+    ],
+    "quote": {
+      "icon": "fa-lightbulb",
+      "text": "\u201CKeberanian untuk bertanya adalah awal dari semua pengetahuan.\u201D",
+      "by": "\u2014 Semua siswa berhak belajar tanpa rasa takut lagi"
+    }
+  },
+  "visi": {
+    "badge": "fa-bullseye",
+    "badgeText": "Visi & Misi",
+    "title": "Arah dan Tujuan Kami",
+    "visi": "Membangun generasi siswa yang percaya diri untuk belajar, bertanya, dan berbagi ilmu — tanpa batasan rasa malu.",
+    "misi": [
+      { "icon": "fa-shield-alt", "title": "Ruang Aman", "desc": "Menyediakan lingkungan diskusi yang nyaman dengan opsi anonim." },
+      { "icon": "fa-handshake", "title": "Koneksi", "desc": "Menghubungkan siswa dengan teman belajar yang sesuai minat." },
+      { "icon": "fa-chart-line", "title": "Progress", "desc": "Membantu siswa melacak perjalanan belajar mereka." }
+    ]
+  },
+  "steps": {
+    "badge": "fa-cogs",
+    "badgeText": "Cara Kerja",
+    "title": "mudah, Kok!",
+    "subtitle": "Cuma 3 langkah buat mulai belajar di Edquest",
+    "items": [
+      { "num": 1, "title": "Daftar Akun", "desc": "Buat akun dengan nama panggilan — nggak perlu pakai nama asli kalau malu." },
+      { "num": 2, "title": "Ikut Diskusi", "desc": "Bertanya, menjawab, atau sekadar membaca thread di forum sesuai minatmu." },
+      { "num": 3, "title": "Tumbuh Bareng", "desc": "Dapatkan poin, badge, dan teman belajar baru. Catat progress belajarmu!" }
+    ]
+  }
+}

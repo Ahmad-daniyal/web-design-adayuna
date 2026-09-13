@@ -1,7 +1,16 @@
 import { injectStyle } from '../../js/utils/styleLoader.js';
+import { CONFIG } from '../../js/core/config.js';
+import { Auth } from '../../js/services/auth.js';
 
 injectStyle('features/profile/css/profile.css');
 injectStyle('features/match/css/match.css');
+
+const JOURNAL_POINTS = CONFIG.LIMITS.JOURNAL_POINTS;
+
+function journalMapelOptions() {
+  return '<option value="umum">Umum</option>' +
+    CONFIG.MAPELS.map(m => '<option value="' + m.key + '">' + m.label + '</option>').join('');
+}
 
 export function renderProfile() { return `
 <section class="pt-16 md:pt-20 pb-10">
@@ -18,7 +27,7 @@ export function renderProfile() { return `
             <div class="w-px h-10" style="background:var(--border-color);"></div>
             <div class="text-center"><div id="profileBadgeCount" class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">0</div><div class="text-xs text-slate-400 dark:text-slate-500">Badge</div></div>
             <div class="w-px h-10" style="background:var(--border-color);"></div>
-            <div class="text-center"><div class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">12</div><div class="text-xs text-slate-400 dark:text-slate-500">Kontribusi</div></div>
+            <div class="text-center"><div id="profileContrib" class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">0</div><div class="text-xs text-slate-400 dark:text-slate-500">Kontribusi</div></div>
           </div>
         </div>
         <div class="card-panel p-6 mb-6">
@@ -63,14 +72,7 @@ export function renderProfile() { return `
             <div class="mb-3">
               <label for="journalMapel" class="form-label">Mapel (opsional)</label>
               <select id="journalMapel" class="form-input" style="cursor:pointer;">
-                <option value="umum">Umum</option>
-                <option value="matematika">Matematika</option>
-                <option value="fisika">Fisika</option>
-                <option value="kimia">Kimia</option>
-                <option value="biologi">Biologi</option>
-                <option value="sejarah">Sejarah</option>
-                <option value="bahasa">Bahasa Indonesia</option>
-                <option value="ips">IPS</option>
+                ${journalMapelOptions()}
               </select>
             </div>
             <div class="mb-3">
@@ -78,7 +80,7 @@ export function renderProfile() { return `
               <textarea id="journalText" rows="3" class="form-input resize-none" placeholder="Contoh: Hari ini aku belajar tentang turunan fungsi..." required></textarea>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-xs text-slate-400 dark:text-slate-500">Setiap catatan = +5 poin</span>
+              <span class="text-xs text-slate-400 dark:text-slate-500">Setiap catatan = +${JOURNAL_POINTS} poin</span>
               <div class="flex gap-2">
                 <button type="button" id="cancelJournalBtn" class="btn-ghost text-sm !py-1 !px-3">Batal</button>
                 <button type="submit" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4">Simpan</button>
@@ -86,32 +88,7 @@ export function renderProfile() { return `
             </div>
           </form>
         </div>
-        <div id="journalEntries" class="space-y-4">
-          <div class="progress-card">
-            <div class="flex items-center justify-between mb-2">
-              <span class="status-tag">Matematika</span>
-              <span class="text-xs text-slate-400 dark:text-slate-500">Hari ini</span>
-            </div>
-            <p class="text-sm leading-relaxed text-slate-500 dark:text-slate-400">Belajar tentang turunan fungsi trigonometri. Aku mulai ngerti konsep d/dx (sin x) = cos x.</p>
-            <div class="flex items-center gap-2 mt-2 text-xs text-slate-600 dark:text-slate-300"><i class="fas fa-circle-check"></i> +5 poin</div>
-          </div>
-          <div class="progress-card">
-            <div class="flex items-center justify-between mb-2">
-              <span class="status-tag">Fisika</span>
-              <span class="text-xs text-slate-400 dark:text-slate-500">Kemarin</span>
-            </div>
-            <p class="text-sm leading-relaxed text-slate-500 dark:text-slate-400">Mencoba soal Hukum Newton nomor 5. Aku masih kadung keliru antara gaya gesek dan gaya normal.</p>
-            <div class="flex items-center gap-2 mt-2 text-xs text-slate-600 dark:text-slate-300"><i class="fas fa-circle-check"></i> +5 poin</div>
-          </div>
-          <div class="progress-card">
-            <div class="flex items-center justify-between mb-2">
-              <span class="status-tag">Biologi</span>
-              <span class="text-xs text-slate-400 dark:text-slate-500">2 hari lalu</span>
-            </div>
-            <p class="text-sm leading-relaxed text-slate-500 dark:text-slate-400">Ikut bantu teman tentang sel mitosis. Aku jadi lebih paham juga sama materinya karena ngajarin.</p>
-            <div class="flex items-center gap-2 mt-2 text-xs text-slate-600 dark:text-slate-300"><i class="fas fa-circle-check"></i> +5 poin</div>
-          </div>
-        </div>
+        <div id="journalEntries" class="space-y-4"></div>
       </div>
     </div>
   </div>

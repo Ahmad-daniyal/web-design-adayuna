@@ -78,6 +78,7 @@ body {
   text-rendering: optimizeLegibility;
   letter-spacing: -0.011em;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  overflow-x: hidden;
 }
 
 body::before {
@@ -433,6 +434,23 @@ select.form-input:focus {
   .toast-progress { display: none; }
 }
 
+/* ===== Mobile Toast (tidak overflow di layar kecil) ===== */
+@media (max-width: 600px) {
+  .toast-container {
+    top: 3.5rem;
+    right: 0.75rem;
+    left: 0.75rem;
+    align-items: stretch;
+  }
+
+  .toast {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    padding: 0.75rem 0.875rem;
+  }
+}
+
 /* ===== Tags ===== */
 .category-tag {
   display: inline-flex;
@@ -700,6 +718,25 @@ html {
 .toast,
 [class*="dark:bg-slate-"] {
   transition: background-color var(--transition), border-color var(--transition), color var(--transition);
+}
+
+/* ===== Touch Targets Mobile (hanya perangkat sentuh / layar kecil) ===== */
+@media (hover: none) and (pointer: coarse) {
+  .btn-ghost,
+  .btn-edquest {
+    min-height: 44px;
+  }
+
+  .toast-close {
+    min-width: 36px;
+    min-height: 36px;
+  }
+}
+
+@media (max-width: 767px) {
+  .btn-ghost {
+    min-height: 44px;
+  }
 }
 
 /* ===== Reduced Motion ===== */

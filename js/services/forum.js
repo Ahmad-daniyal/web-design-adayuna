@@ -1,4 +1,5 @@
 import { dataStore } from '../data/index.js';
+import { CONFIG } from '../core/config.js';
 import { Auth } from './auth.js';
 import { Notifications } from './notifications.js';
 
@@ -12,7 +13,8 @@ export const Forum = (() => {
     threadId: 0
   };
 
-  const CAT_LABELS = { matematika:'Matematika', fisika:'Fisika', kimia:'Kimia', biologi:'Biologi', sejarah:'Sejarah', bahasa:'Bahasa Indonesia', ips:'IPS' };
+  const CAT_LABELS = CONFIG.MAPELS.reduce((o, m) => { o[m.key] = m.label; return o; }, {});
+  const CAT_ICONS = CONFIG.MAPELS.reduce((o, m) => { o[m.key] = m.icon; return o; }, {});
 
   window.addEventListener('pageChanged', (e) => {
     if (e.detail.pageName !== 'forum') {
@@ -60,13 +62,9 @@ export const Forum = (() => {
             <p class="text-sm font-semibold mb-3 text-slate-600 dark:text-slate-300"><i class="fas fa-filter mr-2"></i>Filter Kategori:</p>
             <div class="flex flex-wrap gap-2" id="categoryFilter">
               <button class="cat-btn${state.category === 'all' ? ' active' : ''}" data-category="all">Semua</button>
-              <button class="cat-btn${state.category === 'matematika' ? ' active' : ''}" data-category="matematika"><i class="fas fa-calculator mr-1"></i> Matematika</button>
-              <button class="cat-btn${state.category === 'fisika' ? ' active' : ''}" data-category="fisika"><i class="fas fa-atom mr-1"></i> Fisika</button>
-              <button class="cat-btn${state.category === 'kimia' ? ' active' : ''}" data-category="kimia"><i class="fas fa-flask mr-1"></i> Kimia</button>
-              <button class="cat-btn${state.category === 'biologi' ? ' active' : ''}" data-category="biologi"><i class="fas fa-dna mr-1"></i> Biologi</button>
-              <button class="cat-btn${state.category === 'sejarah' ? ' active' : ''}" data-category="sejarah"><i class="fas fa-landmark mr-1"></i> Sejarah</button>
-              <button class="cat-btn${state.category === 'bahasa' ? ' active' : ''}" data-category="bahasa"><i class="fas fa-language mr-1"></i> Bahasa</button>
-              <button class="cat-btn${state.category === 'ips' ? ' active' : ''}" data-category="ips"><i class="fas fa-globe mr-1"></i> IPS</button>
+              ${CONFIG.MAPELS.map(m =>
+                '<button class="cat-btn${state.category === \'' + m.key + '\' ? \' active\' : \'\'}" data-category="' + m.key + '"><i class="fas ' + m.icon + ' mr-1"></i> ' + m.label + '</button>'
+              ).join('\n              ')}
             </div>
           </div>
         </div>
@@ -250,34 +248,7 @@ export const Forum = (() => {
 
               <h3 class="text-lg font-bold mb-4 thread-anim" style="animation-delay:140ms;color:var(--text-primary);"><i class="fas fa-comments mr-2" style="color:var(--primary);"></i>Jawaban <span class="text-sm font-semibold" style="color:var(--text-muted);">(${thread.replies})</span></h3>
 
-              <div class="comment-item solusi thread-anim mb-4" style="animation-delay:180ms">
-                <div class="flex items-center gap-3 mb-2">
-                  <div class="thread-avatar" style="background:linear-gradient(135deg,#38BDF8,#2563EB);">K</div>
-                  <div>
-                    <span class="font-semibold text-sm" style="color:var(--text-primary);">KakakKelas</span>
-                    <span class="text-xs ml-2" style="color:var(--text-muted);">1 jam lalu</span>
-                  </div>
-                  <span class="thread-solusi-badge ml-auto"><i class="fas fa-circle-check"></i> Solusi Terverifikasi</span>
-                </div>
-                <p class="text-sm leading-relaxed mb-2" style="color:var(--text-secondary);">Gunakan aturan produk ya! (uv)' = u'v + uv'. Kalau f(x) = sin(x)·cos(x), maka:</p>
-                <div class="text-sm p-3 rounded-lg mb-2" style="background:var(--bg-section);border:1px solid var(--border-color);font-family:monospace;color:var(--primary);">f'(x) = cos(x)·cos(x) + sin(x)·(-sin(x))<br>= cos²x − sin²x<br>= cos(2x)</div>
-                <div class="flex items-center gap-4">
-                  <button class="vote-btn" onclick="Forum.toggleVote(this)"><i class="fas fa-arrow-up"></i> <span>5</span></button>
-                  <span class="text-xs" style="color:var(--text-muted);">7 suara</span>
-                </div>
-              </div>
-
-              <div class="comment-item thread-anim mb-4" style="animation-delay:220ms">
-                <div class="flex items-center gap-3 mb-2">
-                  <div class="thread-avatar" style="background:${avatarColor('Aisyah12')};">A</div>
-                  <div>
-                    <span class="font-semibold text-sm" style="color:var(--text-primary);">Aisyah12</span>
-                    <span class="text-xs ml-2" style="color:var(--text-muted);">45 menit lalu</span>
-                  </div>
-                  <span class="thread-chip ml-auto"><i class="fas fa-reply"></i> Menjawab</span>
-                </div>
-                <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Ingat rumus dasar dulu ya: d(sin x)/dx = cos x, d(cos x)/dx = -sin x. Kalau ada perkalian pake aturan produk. Semangat!</p>
-              </div>
+              ${commentItems(thread)}
 
               <div class="glass-card !p-5 mt-6 thread-anim" id="threadReplyBox" style="animation-delay:260ms">
                 <h4 class="font-bold mb-3" style="color:var(--text-primary);"><i class="fas fa-reply mr-2" style="color:var(--primary);"></i>Tulis Balasan</h4>
@@ -380,9 +351,92 @@ export const Forum = (() => {
     const input = document.getElementById('discussionCommentInput');
     if (!input || !input.value.trim()) { Auth.showToast('Komentar tidak boleh kosong', 'error'); return; }
     const thread = dataStore.forum[state.threadId] || dataStore.forum[0];
+    const anon = document.getElementById('anonCheck') && document.getElementById('anonCheck').checked;
+    const user = Auth.getUser();
+    const name = anon ? 'Anonim' : (user ? user.name : 'Tamu');
+    const comment = {
+      author: name,
+      avatar: anon ? '?' : (user ? (user.avatar || '?') : '?'),
+      color: avatarColor(name),
+      time: relativeNow(),
+      verified: false,
+      chip: 'Baru Saja',
+      chipIcon: 'fa-comment',
+      votes: null,
+      text: input.value.trim(),
+      yours: true
+    };
+    saveUserComment(state.threadId, comment);
     Auth.showToast('Komentar berhasil dikirim!', 'success');
     Notifications.push({ type: 'forum', title: 'Komentarmu terkirim', message: 'Balasanmu diposting di thread "' + (thread ? thread.title : 'Forum Diskusi') + '".', link: '#/forum' });
     input.value = '';
+    const root = document.getElementById('forumRoot');
+    if (root) renderThreadDetail(root);
+  }
+
+  function commentItems(thread) {
+    if (!thread) return '';
+    const base = (thread.comments && thread.comments.slice()) || [];
+    const stored = loadUserComments(state.threadId);
+    const all = base.map(c => ({ c: c, trusted: true })).concat(stored.map(c => ({ c: c, trusted: false })));
+    return all.map((x, i) => renderComment(x.c, i, x.trusted)).join('\n              ');
+  }
+
+  function renderComment(c, i, trusted) {
+    if (!c) return '';
+    const cls = 'comment-item' + (c.verified ? ' solusi' : '');
+    const delay = 180 + i * 40;
+    const color = c.color || avatarColor(c.author || 'Anonim');
+    const avatar = c.avatar || initialOf(c.author || '?');
+    const badge = c.verified
+      ? '<span class="thread-solusi-badge ml-auto"><i class="fas fa-circle-check"></i> Solusi Terverifikasi</span>'
+      : (c.chip ? '<span class="thread-chip ml-auto' + (c.yours ? '' : '') + '"><i class="fas ' + (c.chipIcon || 'fa-reply') + '"></i> ' + escText(c.chip) + '</span>' : '');
+    const votes = (c.votes === null || c.votes === undefined) ? null : Number(c.votes);
+    const voteHtml = votes !== null
+      ? '<div class="flex items-center gap-4">' +
+          '<button class="vote-btn" onclick="Forum.toggleVote(this)"><i class="fas fa-arrow-up"></i> <span>' + votes + '</span></button>' +
+          '<span class="text-xs" style="color:var(--text-muted);">' + (votes + 2) + ' suara</span>' +
+        '</div>'
+      : '';
+    return '<div class="' + cls + ' thread-anim mb-4" style="animation-delay:' + delay + 'ms">' +
+      '<div class="flex items-center gap-3 mb-2">' +
+        '<div class="thread-avatar" style="background:' + color + ';">' + escText(avatar) + '</div>' +
+        '<div class="min-w-0">' +
+          '<span class="font-semibold text-sm" style="color:var(--text-primary);">' + escText(c.author) + '</span>' +
+          '<span class="text-xs ml-2" style="color:var(--text-muted);">' + escText(c.time) + '</span>' +
+        '</div>' +
+        badge +
+      '</div>' +
+      '<p class="text-sm leading-relaxed mb-2" style="color:var(--text-secondary);">' + (trusted ? c.text : escText(c.text)) + '</p>' +
+      voteHtml +
+    '</div>';
+  }
+
+  function loadUserComments(threadId) {
+    try {
+      const raw = localStorage.getItem('edquest_forum_comments');
+      const map = raw ? JSON.parse(raw) : {};
+      return (map && map[threadId]) || [];
+    } catch { return []; }
+  }
+
+  function saveUserComment(threadId, comment) {
+    try {
+      const raw = localStorage.getItem('edquest_forum_comments');
+      const map = raw ? JSON.parse(raw) : {};
+      if (typeof map !== 'object' || map === null) return;
+      map[threadId] = map[threadId] || [];
+      map[threadId].push(comment);
+      localStorage.setItem('edquest_forum_comments', JSON.stringify(map));
+    } catch { /* abaikan */ }
+  }
+
+  function relativeNow() {
+    return 'Baru saja';
+  }
+
+  function escText(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
   function threadIndex(thread) { return dataStore.forum.indexOf(thread); }
@@ -450,7 +504,7 @@ export const Forum = (() => {
     Auth.showToast(active ? 'Kamu mengikuti thread ini' : 'Berhenti mengikuti thread', active ? 'success' : 'info');
   }
 
-  function getIcon(cat) { return { matematika:'fa-calculator', fisika:'fa-atom', kimia:'fa-flask', biologi:'fa-dna', sejarah:'fa-landmark', bahasa:'fa-language', ips:'fa-globe' }[cat] || 'fa-book'; }
+  function getIcon(cat) { return CAT_ICONS[cat] || 'fa-book'; }
 
   function catLabel(cat) { return CAT_LABELS[cat] || capitalize(cat); }
 

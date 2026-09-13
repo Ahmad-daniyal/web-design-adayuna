@@ -35,6 +35,10 @@ function forUser() {
   return readStore()[user.id] || [];
 }
 
+function unreadCount() {
+  return (forUser() || []).filter(n => !n.read).length;
+}
+
 function saveForUser(list) {
   const user = Auth.getUser();
   if (!user || !user.id) return;
@@ -137,10 +141,6 @@ export const Notifications = (() => {
 
   function getAll() {
     return forUser() || [];
-  }
-
-  function unreadCount() {
-    return (forUser() || []).filter(n => !n.read).length;
   }
 
   function markRead(id) {

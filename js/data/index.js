@@ -5,7 +5,9 @@ export const dataStore = {
   buddies: [],
   home: null,
   questions: [],
-  leaderboard: []
+  leaderboard: [],
+  about: null,
+  faq: null
 };
 
 let loaded = false;
@@ -23,7 +25,9 @@ export async function preloadData() {
     load(CONFIG.DATA_PATHS.BUDDIES, 'buddies'),
     load(CONFIG.DATA_PATHS.HOME, 'home'),
     load(CONFIG.DATA_PATHS.QUESTIONS, 'questions'),
-    load(CONFIG.DATA_PATHS.LEADERBOARD, 'leaderboard')
+    load(CONFIG.DATA_PATHS.LEADERBOARD, 'leaderboard'),
+    load(CONFIG.DATA_PATHS.ABOUT, 'about'),
+    load(CONFIG.DATA_PATHS.FAQ, 'faq')
   ]);
   loaded = true;
 }

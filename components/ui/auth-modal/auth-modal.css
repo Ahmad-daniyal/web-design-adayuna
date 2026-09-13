@@ -150,3 +150,20 @@
     border-radius: var(--radius-lg);
   }
 }
+
+/* ===== Mobile Auth Modal ===== */
+@media (hover: none) and (pointer: coarse) {
+  .modal-edquest .modal-close {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .auth-tab {
+    min-height: 44px;
+  }
+
+  .password-toggle {
+    min-width: 40px;
+    min-height: 40px;
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "hero": {
+    "badge": "fa-question-circle",
+    "badgeText": "FAQ & Kontak",
+    "title": "Punya Pertanyaan?",
+    "subtitle": "Jawaban atas pertanyaan yang paling sering diajukan. Atau kirim pesan langsung ke kami."
+  },
+  "sectionTitle": "Pertanyaan Umum",
+  "items": [
+    {
+      "icon": "fa-user-friends",
+      "q": "Apa itu Edquest?",
+      "a": "Edquest adalah platform belajar digital untuk siswa SMA/SMK. Di sini kamu bisa berdiskusi dengan teman sebaya, mencari teman belajar yang cocok, dan melacak progress belajarmu — semua tanpa rasa malu."
+    },
+    {
+      "icon": "fa-mask",
+      "q": "Boleh anonim nggak di forum?",
+      "a": "Boleh sekali! Di Edquest, kamu bisa post dengan nama panggilan atau bahkan tetap anonim. Yang penting kamu ikut berpartisipasi dan belajar bareng."
+    },
+    {
+      "icon": "fa-star",
+      "q": "Bagaimana sistem poin dan badge-nya?",
+      "a": "Poin diperoleh dari aktivitas seperti membuat thread, membalas, dan berkontribusi. Badge diberikan sebagai simbol pencapaian — bukan untuk perlombaan — melainkan untuk mendorongmu terus aktif belajar."
+    },
+    {
+      "icon": "fa-user-group",
+      "q": "Bagaimana cara kerja Study Buddy Matching?",
+      "a": "Tinggal pilih mapel dan minat belajarmu di halaman \u201CCari Teman\u201D. Sistem akan mencocokkanmu dengan siswa lain yang punya minat dan mapel yang sama."
+    },
+    {
+      "icon": "fa-book",
+      "q": "Apakah ada jurnal belajar?",
+      "a": "Ya! Setiap pengguna punya jurnal belajar pribadi di halaman Profil. Catat apa yang udah kamu pelajari setiap hari — setiap catatan memberi poin dan bisa jadi motivasi buat lihat progress-mu seiring waktu."
+    },
+    {
+      "icon": "fa-shield-alt",
+      "q": "Apakah data saya aman?",
+      "a": "Ini versi demo/mockup untuk lomba. Data disimpan sementara di localStorage browser dan tidak dikirim ke server manapun. Tidak ada data pribadi yang dibagikan ke pihak manapun."
+    }
+  ],
+  "contact": {
+    "sectionTitle": "Kirim Pesan",
+    "sendLabel": "Kirim Pesan"
+  }
+}
