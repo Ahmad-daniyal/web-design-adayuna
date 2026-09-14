@@ -10,15 +10,12 @@ export function renderNavbar() { return `
     <button id="sidebarToggle" class="btn-ghost !p-2 rounded-lg text-lg md:hidden" aria-label="Toggle sidebar">
       <i class="fas fa-bars"></i>
     </button>
-    <a href="#/about" class="navbar-brand flex items-center gap-2 no-underline" aria-label="Edquest — Tentang Edquest" title="Tentang Edquest">
+    <a href="#/home" class="navbar-brand flex items-center gap-2 no-underline" aria-label="Edquest — Tentang Edquest" title="Tentang Edquest">
       <span class="brand-logo flex items-center justify-center w-9 h-9 rounded-xl text-lg text-white">E</span>
       <span class="brand-title hidden sm:inline">Edquest</span>
     </a>
   </div>
   <div class="flex items-center gap-1">
-    <button id="focusModeToggle" class="btn-ghost !p-2 rounded-lg text-base" aria-label="Mode Fokus" title="Mode Fokus">
-      <i class="fas fa-expand"></i>
-    </button>
     <button id="searchBtn" class="btn-ghost !p-2 rounded-lg text-base" aria-label="Cari">
       <i class="fas fa-search" style="color:var(--text-secondary);"></i>
     </button>
@@ -31,9 +28,9 @@ export function renderNavbar() { return `
         <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-800">
           <p class="text-sm font-bold" style="color:var(--text-primary);"><i class="fas fa-bell mr-2" style="color:var(--primary);"></i>Notifikasi</p>
           <div class="flex items-center gap-2">
-            <button id="notifMarkAll" class="text-xs font-semibold hover:opacity-80 transition-opacity" style="color:var(--primary); background:transparent; border:none; cursor:pointer;"><i class="fas fa-check-double mr-1"></i>Tandai dibaca</button>
+            <button id="notifMarkAll" class="text-xs font-semibold hover:opacity-80 transition-opacity cursor-pointer" style="color:var(--primary); background:transparent; border:none; cursor:pointer;" onclick="event.stopPropagation(); Notifications.markAllRead();"><i class="fas fa-check-double mr-1"></i>Tandai dibaca</button>
             <span style="color:var(--border-color);">|</span>
-            <button id="notifClearAll" class="text-xs font-semibold hover:opacity-80 transition-opacity" style="color:var(--text-muted); background:transparent; border:none; cursor:pointer;"><i class="fas fa-trash mr-1"></i>Bersihkan</button>
+            <button id="notifClearAll" class="text-xs font-semibold hover:opacity-80 transition-opacity cursor-pointer" style="color:var(--text-muted); background:transparent; border:none; cursor:pointer;" onclick="event.stopPropagation(); Notifications.clearAll();"><i class="fas fa-trash mr-1"></i>Bersihkan</button>
           </div>
         </div>
         <div id="notifList" class="notif-list max-h-96 overflow-y-auto"></div>

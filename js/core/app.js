@@ -7,12 +7,15 @@ import { Profile } from '../services/profile.js';
 import { Settings } from '../services/settings.js';
 import { dataStore } from '../data/index.js';
 
+const MAPEL_LABELS = CONFIG.MAPELS.reduce((o, m) => { o[m.key] = m.label; return o; }, {});
+
 export const App = (() => {
+  let activeAcDropdown = null;
+
   function init() {
     initDarkMode();
     initNavbarScroll();
     initReadingProgress();
-    initFocusMode();
     initHelpDropdown();
     initSidebarToggle();
     initSearch();
@@ -46,26 +49,18 @@ export const App = (() => {
     let current = null;
     let rafId = 0;
     const reset = () => {
-      if (current) {
-        current.style.transform = '';
-        current = null;
-      }
+      if (current) { current.style.transform = ''; current = null; }
     };
     document.addEventListener('pointermove', (e) => {
       const card = e.target.closest ? e.target.closest('.fx-card') : null;
-      if (card !== current) {
-        reset();
-        current = card;
-      }
+      if (card !== current) { reset(); current = card; }
       if (!card) return;
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
         const r = card.getBoundingClientRect();
         if (!r.width) return;
-        const px = e.clientX - r.left;
-        const py = e.clientY - r.top;
-        card.style.setProperty('--fx-x', (px / r.width) * 100 + '%');
-        card.style.setProperty('--fx-y', (py / r.height) * 100 + '%');
+        card.style.setProperty('--fx-x', (px) => (e.clientX - r.left) / r.width * 100 + '%');
+        card.style.setProperty('--fx-y', (py) => (e.clientY - r.top) / r.height * 100 + '%');
         card.style.transform = 'translateY(-6px) scale(1.02)';
       });
     }, { passive: true });
@@ -88,17 +83,11 @@ export const App = (() => {
       const BASE = 'translateY(-10px) scale(1.06) ';
       tile.addEventListener('pointermove', (e) => {
         const r = card.getBoundingClientRect();
-        const px = e.clientX - r.left;
-        const py = e.clientY - r.top;
-        const rx = ((py / r.height) - 0.5) * -14;
-        const ry = ((px / r.width) - 0.5) * 14;
-        card.style.setProperty('--mx', (px / r.width) * 100 + '%');
-        card.style.setProperty('--my', (py / r.height) * 100 + '%');
-        card.style.transform = `${BASE}perspective(700px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+        card.style.setProperty('--mx', (e.clientX - r.left) / r.width * 100 + '%');
+        card.style.setProperty('--my', (e.clientY - r.top) / r.height * 100 + '%');
+        card.style.transform = `${BASE}perspective(700px) rotateX(${(e.clientY - r.top) / r.height * -14}deg) rotateY(${(e.clientX - r.left) / r.width * 14}deg)`;
       });
-      tile.addEventListener('pointerleave', () => {
-        card.style.transform = '';
-      });
+      tile.addEventListener('pointerleave', () => { card.style.transform = ''; });
     });
   }
 
@@ -107,6 +96,7 @@ export const App = (() => {
       if (e.key !== 'Escape') return;
       Settings.closeModal();
       Auth.closeModal();
+      closeAllAutocomplete();
     });
   }
 
@@ -115,10 +105,7 @@ export const App = (() => {
       document.documentElement.classList.toggle('dark', isDark);
       localStorage.setItem(CONFIG.STORAGE_KEYS.DARK, isDark);
       const toggle = document.getElementById('darkModeToggle');
-      if (toggle) {
-        toggle.classList.toggle('is-dark', isDark);
-        toggle.setAttribute('aria-checked', isDark);
-      }
+      if (toggle) { toggle.classList.toggle('is-dark', isDark); toggle.setAttribute('aria-checked', isDark); }
     };
     const toggle = document.getElementById('darkModeToggle');
     const saved = localStorage.getItem(CONFIG.STORAGE_KEYS.DARK);
@@ -140,8 +127,7 @@ export const App = (() => {
     if (!bar) return;
     const update = () => {
       const doc = document.documentElement;
-      const total = doc.scrollHeight - doc.clientHeight;
-      const pct = total > 0 ? (doc.scrollTop / total) * 100 : 0;
+      const pct = doc.scrollHeight - doc.clientHeight > 0 ? (doc.scrollTop / (doc.scrollHeight - doc.clientHeight)) * 100 : 0;
       bar.style.width = pct + '%';
     };
     window.addEventListener('scroll', update, { passive: true });
@@ -149,36 +135,12 @@ export const App = (() => {
     update();
   }
 
-  function initFocusMode() {
-    const btn = document.getElementById('focusModeToggle');
-    if (!btn) return;
-    const apply = (active) => {
-      document.body.classList.toggle('focus-mode', active);
-      document.documentElement.classList.remove('focus-mode-ready');
-      const icon = btn.querySelector('i');
-      if (icon) icon.className = active ? 'fas fa-compress' : 'fas fa-expand';
-      btn.title = active ? 'Keluar Mode Fokus' : 'Mode Fokus';
-    };
-    apply(localStorage.getItem(CONFIG.STORAGE_KEYS.FOCUS) === 'true');
-    btn.addEventListener('click', () => {
-      const active = !document.body.classList.contains('focus-mode');
-      localStorage.setItem(CONFIG.STORAGE_KEYS.FOCUS, active);
-      apply(active);
-      Auth.showToast(active ? 'Mode Fokus aktif, sidebar disembunyikan' : 'Mode Fokus nonaktif', 'info');
-    });
-  }
-
   function initHelpDropdown() {
     const btn = document.getElementById('helpBtn');
     const dd = document.getElementById('helpDropdown');
     if (!btn || !dd) return;
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      dd.classList.toggle('hidden');
-    });
-    document.addEventListener('click', (e) => {
-      if (!dd.contains(e.target) && e.target !== btn) dd.classList.add('hidden');
-    });
+    btn.addEventListener('click', (e) => { e.stopPropagation(); dd.classList.toggle('hidden'); });
+    document.addEventListener('click', (e) => { if (!dd.contains(e.target) && e.target !== btn) dd.classList.add('hidden'); });
     document.addEventListener('pageChanged', () => dd.classList.add('hidden'));
   }
 
@@ -192,12 +154,16 @@ export const App = (() => {
       if (overlay) overlay.classList.toggle('hidden');
     });
     if (overlay) {
-      overlay.addEventListener('click', () => {
-        sidebar.classList.remove('open');
-        overlay.classList.add('hidden');
-      });
+      overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.add('hidden'); });
     }
   }
+
+  function closeAllAutocomplete() {
+    document.querySelectorAll('.search-ac-dropdown, .sac-autocomplete').forEach(dd => dd.classList.remove('open'));
+    document.querySelectorAll('.sac-item.focused').forEach(el => el.classList.remove('focused'));
+    activeAcDropdown = null;
+  }
+
 
   function initSearch() {
     const btn = document.getElementById('searchBtn');
@@ -206,34 +172,56 @@ export const App = (() => {
     const input = document.getElementById('searchInput');
     const results = document.getElementById('searchResults');
     if (!btn || !overlay) return;
-    const openSearch = () => {
-      overlay.classList.add('open');
-      setTimeout(() => { if (input) input.focus(); }, 150);
-    };
+    const openSearch = () => { overlay.classList.add('open'); setTimeout(() => { if (input) input.focus(); }, 150); };
     const closeSearch = () => {
       overlay.classList.remove('open');
-      if (input) input.blur();
-      if (input) input.value = '';
+      if (input) { input.blur(); input.value = ''; }
       if (results) results.innerHTML = '<p class="text-sm" style="color:var(--text-muted);">Ketik untuk mencari...</p>';
+      const ac = document.getElementById('searchAutocomplete');
+      if (ac) ac.classList.remove('open');
+      activeAcDropdown = null;
     };
     btn.addEventListener('click', openSearch);
     if (close) close.addEventListener('click', closeSearch);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closeSearch(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSearch(); });
+
     if (input && results) {
+      const filtered = dataStore.forum;
+      const getFiltered = (q) => filtered.filter(t =>
+        t.title.toLowerCase().includes(q) ||
+        t.subtitle.toLowerCase().includes(q) ||
+        (t.category && MAPEL_LABELS[t.category] && MAPEL_LABELS[t.category].toLowerCase().includes(q)) ||
+        (t.category && t.category.toLowerCase().includes(q))
+      );
+
       input.addEventListener('input', () => {
         const q = input.value.toLowerCase().trim();
         if (!q) { results.innerHTML = '<p class="text-sm" style="color:var(--text-muted);">Ketik untuk mencari...</p>'; return; }
-        const filtered = dataStore.forum.filter(t => t.title.toLowerCase().includes(q) || t.subtitle.toLowerCase().includes(q));
-        if (filtered.length === 0) {
+        const matched = getFiltered(q);
+        if (matched.length === 0) {
           results.innerHTML = '<p class="text-sm" style="color:var(--text-muted);">Tidak ditemukan</p>';
-        } else {
-          results.innerHTML = filtered.slice(0, 6).map(t => `
-            <div class="p-3 rounded-lg cursor-pointer" style="background:var(--bg-body);border:1px solid var(--border-color);" onclick="Router.navigate('forum'); setTimeout(function(){ Forum.openThread(${dataStore.forum.indexOf(t)}); document.getElementById('searchOverlay').classList.remove('open') }, 120)">
-              <p class="text-sm font-medium" style="color:var(--text-primary);">${t.title}</p>
-              <p class="text-xs" style="color:var(--text-muted);">${t.subtitle}</p>
+          const ac = document.getElementById('searchAutocomplete');
+          if (ac) ac.classList.remove('open');
+          return;
+        }
+        results.innerHTML = matched.slice(0, 6).map(t => `
+          <div class="p-3 rounded-lg cursor-pointer" style="background:var(--bg-body);border:1px solid var(--border-color);" onclick="Router.navigate('forum'); setTimeout(function(){ const idx=dataStore.forum.findIndex(x=>x.title==='${t.title}'); if(idx>=0)Forum.openThread(idx); document.getElementById('searchOverlay').classList.remove('open') }, 150)">
+            <p class="text-sm font-medium" style="color:var(--text-primary);">${t.title}</p>
+            <p class="text-xs" style="color:var(--text-muted);"><i class="fas ${CONFIG.MAPELS.find(m=>m.key===t.category)?.icon||'fa-book'} mr-1"></i>${MAPEL_LABELS[t.category]||t.category}</p>
+          </div>
+        `).join('');
+        const ac = document.getElementById('searchAutocomplete');
+        if (ac) {
+          ac.innerHTML = matched.slice(0, 6).map(t => `
+            <div class="sac-item" data-page="forum" data-id="">
+              <i class="fas fa-search sac-icon"></i>
+              <span class="sac-title">${t.title}</span>
+              <span class="sac-source">Forum</span>
             </div>
           `).join('');
+          ac.classList.add('open');
+          activeAcDropdown = { input, container: ac };
         }
       });
     }
@@ -243,18 +231,10 @@ export const App = (() => {
     const btn = document.getElementById('userMenuBtn');
     const dropdown = document.getElementById('userDropdown');
     if (btn && dropdown) {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        dropdown.classList.toggle('hidden');
-      });
-      document.addEventListener('click', (e) => {
-        if (!dropdown.contains(e.target) && e.target !== btn) dropdown.classList.add('hidden');
-      });
+      btn.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('hidden'); });
+      document.addEventListener('click', (e) => { if (!dropdown.contains(e.target) && e.target !== btn) dropdown.classList.add('hidden'); });
     }
-    document.addEventListener('pageChanged', () => {
-      const dd = document.getElementById('userDropdown');
-      if (dd) dd.classList.add('hidden');
-    });
+    document.addEventListener('pageChanged', () => { const dd = document.getElementById('userDropdown'); if (dd) dd.classList.add('hidden'); });
   }
 
   function initIceBreakerCopy() {
@@ -262,11 +242,7 @@ export const App = (() => {
       const card = e.target.closest('[data-copy]');
       if (!card) return;
       const text = card.dataset.copy;
-      navigator.clipboard.writeText(text).then(() => {
-        Auth.showToast('Teks disalin! Tinggal tempel di forum', 'success');
-      }).catch(() => {
-        Auth.showToast('Gagal menyalin teks', 'error');
-      });
+      navigator.clipboard.writeText(text).then(() => { Auth.showToast('Teks disalin! Tinggal tempel di forum', 'success'); }).catch(() => { Auth.showToast('Gagal menyalin teks', 'error'); });
     });
   }
 

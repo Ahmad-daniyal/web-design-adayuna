@@ -105,18 +105,98 @@
   transition: margin-left var(--transition);
 }
 
-/* ===== Focus Mode ===== */
-html.focus-mode-ready .sidebar,
-body.focus-mode .sidebar {
-  transform: translateX(-100%);
+/* ===== Search Autocomplete ===== */
+.search-autocomplete {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 6px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12), var(--shadow-md);
+  max-height: 320px;
+  overflow-y: auto;
+  z-index: 100;
   opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px) scale(0.98);
+  transition: opacity 0.2s cubic-bezier(0.22, 1, 0.36, 1), transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.2s;
 }
 
-html.focus-mode-ready .main-content,
-body.focus-mode .main-content {
-  margin-left: 0;
+.search-autocomplete.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
 }
 
+.search-autocomplete-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.search-autocomplete-item:last-child {
+  border-bottom: none;
+}
+
+.search-autocomplete-item:hover,
+.search-autocomplete-item.focused {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.search-autocomplete-item .ac-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-autocomplete-item:hover .ac-title,
+.search-autocomplete-item.focused .ac-title {
+  color: var(--primary);
+}
+
+.search-autocomplete-item .ac-source {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 50px;
+  background: var(--bg-section);
+}
+
+.search-autocomplete-item:hover .ac-source,
+.search-autocomplete-item.focused .ac-source {
+  background: rgba(37, 99, 235, 0.14);
+  color: var(--primary);
+}
+
+.search-autocomplete-item .ac-icon {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.search-empty {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* ===== Mobile Sidebar ===== */
 @media (max-width: 767px) {
   .sidebar {
     transform: translateX(-100%);

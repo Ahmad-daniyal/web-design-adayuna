@@ -3,7 +3,6 @@ export const CONFIG = {
     USER: 'edquest_user',
     REGISTERED_USERS: 'edquest_registered',
     DARK: 'edquest_dark',
-    FOCUS: 'edquest_focus',
     LEADERBOARD: 'edquest_leaderboard',
     NOTIFICATIONS: 'edquest_notifications'
   },

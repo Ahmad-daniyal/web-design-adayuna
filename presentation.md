@@ -83,6 +83,11 @@
 - **Profile** — data pengguna, jurnal, badge, statistik duel
 - **Settings (modal)** — pengaturan pengguna
 
+### Navigasi Utama
+- 6 menu sidebar: **Home, Forum, Friend, Arena, About, FAQ** + Settings
+- **Logo Edquest** → navigasi ke **Home/Beranda** (bukan About)
+- **Footer** → logo juga langsung ke Home/Beranda
+
 ### Cakupan Konten
 
 - **7 kategori mapel**: Matematika, Fisika, Kimia, Biologi, Sejarah, Bahasa Indonesia, IPS
@@ -200,10 +205,20 @@ Boot → Theme → Preload Data → Router → Render Halaman → Event → Upda
 - Badge tampil di profil (ikon terkunci untuk yang belum diraih)
 - **Rank points** = rating + badge×15 + poin÷10
 
+### Pencarian Cerdas (Search Autocomplete)
+- **3 search bar** — Navbar (global), Beranda (semua konten), Forum (thread & mapel)
+- **Autocomplete per karakter** — hasil muncul langsung saat mengetik, tanpa perlu menekan Enter
+- **Highlight hover & tab navigation** — setiap item menyorot saat diarahkan kursor/atau ditab
+- **Ikon & sumber halaman** — setiap hasil menampilkan ikon mapel + badge sumber halaman (Forum, dll)
+- **Redirect otomatis** — jika hasil tidak sesuai halaman yang sedang dibuka, otomatis navigasi ke halaman yang benar
+- **Filter kategori** — pencarian forum juga mencari berdasarkan nama kategori mapel (Matematika, Fisika, dll)
+- **Animasi halus** — dropdown muncul dengan transisi smooth (fade + scale)
+
 ### Notifikasi
 - **7 tipe**: badge, rank, match, journal, forum, buddy, system
 - Dropdown notifikasi + **badge counter unread** di navbar
-- "Tandai dibaca", "Bersihkan semua", klik untuk navigasi
+- "Tandai dibaca" & **"Bersihkan"** — tombol klik langsung (interaksi terjamin)
+- Klik navigasi otomatis ke halaman terkait
 
 ### Autentikasi
 - **Register** — nama, email, sekolah, mapel, minat, kelas, password (validasi lengkap, password ≥ 8 karakter)
@@ -216,7 +231,8 @@ Boot → Theme → Preload Data → Router → Render Halaman → Event → Upda
 
 ### UI/UX & Pengalaman
 - **Mode Gelap / Terang** — otomatis mengikuti preferensi sistem
-- **Mode Fokus** — menyembunyikan sidebar untuk fokus membaca
+- **Mode Gelap / Terang** — otomatis mengikuti preferensi sistem
+- **Pencarian global** (Search Overlay) — cari forum/topik dengan autocomplete
 - **Pencarian global (Search Overlay)** — cari thread/topik, klik hasil → langsung buka thread
 - **Reading progress bar** di atas navbar
 - **Responsive** — desktop (navbar + sidebar) & mobile (top bar + bottom navigation)
@@ -241,6 +257,8 @@ Boot → Theme → Preload Data → Router → Render Halaman → Event → Upda
 | 6 | **Event ganda pada halaman FAQ** (double-bind) | Aman karena modul di-import **sekali**; dicatat untuk di-refactor bila dibutuhkan |
 | 7 | **Data statis di JSON** belum bisa dipakai produksi | Arsitektur **siap migrasi JSON → API** — cukup ubah `CONFIG.DATA_PATHS` & `preloadData` |
 | 8 | **CSS dinamis `<link>` belum di-minify** | Dianjurkan **digabung & minify** saat build produksi |
+| 9 | **Tombol Bersihkan notifikasi tidak bisa diklik** | Handler klik inline (onclick) langsung pada tombol + pointer-events auto di CSS dropdown |
+| 10 | **Pencarian hanya berdasarkan judul/subtitle** | Perluas filter ke **nama kategori mapel** dan tambahkan autocomplete per karakter |
 | 9 | **Cocokkan lawan seimbang di Arena** | Bot lawan dibuat adaptif mengikuti **tier & rating pengguna** (akurasi 45–93%) |
 | 10 | **Validasi input pengguna** (form, modal, komentar) | Validasi sisi klien + **escaping HTML** untuk mencegah input berbahaya |
 
