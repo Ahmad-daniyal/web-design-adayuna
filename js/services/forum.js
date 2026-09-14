@@ -15,6 +15,8 @@ export const Forum = (() => {
 
   const CAT_LABELS = CONFIG.MAPELS.reduce((o, m) => { o[m.key] = m.label; return o; }, {});
   const CAT_ICONS = CONFIG.MAPELS.reduce((o, m) => { o[m.key] = m.icon; return o; }, {});
+  const STORAGE_THREADS_KEY = 'edquest_forum_threads';
+  let userThreadsLoaded = false;
 
   window.addEventListener('pageChanged', (e) => {
     if (e.detail.pageName !== 'forum') {
@@ -42,6 +44,7 @@ export const Forum = (() => {
 
   function refresh() {
     bindGlobal();
+    loadUserThreads();
     render();
   }
 
@@ -63,7 +66,7 @@ export const Forum = (() => {
             <div class="flex flex-wrap gap-2" id="categoryFilter">
               <button class="cat-btn${state.category === 'all' ? ' active' : ''}" data-category="all">Semua</button>
               ${CONFIG.MAPELS.map(m =>
-                '<button class="cat-btn${state.category === \'' + m.key + '\' ? \' active\' : \'\'}" data-category="' + m.key + '"><i class="fas ' + m.icon + ' mr-1"></i> ' + m.label + '</button>'
+                '<button class="cat-btn' + (state.category === m.key ? ' active' : '') + '" data-category="' + m.key + '"><i class="fas ' + m.icon + ' mr-1"></i> ' + m.label + '</button>'
               ).join('\n              ')}
             </div>
           </div>
@@ -336,7 +339,109 @@ export const Forum = (() => {
       Auth.openModal('register');
       return;
     }
-    Auth.showToast('Fitur membuat thread baru segera hadir!', 'info');
+    openNewThreadModal();
+  }
+
+  function openNewThreadModal() {
+    const existing = document.getElementById('newThreadModal');
+    if (existing) { existing.classList.add('active'); document.body.style.overflow = 'hidden'; return; }
+    const user = Auth.getUser();
+    const div = document.createElement('div');
+    div.id = 'newThreadModal';
+    div.className = 'modal-edquest active';
+    div.setAttribute('role', 'dialog');
+    div.setAttribute('aria-modal', 'true');
+    const categoryOptions = CONFIG.MAPELS.map(m =>
+      '<option value="' + m.key + '">' + m.label + '</option>'
+    ).join('');
+    div.innerHTML = '<div class="modal-content">' +
+      '<div class="modal-header">' +
+        '<h3 class="text-xl font-bold" style="color:var(--text-primary);"><i class="fas fa-plus-circle mr-2" style="color:var(--primary);"></i>Buat Thread Baru</h3>' +
+        '<button class="modal-close" onclick="Forum.closeNewThreadModal()" aria-label="Tutup"><i class="fas fa-times"></i></button>' +
+      '</div>' +
+      '<div class="modal-body">' +
+        '<form id="newThreadForm" class="form-edquest">' +
+          '<div class="mb-4">' +
+            '<label class="form-label" for="newThreadTitle">Judul</label>' +
+            '<input id="newThreadTitle" type="text" class="form-input" maxlength="120" placeholder="Contoh: Cara cepat paham turunan fungsi trigonometri">' +
+            '<span class="form-error"></span>' +
+          '</div>' +
+          '<div class="mb-4">' +
+            '<label class="form-label" for="newThreadCategory">Kategori</label>' +
+            '<select id="newThreadCategory" class="form-input" style="cursor:pointer;">' +
+              '<option value="" disabled selected>Pilih kategori mapel</option>' + categoryOptions +
+            '</select>' +
+            '<span class="form-error"></span>' +
+          '</div>' +
+          '<div class="mb-4">' +
+            '<label class="form-label" for="newThreadContent">Isi Diskusi</label>' +
+            '<textarea id="newThreadContent" rows="5" class="form-input resize-none" placeholder="Ceritakan topik atau pertanyaanmu dengan jelas..."></textarea>' +
+            '<span class="form-error"></span>' +
+          '</div>' +
+          '<p class="text-xs mb-4" style="color:var(--text-muted);">Thread akan tampil sebagai <strong>' + escText(user ? user.name : 'Kamu') + '</strong></p>' +
+          '<button type="submit" class="btn-edquest btn-primary-grad w-full"><i class="fas fa-paper-plane"></i> Posting Thread</button>' +
+        '</form>' +
+      '</div>' +
+    '</div>';
+    document.body.appendChild(div);
+    document.body.style.overflow = 'hidden';
+    document.getElementById('newThreadForm').addEventListener('submit', (e) => { e.preventDefault(); submitNewThread(e); });
+    div.addEventListener('click', (e) => { if (e.target === div) closeNewThreadModal(); });
+    setTimeout(() => { const el = document.getElementById('newThreadTitle'); if (el) el.focus(); }, 100);
+  }
+
+  function closeNewThreadModal() {
+    const modal = document.getElementById('newThreadModal');
+    if (modal) { modal.classList.remove('active'); document.body.style.overflow = ''; setTimeout(() => { if (modal && !modal.classList.contains('active')) modal.remove(); }, 300); }
+  }
+
+  function submitNewThread(e) {
+    const form = e.target;
+    const title = form.querySelector('#newThreadTitle').value.trim();
+    const category = form.querySelector('#newThreadCategory').value;
+    const content = form.querySelector('#newThreadContent').value.trim();
+    clearNewThreadErrors(form);
+    let valid = true;
+    if (title.length < 5) { showNewThreadError(form.querySelector('#newThreadTitle'), 'Judul minimal 5 karakter'); valid = false; }
+    if (!category) { showNewThreadError(form.querySelector('#newThreadCategory'), 'Pilih kategori terlebih dahulu'); valid = false; }
+    if (content.length < 10) { showNewThreadError(form.querySelector('#newThreadContent'), 'Isi minimal 10 karakter'); valid = false; }
+    if (!valid) return;
+    const user = Auth.getUser();
+    const thread = {
+      uid: 'user_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+      category: category,
+      title: escText(title),
+      subtitle: escText(content),
+      author: user ? user.name : 'Anonim',
+      replies: 0,
+      votes: 0,
+      time: 'Baru saja',
+      status: 'Aktif',
+      comments: [],
+      mine: true
+    };
+    const stored = loadStoredThreads();
+    stored.unshift(thread);
+    saveStoredThreads(stored);
+    dataStore.forum.unshift(thread);
+    closeNewThreadModal();
+    state.screen = 'list';
+    state.category = 'all';
+    render();
+    Auth.showToast('Thread berhasil dibuat!', 'success');
+    Notifications.push({ type: 'forum', title: 'Thread barumu terbit', message: '"' + thread.title + '" berhasil dibuat di kategori ' + catLabel(category) + '.', link: '#/forum' });
+  }
+
+  function showNewThreadError(input, message) {
+    if (!input || !input.parentElement) return;
+    input.classList.add('error');
+    const errorEl = input.parentElement.querySelector('.form-error');
+    if (errorEl) { errorEl.textContent = message; errorEl.classList.add('show'); }
+  }
+
+  function clearNewThreadErrors(form) {
+    form.querySelectorAll('.form-input').forEach(i => i.classList.remove('error'));
+    form.querySelectorAll('.form-error').forEach(e => { e.textContent = ''; e.classList.remove('show'); });
   }
 
   function toggleVote(btn) {
@@ -435,6 +540,25 @@ export const Forum = (() => {
     return 'Baru saja';
   }
 
+  function loadStoredThreads() {
+    try {
+      const raw = localStorage.getItem(STORAGE_THREADS_KEY);
+      const list = raw ? JSON.parse(raw) : [];
+      return Array.isArray(list) ? list : [];
+    } catch { return []; }
+  }
+
+  function saveStoredThreads(list) {
+    try { localStorage.setItem(STORAGE_THREADS_KEY, JSON.stringify(list)); } catch { /* abaikan */ }
+  }
+
+  function loadUserThreads() {
+    if (userThreadsLoaded) return;
+    userThreadsLoaded = true;
+    const stored = loadStoredThreads();
+    if (stored.length) dataStore.forum.unshift(...stored);
+  }
+
   function escText(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
@@ -510,5 +634,5 @@ export const Forum = (() => {
 
   function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-  return { refresh, openThread, openDiscussionModal: openThreadFromCard, openNewThread, backToList, toggleVote, submitComment, shareThread, scrollToReply, followThread };
+  return { refresh, openThread, openDiscussionModal: openThreadFromCard, openNewThread, closeNewThreadModal, backToList, toggleVote, submitComment, shareThread, scrollToReply, followThread };
 })();
