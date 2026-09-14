@@ -6,8 +6,10 @@ import { Match } from '../services/match.js';
 import { Profile } from '../services/profile.js';
 import { Settings } from '../services/settings.js';
 import { dataStore } from '../data/index.js';
+import { initHomeSearch } from '../../features/home/home.js';
+import { initForumSearch } from '../../features/forum/forum.js';
 
-const MAPEL_LABELS = CONFIG.MAPELS.reduce((o, m) => { o[m.key] = m.label; return o; }, {});
+const CAT_LABELS = CONFIG.MAPELS.reduce((o, m) => { o[m.key] = m.label; return o; }, {});
 
 export const App = (() => {
   let activeAcDropdown = null;
@@ -34,8 +36,8 @@ export const App = (() => {
       const sm = document.getElementById('settingsModal');
       if (sm) Settings.closeModal();
       setTimeout(() => {
-        if (page === 'home') initHomeTiles();
-        if (page === 'forum') Forum.refresh();
+        if (page === 'home') { initHomeTiles(); initHomeSearch(); }
+        if (page === 'forum') { Forum.refresh(); initForumSearch(); }
         if (page === 'friend') Matching.init();
         if (page === 'match') Match.init();
         if (page === 'profile') Profile.init();
@@ -59,8 +61,8 @@ export const App = (() => {
       rafId = requestAnimationFrame(() => {
         const r = card.getBoundingClientRect();
         if (!r.width) return;
-        card.style.setProperty('--fx-x', (px) => (e.clientX - r.left) / r.width * 100 + '%');
-        card.style.setProperty('--fx-y', (py) => (e.clientY - r.top) / r.height * 100 + '%');
+        card.style.setProperty('--fx-x', ((e.clientX - r.left) / r.width * 100) + '%');
+        card.style.setProperty('--fx-y', ((e.clientY - r.top) / r.height * 100) + '%');
         card.style.transform = 'translateY(-6px) scale(1.02)';
       });
     }, { passive: true });
@@ -170,61 +172,86 @@ export const App = (() => {
     const overlay = document.getElementById('searchOverlay');
     const close = document.getElementById('searchClose');
     const input = document.getElementById('searchInput');
-    const results = document.getElementById('searchResults');
-    if (!btn || !overlay) return;
-    const openSearch = () => { overlay.classList.add('open'); setTimeout(() => { if (input) input.focus(); }, 150); };
-    const closeSearch = () => {
+    const ac = document.getElementById('searchAutocomplete');
+    if (!btn || !overlay || !input) return;
+
+    function closeSearch() {
       overlay.classList.remove('open');
       if (input) { input.blur(); input.value = ''; }
+      const results = document.getElementById('searchResults');
       if (results) results.innerHTML = '<p class="text-sm" style="color:var(--text-muted);">Ketik untuk mencari...</p>';
-      const ac = document.getElementById('searchAutocomplete');
       if (ac) ac.classList.remove('open');
       activeAcDropdown = null;
-    };
+    }
+
+    function openSearch() { overlay.classList.add('open'); setTimeout(() => { if (input) input.focus(); }, 150); }
     btn.addEventListener('click', openSearch);
     if (close) close.addEventListener('click', closeSearch);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closeSearch(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSearch(); });
 
-    if (input && results) {
-      const filtered = dataStore.forum;
-      const getFiltered = (q) => filtered.filter(t =>
-        t.title.toLowerCase().includes(q) ||
-        t.subtitle.toLowerCase().includes(q) ||
-        (t.category && MAPEL_LABELS[t.category] && MAPEL_LABELS[t.category].toLowerCase().includes(q)) ||
-        (t.category && t.category.toLowerCase().includes(q))
-      );
+    function doSearch(q) {
+      if (!q) {
+        const results = document.getElementById('searchResults');
+        if (results) results.innerHTML = '<p class="text-sm" style="color:var(--text-muted);">Ketik untuk mencari...</p>';
+        if (ac) ac.classList.remove('open');
+        return;
+      }
+      const seen = new Set();
+      const items = [];
+      dataStore.forum.forEach((t, idx) => {
+        const hit = t.title.toLowerCase().includes(q) || t.subtitle.toLowerCase().includes(q) ||
+          (t.category && CAT_LABELS[t.category] && CAT_LABELS[t.category].toLowerCase().includes(q)) ||
+          (t.category && t.category.toLowerCase().includes(q));
+        if (hit) { const key = 'forum-' + idx; if (!seen.has(key)) { seen.add(key); items.push({ type: 'forum', idx, title: t.title, icon: CONFIG.MAPELS.find(m => m.key === t.category)?.icon || 'fa-book', page: 'forum' }); } }
+      });
+      dataStore.buddies.forEach((b, idx) => {
+        const hit = (b.name || '').toLowerCase().includes(q) || (b.mapel || '').toLowerCase().includes(q) || (b.kelas || '').toLowerCase().includes(q);
+        if (hit) { const key = 'buddy-' + idx; if (!seen.has(key)) { seen.add(key); items.push({ type: 'buddy', idx, title: b.name, icon: 'fa-user-group', page: 'friend' }); } }
+      });
 
-      input.addEventListener('input', () => {
-        const q = input.value.toLowerCase().trim();
-        if (!q) { results.innerHTML = '<p class="text-sm" style="color:var(--text-muted);">Ketik untuk mencari...</p>'; return; }
-        const matched = getFiltered(q);
-        if (matched.length === 0) {
-          results.innerHTML = '<p class="text-sm" style="color:var(--text-muted);">Tidak ditemukan</p>';
-          const ac = document.getElementById('searchAutocomplete');
-          if (ac) ac.classList.remove('open');
-          return;
-        }
-        results.innerHTML = matched.slice(0, 6).map(t => `
-          <div class="p-3 rounded-lg cursor-pointer" style="background:var(--bg-body);border:1px solid var(--border-color);" onclick="Router.navigate('forum'); setTimeout(function(){ const idx=dataStore.forum.findIndex(x=>x.title==='${t.title}'); if(idx>=0)Forum.openThread(idx); document.getElementById('searchOverlay').classList.remove('open') }, 150)">
-            <p class="text-sm font-medium" style="color:var(--text-primary);">${t.title}</p>
-            <p class="text-xs" style="color:var(--text-muted);"><i class="fas ${CONFIG.MAPELS.find(m=>m.key===t.category)?.icon||'fa-book'} mr-1"></i>${MAPEL_LABELS[t.category]||t.category}</p>
-          </div>
-        `).join('');
-        const ac = document.getElementById('searchAutocomplete');
-        if (ac) {
-          ac.innerHTML = matched.slice(0, 6).map(t => `
-            <div class="sac-item" data-page="forum" data-id="">
-              <i class="fas fa-search sac-icon"></i>
-              <span class="sac-title">${t.title}</span>
-              <span class="sac-source">Forum</span>
-            </div>
-          `).join('');
-          ac.classList.add('open');
-          activeAcDropdown = { input, container: ac };
-        }
+      const results = document.getElementById('searchResults');
+      if (results) results.innerHTML = items.length
+        ? '<p class="text-sm" style="color:var(--text-muted);">' + items.length + ' hasil — klik item di atas</p>'
+        : '<p class="text-sm" style="color:var(--text-muted);">Tidak ditemukan</p>';
+
+      if (!ac) return;
+      ac.innerHTML = items.slice(0, 8).map(r =>
+        '<div class="sac-item" data-type="' + r.type + '" data-idx="' + r.idx + '" data-page="' + r.page + '">' +
+          '<i class="fas ' + r.icon + ' sac-icon"></i>' +
+          '<span class="sac-title">' + r.title + '</span>' +
+          '<span class="sac-source">' + (r.type === 'forum' ? 'Forum' : 'Study Buddy') + '</span>' +
+        '</div>'
+      ).join('');
+      ac.classList.add('open');
+      activeAcDropdown = { input, container: ac };
+
+      ac.querySelectorAll('.sac-item').forEach(el => {
+        el.addEventListener('click', () => {
+          const type = el.dataset.type, idx = Number(el.dataset.idx);
+          ac.classList.remove('open');
+          closeSearch();
+          if (type === 'forum') { Router.navigate('forum'); setTimeout(function() { Forum.openThread(idx); }, 220); }
+          else if (type === 'buddy') { Router.navigate('friend'); }
+        });
+        el.addEventListener('mouseenter', () => {
+          ac.querySelectorAll('.sac-item').forEach(e => e.classList.remove('focused'));
+          el.classList.add('focused');
+        });
       });
     }
+
+    input.addEventListener('input', () => { doSearch(input.value.toLowerCase().trim()); });
+
+    input.addEventListener('keydown', (e) => {
+      const items = ac ? ac.querySelectorAll('.sac-item') : [];
+      if (!items.length) return;
+      let focused = [...items].findIndex(el => el.classList.contains('focused'));
+      if (e.key === 'ArrowDown') { e.preventDefault(); focused = Math.min(focused + 1, items.length - 1); items.forEach(function(el, i) { el.classList.toggle('focused', i === focused); }); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); focused = Math.max(focused - 1, 0); items.forEach(function(el, i) { el.classList.toggle('focused', i === focused); }); }
+      else if (e.key === 'Enter' && focused >= 0) { e.preventDefault(); items[focused].click(); }
+      else if (e.key === 'Tab' && focused >= 0) { e.preventDefault(); items[focused].click(); }
+    });
   }
 
   function initUserDropdown() {

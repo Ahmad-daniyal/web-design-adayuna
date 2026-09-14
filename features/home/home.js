@@ -1,13 +1,11 @@
 import { injectStyle } from '../../js/utils/styleLoader.js';
 import { dataStore } from '../../js/data/index.js';
+import { CONFIG } from '../../js/core/config.js';
 
 injectStyle('features/home/css/home.css');
 
-const CTA_STYLES = {
-  primary: 'background:var(--gradient-primary); color:#fff; font-weight:700; box-shadow:0 4px 14px rgba(37,99,235,0.35);',
-  light: 'background:var(--primary-light); color:var(--primary); border:1.5px solid rgba(37,99,235,0.3);',
-  accent: 'background:var(--accent); color:#fff; font-weight:700; box-shadow:0 4px 14px rgba(2,132,199,0.35);'
-};
+const CAT_LABELS = CONFIG.MAPELS.reduce((o, m) => { o[m.key] = m.label; return o; }, {});
+const CAT_ICONS = CONFIG.MAPELS.reduce((o, m) => { o[m.key] = m.icon; return o; }, {});
 
 function escHtml(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -38,7 +36,7 @@ function iceCards() {
   return ice.map(c =>
     '<div class="ice-card fx-shine" data-copy="' + escapeAttr(c && c.copy) + '">' +
       '<i class="fas fa-quote-right quote-icon"></i>' +
-      '<p class="text-sm font-medium leading-relaxed mb-3" style="color:var(--text-primary);">"' + ((c && c.text) || '') + '"</p>' +
+      '<p class="text-sm font-medium leading-relaxed mb-3" style="color:var(--text-primary);">' + ((c && c.text) || '') + '"</p>' +
       '<div class="flex items-center justify-between">' +
         '<span class="flex flex-wrap gap-1.5">' + (c && c.tags ? c.tags.map(tagHTML).join('') : '') + '</span>' +
         '<span class="copy-btn text-xs font-semibold" style="color:var(--primary); cursor:pointer;"><i class="fas fa-copy"></i> Salin</span>' +
@@ -125,6 +123,12 @@ function ctaSection() {
     '<div class="flex flex-wrap justify-center gap-3">\n        ' + (buttons || '') + '\n      </div>';
 }
 
+const CTA_STYLES = {
+  primary: 'background:var(--gradient-primary); color:#fff; font-weight:700; box-shadow:0 4px 14px rgba(37,99,235,0.35);',
+  light: 'background:var(--primary-light); color:var(--primary); border:1.5px solid rgba(37,99,235,0.3);',
+  accent: 'background:var(--accent); color:#fff; font-weight:700; box-shadow:0 4px 14px rgba(2,132,199,0.35);'
+};
+
 export function renderHome() {
   const hero = heroContent();
   return `
@@ -144,13 +148,13 @@ export function renderHome() {
         </p>
         <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-6">
           ${hero.ctaButtons}
-        <div class="home-search-wrapper mx-auto md:mx-0" style="max-width:520px;width:100%%;">
+        </div>
+        <div class="home-search-wrapper mx-auto md:mx-0" style="max-width:520px;width:100%;">
           <div class="search-input-wrapper" style="position:relative;">
-            <i class="fas fa-search" style="position:absolute;left:1rem;top:50%%;transform:translateY(-50%%);color:var(--text-muted);z-index:2;"></i>
+            <i class="fas fa-search" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-muted);z-index:2;"></i>
             <input id="homeSearchInput" type="text" class="form-input !pl-11" placeholder="Cari forum, topik, atau mapel..." autocomplete="off">
             <div id="homeSearchAc" class="search-ac-dropdown"></div>
           </div>
-        </div>
         </div>
         <div class="baca-dulu mx-auto md:mx-0">
           ${hero.bacaDulu}
@@ -210,12 +214,41 @@ export function renderHome() {
 `; }
 
 function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
-/* ===== Home Search Autocomplete ===== */
-(function initHomeSearch() {
+
+export function initHomeSearch() {
   const input = document.getElementById('homeSearchInput');
   const dropdown = document.getElementById('homeSearchAc');
-  if (!input || !dropdown) return;
-  const MAPEL_LABELS = { matematika:'Matematika', fisika:'Fisika', kimia:'Kimia', biologi:'Biologi', sejarah:'Sejarah', bahasa:'Bahasa Indonesia', ips:'IPS' };
+  if (!input || !dropdown || input.dataset.searchBound) return;
+  input.dataset.searchBound = '1';
+
+  function renderItems(items) {
+    if (items.length === 0) {
+      dropdown.innerHTML = '<div class="sac-empty">Tidak ditemukan</div>';
+      dropdown.classList.add('open');
+      return;
+    }
+    dropdown.innerHTML = items.slice(0, 8).map(t => {
+      const idx = dataStore.forum.indexOf(t);
+      return '<div class="sac-item" data-idx="' + idx + '" data-page="forum">' +
+        '<i class="fas ' + (CAT_ICONS[t.category] || 'fa-book') + ' sac-icon"></i>' +
+        '<span class="sac-title">' + t.title + '</span>' +
+        '<span class="sac-source">' + (CAT_LABELS[t.category] || t.category) + '</span>' +
+      '</div>';
+    }).join('');
+    dropdown.classList.add('open');
+    dropdown.querySelectorAll('.sac-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const idx = Number(el.dataset.idx);
+        dropdown.classList.remove('open');
+        Router.navigate('forum');
+        setTimeout(function() { Forum.openThread(idx); }, 250);
+      });
+      el.addEventListener('mouseenter', () => {
+        dropdown.querySelectorAll('.sac-item').forEach(e => e.classList.remove('focused'));
+        el.classList.add('focused');
+      });
+    });
+  }
 
   document.addEventListener('input', (e) => {
     if (e.target !== input) return;
@@ -224,49 +257,23 @@ function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
     const items = dataStore.forum.filter(t =>
       t.title.toLowerCase().includes(q) ||
       t.subtitle.toLowerCase().includes(q) ||
-      (t.category && MAPEL_LABELS[t.category] && MAPEL_LABELS[t.category].toLowerCase().includes(q)) ||
+      (t.category && CAT_LABELS[t.category] && CAT_LABELS[t.category].toLowerCase().includes(q)) ||
       (t.category && t.category.toLowerCase().includes(q))
     );
-    if (items.length === 0) {
-      dropdown.innerHTML = '<div class="sac-empty">Tidak ditemukan</div>';
-      dropdown.classList.add('open');
-      return;
-    }
-    dropdown.innerHTML = items.slice(0, 8).map(t => `
-      <div class="sac-item" data-page="forum">
-        <i class="fas fa-search sac-icon"></i>
-        <span class="sac-title">${t.title}</span>
-        <span class="sac-source">${MAPEL_LABELS[t.category] || t.category}</span>
-      </div>
-    `).join('');
-    dropdown.classList.add('open');
-    dropdown.querySelectorAll('.sac-item').forEach(el => {
-      el.addEventListener('click', () => {
-        Router.navigate('forum');
-        dropdown.classList.remove('open');
-        setTimeout(() => {
-          const idx = dataStore.forum.findIndex(x => x.title === el.querySelector('.sac-title').textContent);
-          if (idx >= 0) Forum.openThread(idx);
-        }, 200);
-      });
-      el.addEventListener('mouseenter', () => {
-        dropdown.querySelectorAll('.sac-item').forEach(e => e.classList.remove('focused'));
-        el.classList.add('focused');
-      });
-    });
+    renderItems(items);
   });
 
   input.addEventListener('keydown', (e) => {
     const items = dropdown.querySelectorAll('.sac-item');
     if (!items.length) return;
     let focused = [...items].findIndex(el => el.classList.contains('focused'));
-    if (e.key === 'ArrowDown') { e.preventDefault(); focused = Math.min(focused + 1, items.length - 1); items.forEach((el, i) => el.classList.toggle('focused', i === focused)); }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); focused = Math.max(focused - 1, 0); items.forEach((el, i) => el.classList.toggle('focused', i === focused)); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); focused = Math.min(focused + 1, items.length - 1); items.forEach(function(el, i) { el.classList.toggle('focused', i === focused); }); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); focused = Math.max(focused - 1, 0); items.forEach(function(el, i) { el.classList.toggle('focused', i === focused); }); }
     else if (e.key === 'Enter' && focused >= 0) { e.preventDefault(); items[focused].click(); }
-    else if (e.key === 'Escape') { dropdown.classList.remove('open'); }
+    else if (e.key === 'Tab' && focused >= 0) { e.preventDefault(); items[focused].click(); }
   });
 
   document.addEventListener('click', (e) => {
     if (!dropdown.contains(e.target) && e.target !== input) dropdown.classList.remove('open');
   });
-})();
+}
