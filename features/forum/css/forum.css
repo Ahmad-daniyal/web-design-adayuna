@@ -582,7 +582,7 @@
 }
 
 .thread-stat .ts-num {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-heading);
   font-weight: 800;
   font-size: 1.1rem;
   color: var(--text-primary);

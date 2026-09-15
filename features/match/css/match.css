@@ -225,7 +225,7 @@
 .timer-block { flex-shrink: 0; width: 120px; text-align: center; }
 
 .timer-text {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-heading);
   font-weight: 800;
   font-size: 1.4rem;
   font-variant-numeric: tabular-nums;
@@ -279,7 +279,7 @@
 }
 
 .score-num {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-heading);
   font-size: 2.25rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
@@ -761,7 +761,7 @@
 
 .rank-up-to {
   display: inline-block;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-heading);
   font-size: 2.4rem;
   font-weight: 800;
   letter-spacing: 0.04em;
@@ -854,7 +854,7 @@
 .rs-cell { min-width: 96px; }
 .rs-name { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); }
 .rs-num {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-heading);
   font-size: 2.6rem;
   font-weight: 800;
   color: var(--text-primary);
@@ -940,7 +940,7 @@
 .lb-info { flex: 1; min-width: 0; }
 
 .lb-rating {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-heading);
   font-weight: 800;
   font-size: 1rem;
   font-variant-numeric: tabular-nums;
