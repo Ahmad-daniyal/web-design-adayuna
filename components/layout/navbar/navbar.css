@@ -488,3 +488,6 @@
 }
 
 .sac-item:active { transform: scale(0.985); }
+.sac-body { flex: 1; min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
+.sac-item .sac-title { flex: 0 0 auto; display: block; }
+.sac-desc { display: block; font-size: 0.7rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 1px; line-height: 1.2; }
