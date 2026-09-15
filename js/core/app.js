@@ -196,7 +196,7 @@ export const App = (() => {
         : '<p class="text-sm" style="color:var(--text-muted);">Tidak ditemukan</p>';
       if (items.length) {
         dropdown.innerHTML = sacHTML(items);
-        bindSacItems(dropdown, () => dropdown.classList.remove('open'));
+        bindSacItems(dropdown, closeSearch);
         bindKeydown(input, dropdown);
         dropdown.classList.add('open');
       } else {

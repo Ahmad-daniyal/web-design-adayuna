@@ -2,3 +2,8 @@
 .faq-toggle:hover {
   background: var(--bg-section);
 }
+
+.faq-chevron {
+  transition: transform 0.3s ease;
+  transform-origin: center;
+}

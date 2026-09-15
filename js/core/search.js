@@ -21,10 +21,33 @@ const PAGE_ENTRIES = [
   { page: 'profile', title: 'Profil & Progress', desc: 'Profil, jurnal belajar, badge, poin, statistik, akun, progress', icon: 'fa-user', source: 'Halaman' },
 ];
 
+function aboutKeywords() {
+  const d = dataStore.about || {};
+  const parts = [];
+  const push = (v) => { if (v) parts.push(String(v)); };
+  push('about');
+  push('tentang');
+  push('tentang edquest');
+  push(d.hero && d.hero.title);
+  push(d.hero && d.hero.subtitle);
+  push(d.latarBelakang && d.latarBelakang.title);
+  ((d.latarBelakang && d.latarBelakang.paragraphs) || []).forEach(push);
+  push(d.latarBelakang && d.latarBelakang.quote && d.latarBelakang.quote.text);
+  push(d.visi && d.visi.title);
+  push(d.visi && d.visi.visi);
+  ((d.visi && d.visi.misi) || []).forEach(m => { push(m.title); push(m.desc); });
+  push(d.steps && d.steps.title);
+  push(d.steps && d.steps.subtitle);
+  ((d.steps && d.steps.items) || []).forEach(s => { push(s.title); push(s.desc); });
+  return parts.join(' ').toLowerCase();
+}
+
 function pageMatches(q) {
   const ql = q.toLowerCase().trim();
-  return PAGE_ENTRIES.filter(e => ((e.title + ' ' + e.desc).toLowerCase()).includes(ql))
-    .map(e => ({ type: 'page', page: e.page, title: e.title, desc: e.desc, icon: e.icon, source: e.source }));
+  return PAGE_ENTRIES.filter(e => {
+    const extra = e.page === 'about' ? ' ' + aboutKeywords() : '';
+    return ((e.title + ' ' + e.desc + extra).toLowerCase()).includes(ql);
+  }).map(e => ({ type: 'page', page: e.page, title: e.title, desc: e.desc, icon: e.icon, source: e.source }));
 }
 
 function esc(s) { return String(s == null ? '' : s); }

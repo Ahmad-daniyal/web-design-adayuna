@@ -13,7 +13,7 @@ function faqItems() {
     '<div class="card-panel overflow-hidden">' +
       '<button class="faq-toggle w-full text-left p-5 flex items-center justify-between" aria-expanded="false">' +
         '<span class="font-semibold text-sm text-slate-900 dark:text-slate-100"><i class="fas ' + (it.icon || 'fa-circle-question') + ' mr-2 text-slate-500 dark:text-slate-400"></i>' + esc(it.q) + '</span>' +
-        '<i class="fas fa-chevron-down text-xs text-slate-400 dark:text-slate-500 transition-transform duration-300"></i>' +
+        '<i class="fas fa-chevron-down faq-chevron text-xs text-slate-400 dark:text-slate-500 transition-transform duration-300"></i>' +
       '</button>' +
       '<div class="faq-panel" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;">' +
         '<p class="px-5 pb-5 text-sm leading-relaxed text-slate-500 dark:text-slate-400">' + esc(it.a) + '</p>' +
@@ -79,13 +79,13 @@ function initFaqAccordion() {
       const isOpen = btn.getAttribute('aria-expanded') === 'true';
       container.querySelectorAll('.faq-toggle').forEach(b => {
         b.setAttribute('aria-expanded', 'false');
-        const icon = b.querySelector('i');
+        const icon = b.querySelector('.faq-chevron');
         if (icon) icon.style.transform = '';
         if (b.nextElementSibling) b.nextElementSibling.style.maxHeight = '0';
       });
       if (!isOpen) {
         btn.setAttribute('aria-expanded', 'true');
-        const icon = btn.querySelector('i');
+        const icon = btn.querySelector('.faq-chevron');
         if (icon) icon.style.transform = 'rotate(180deg)';
         panel.style.maxHeight = panel.scrollHeight + 'px';
       }
