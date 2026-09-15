@@ -93,8 +93,8 @@ export const Match = (() => {
 
   function renderDuelPanel() {
     const modes = [
-      { key: 'classic', icon: 'fa-fire', title: 'Classic', desc: 'Tanpa rating. Kumpulkan poin & badge dengan santai.', color: '#0EA5E9' },
-      { key: 'ranked', icon: 'fa-trophy', title: 'Ranked', desc: 'Naikkan rank dari Bronze hingga Diamond.', color: '#2563EB' }
+      { key: 'classic', icon: 'fa-fire', title: 'Classic', desc: 'Tanpa rating. Kumpulkan poin & badge dengan santai.', color: 'var(--accent)' },
+      { key: 'ranked', icon: 'fa-trophy', title: 'Ranked', desc: 'Naikkan rank dari Bronze hingga Diamond.', color: 'var(--primary)' }
     ].map(m =>
       '<button class="mode-card fx-card' + (state.mode === m.key ? ' active' : '') + '" onclick="Match.setMode(\'' + m.key + '\')">' +
       '<span class="mode-icon" style="background:' + m.color + ';"><i class="fas ' + m.icon + '"></i></span>' +
@@ -202,7 +202,7 @@ export const Match = (() => {
     const pool = dataStore.buddies || [];
     const candidates = pool.filter(b => !current || String(b.id) !== String(current.id));
     const b = candidates[Math.floor(Math.random() * candidates.length)] ||
-      { name: 'Bot AI', initials: 'AI', color: 'linear-gradient(135deg,#38BDF8,#2563EB)', id: 0 };
+      { name: 'Bot AI', initials: 'AI', color: 'g1', id: 0 };
     const rp = rankPointsOf(current);
     const tIdx = Math.max(0, tierIndex(tierOf(rp)));
     const acc = Math.min(0.93, Math.max(0.45, 0.5 + tIdx * 0.07 + (Math.random() * 0.06 - 0.03)));
@@ -236,7 +236,7 @@ export const Match = (() => {
     root.innerHTML = `
       <div class="match-topbar card-panel p-4">
         <div class="opponent-chip">
-          <div class="opp-avatar" style="background:${state.opponent.color};">${esc(state.opponent.initials)}</div>
+          <div class="opp-avatar" style="background:${avatarBg(state.opponent.color)};">${esc(state.opponent.initials)}</div>
           <div>
             <div class="font-bold text-sm" style="color:var(--text-primary);">${esc(state.opponent.name)}</div>
             <div class="text-xs" style="color:var(--text-muted);">${state.mode === 'ranked' ? esc(tierOf(state.opponent.rating)) + ' · ' : ''}sedang mengerjakan...</div>
@@ -249,7 +249,7 @@ export const Match = (() => {
         <div class="opponent-chip justify-end text-right">
           <div>
             <div class="font-bold text-sm" style="color:var(--text-primary);">${esc(user ? user.name : 'Kamu')}</div>
-            <div class="text-xs" style="color:var(--primary);">Kamu</div>
+            <div class="text-xs" style="color:var(--primary-text);">Kamu</div>
           </div>
           <div class="opp-avatar" style="background:var(--gradient-primary);">${esc(user ? (user.avatar || '?') : 'K')}</div>
         </div>
@@ -715,6 +715,10 @@ export const Match = (() => {
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function avatarBg(c) {
+    return /^g[1-6]$/.test(String(c || '')) ? 'var(--avatar-' + c + ')' : c;
   }
 
   function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }

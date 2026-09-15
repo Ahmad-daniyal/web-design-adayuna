@@ -11,6 +11,10 @@ export const Matching = (() => {
     return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
+  function avatarBg(c) {
+    return /^g[1-6]$/.test(String(c || '')) ? 'var(--avatar-' + c + ')' : c;
+  }
+
   function init() {
     bindFilterEvents();
     renderBuddies(getPool());
@@ -49,7 +53,7 @@ export const Matching = (() => {
         mapel: u.mapel || 'umum',
         minat: u.minat || 'diskusi',
         kelas: u.kelas || '10',
-        color: 'linear-gradient(135deg,#38BDF8,#2563EB)',
+        color: 'g1',
         online: true
       }));
     return accounts.concat(dataStore.buddies);
@@ -80,7 +84,7 @@ export const Matching = (() => {
     container.innerHTML = list.map((b, i) => {
       const minatLabel = MINAT_LABELS[b.minat] || capitalize(String(b.minat));
       return '<div class="buddy-card">' +
-        '<div class="flex items-center gap-3 mb-4"><div class="buddy-avatar" style="background:' + b.color + ';">' + esc(b.initials) + '</div>' +
+        '<div class="flex items-center gap-3 mb-4"><div class="buddy-avatar" style="background:' + avatarBg(b.color) + ';">' + esc(b.initials) + '</div>' +
         '<div class="flex-1 min-w-0"><h4 class="font-bold text-sm" style="color:var(--text-primary);">' + esc(b.name) +
         (b.id ? ' <span class="buddy-id">ID ' + esc(b.id) + '</span>' : '') + '</h4>' +
         '<span class="text-xs" style="color:var(--text-muted);">Kelas ' + esc(b.kelas) + '</span>' +

@@ -30,10 +30,10 @@ export function renderAuthModal() { return `
         </div>
         <div class="flex items-center justify-between mb-6">
           <label class="form-checkbox"><input type="checkbox" id="rememberMe" checked> Ingat saya</label>
-          <a href="#" class="text-sm font-medium no-underline" style="color:var(--primary);">Lupa password?</a>
+          <a href="#" class="text-sm font-medium no-underline" style="color:var(--primary-text);">Lupa password?</a>
         </div>
         <button type="submit" class="btn-edquest btn-primary-grad w-full">Masuk</button>
-        <p class="text-center text-sm mt-4" style="color:var(--text-muted);">Belum punya akun? <a href="#" onclick="Auth.openModal('register');return false;" style="color:var(--primary);font-weight:600;">Daftar</a></p>
+        <p class="text-center text-sm mt-4" style="color:var(--text-muted);">Belum punya akun? <a href="#" onclick="Auth.openModal('register');return false;" style="color:var(--primary-text);font-weight:600;">Daftar</a></p>
       </form>
       <form id="registerForm" class="auth-form form-edquest" style="display:none;" novalidate>
         <div class="mb-4">
@@ -103,7 +103,7 @@ export function renderAuthModal() { return `
           <span class="form-error"></span>
         </div>
         <button type="submit" class="btn-edquest btn-primary-grad w-full">Daftar</button>
-        <p class="text-center text-sm mt-4" style="color:var(--text-muted);">Sudah punya akun? <a href="#" onclick="Auth.openModal('login');return false;" style="color:var(--primary);font-weight:600;">Masuk</a></p>
+        <p class="text-center text-sm mt-4" style="color:var(--text-muted);">Sudah punya akun? <a href="#" onclick="Auth.openModal('login');return false;" style="color:var(--primary-text);font-weight:600;">Masuk</a></p>
       </form>
     </div>
   </div>

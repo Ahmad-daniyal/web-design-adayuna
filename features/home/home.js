@@ -36,7 +36,7 @@ function iceCards() {
       '<p class="text-sm font-medium leading-relaxed mb-3" style="color:var(--text-primary);">' + ((c && c.text) || '') + '"</p>' +
       '<div class="flex items-center justify-between">' +
         '<span class="flex flex-wrap gap-1.5">' + (c && c.tags ? c.tags.map(tagHTML).join('') : '') + '</span>' +
-        '<span class="copy-btn text-xs font-semibold" style="color:var(--primary); cursor:pointer;"><i class="fas fa-copy"></i> Salin</span>' +
+        '<span class="copy-btn text-xs font-semibold" style="color:var(--primary-text); cursor:pointer;"><i class="fas fa-copy"></i> Salin</span>' +
       '</div>' +
     '</div>'
   ).join('');
@@ -62,7 +62,7 @@ function heroContent() {
   ).join('\n          ');
 
   const tiles = ((h.tiles) || []).filter(t => t && t.label).map(t =>
-    '<a href="' + escAttr(t.href || '#') + '" class="hero-tile hero-tile-enter" style="--tile-accent:' + escAttr(t.accent || '#2563EB') + '; animation:float 6s ease-in-out infinite; animation-delay:' + escAttr(t.delay || '0s') + ';">' +
+    '<a href="' + escAttr(t.href || '#') + '" class="hero-tile hero-tile-enter" style="--tile-accent:' + escAttr(t.accent || '#4DB6E6') + '; animation:float 6s ease-in-out infinite; animation-delay:' + escAttr(t.delay || '0s') + ';">' +
       '<div class="glass-card hero-tile-card !p-5 text-center">' +
         '<div class="hero-tile-icon"><i class="fas ' + escAttr(t.icon || 'fa-star') + '"></i></div>' +
         '<p class="hero-tile-label text-xs font-medium mt-2">' + escHtml(t.label) + '</p>' +
@@ -121,9 +121,9 @@ function ctaSection() {
 }
 
 const CTA_STYLES = {
-  primary: 'background:var(--gradient-primary); color:#fff; font-weight:700; box-shadow:0 4px 14px rgba(37,99,235,0.35);',
-  light: 'background:var(--primary-light); color:var(--primary); border:1.5px solid rgba(37,99,235,0.3);',
-  accent: 'background:var(--accent); color:#fff; font-weight:700; box-shadow:0 4px 14px rgba(2,132,199,0.35);'
+  primary: 'background:var(--gradient-primary); color:var(--on-primary); font-weight:700; box-shadow:0 4px 14px color-mix(in srgb, var(--primary) 45%, transparent);',
+  light: 'background:var(--primary-light); color:var(--primary-text); border:1.5px solid color-mix(in srgb, var(--primary) 30%, transparent);',
+  accent: 'background:var(--accent); color:var(--on-accent); font-weight:700; box-shadow:0 4px 14px color-mix(in srgb, var(--accent) 45%, transparent);'
 };
 
 export function renderHome() {
@@ -159,7 +159,7 @@ export function renderHome() {
       </div>
       <div class="hidden md:flex items-center justify-center">
         <div class="relative">
-          <div class="w-80 h-80 rounded-full" style="background:radial-gradient(circle, rgba(37,99,235,0.10) 0%, transparent 70%);"></div>
+          <div class="w-80 h-80 rounded-full" style="background:radial-gradient(circle, color-mix(in srgb, var(--primary) 14%, transparent) 0%, transparent 70%);"></div>
           <div class="absolute inset-0 flex items-center justify-center">
             ${hero.heroVisual}
           </div>

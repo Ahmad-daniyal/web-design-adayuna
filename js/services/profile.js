@@ -107,7 +107,7 @@ export const Profile = (() => {
         '<span class="text-xs" style="color:var(--text-muted);">' + relativeTime(entry.time) + '</span>' +
       '</div>' +
       '<p class="text-sm leading-relaxed" style="color:var(--text-secondary);">' + esc(entry.text) + '</p>' +
-      '<div class="flex items-center gap-2 mt-2 text-xs" style="color:var(--primary);"><i class="fas fa-circle-check"></i> +' + (Number(entry.points) || JOURNAL_POINTS) + ' poin</div>' +
+      '<div class="flex items-center gap-2 mt-2 text-xs" style="color:var(--primary-text);"><i class="fas fa-circle-check"></i> +' + (Number(entry.points) || JOURNAL_POINTS) + ' poin</div>' +
     '</div>';
   }
 

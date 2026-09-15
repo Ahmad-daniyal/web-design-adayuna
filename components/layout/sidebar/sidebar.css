@@ -6,7 +6,7 @@
   width: 256px;
   height: calc(100vh - 56px);
   z-index: 40;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 253, 245, 0.9);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-right: 1px solid var(--border-color);
@@ -17,7 +17,7 @@
 }
 
 .dark .sidebar {
-  background: rgba(9, 13, 22, 0.85);
+  background: rgba(11, 14, 26, 0.85);
 }
 
 .sidebar-inner {
@@ -61,12 +61,12 @@
 .sidebar-link.active,
 .sidebar-link[data-link].active {
   background: var(--primary-light);
-  color: var(--primary);
+  color: var(--primary-text);
   font-weight: 700;
 }
 
 .sidebar-link.active i {
-  color: var(--primary);
+  color: var(--primary-text);
 }
 
 .sidebar-link.active {
@@ -74,7 +74,7 @@
 }
 
 .dark .sidebar-link.active {
-  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.12), 0 4px 18px rgba(56, 189, 248, 0.14);
+  box-shadow: var(--glow-primary);
 }
 
 .sidebar-footer {
@@ -94,7 +94,7 @@
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(9, 13, 22, 0.45);
+  background: rgba(11, 14, 26, 0.45);
   z-index: 39;
 }
 
@@ -115,7 +115,7 @@
   background: var(--bg-card);
   border: 1.5px solid var(--border-color);
   border-radius: var(--radius-md);
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12), var(--shadow-md);
+  box-shadow: 0 12px 32px rgba(40, 34, 12, 0.14), var(--shadow-md);
   max-height: 320px;
   overflow-y: auto;
   z-index: 100;
@@ -148,7 +148,7 @@
 .search-autocomplete-item:hover,
 .search-autocomplete-item.focused {
   background: var(--primary-light);
-  color: var(--primary);
+  color: var(--primary-text);
 }
 
 .search-autocomplete-item .ac-title {
@@ -163,7 +163,7 @@
 
 .search-autocomplete-item:hover .ac-title,
 .search-autocomplete-item.focused .ac-title {
-  color: var(--primary);
+  color: var(--primary-text);
 }
 
 .search-autocomplete-item .ac-source {
@@ -177,8 +177,8 @@
 
 .search-autocomplete-item:hover .ac-source,
 .search-autocomplete-item.focused .ac-source {
-  background: rgba(37, 99, 235, 0.14);
-  color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary-text);
 }
 
 .search-autocomplete-item .ac-icon {

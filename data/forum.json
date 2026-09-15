@@ -12,7 +12,7 @@
       {
         "author": "KakakKelas",
         "avatar": "K",
-        "color": "linear-gradient(135deg,#38BDF8,#2563EB)",
+        "color": "g1",
         "time": "1 jam lalu",
         "verified": true,
         "votes": 5,
@@ -21,7 +21,7 @@
       {
         "author": "Aisyah12",
         "avatar": "A",
-        "color": "linear-gradient(135deg,#059669,#34D399)",
+        "color": "g2",
         "time": "45 menit lalu",
         "verified": false,
         "chip": "Menjawab",
@@ -44,7 +44,7 @@
       {
         "author": "RumusRumus",
         "avatar": "R",
-        "color": "linear-gradient(135deg,#4F46E5,#818CF8)",
+        "color": "g3",
         "time": "4 jam lalu",
         "verified": true,
         "votes": 9,
@@ -53,7 +53,7 @@
       {
         "author": "SangPintar",
         "avatar": "S",
-        "color": "linear-gradient(135deg,#D97706,#FBBF24)",
+        "color": "g4",
         "time": "2 jam lalu",
         "verified": false,
         "chip": "Menambahkan",
@@ -76,7 +76,7 @@
       {
         "author": "GuruFisika",
         "avatar": "G",
-        "color": "linear-gradient(135deg,#0369A1,#22D3EE)",
+        "color": "g5",
         "time": "20 jam lalu",
         "verified": true,
         "votes": 6,
@@ -85,7 +85,7 @@
       {
         "author": "NewtonLover",
         "avatar": "N",
-        "color": "linear-gradient(135deg,#0F766E,#2DD4BF)",
+        "color": "g6",
         "time": "12 jam lalu",
         "verified": false,
         "chip": "Menjawab",
@@ -108,7 +108,7 @@
       {
         "author": "RocketBoy",
         "avatar": "R",
-        "color": "linear-gradient(135deg,#0284C7,#075985)",
+        "color": "g1",
         "time": "1 hari lalu",
         "verified": true,
         "votes": 8,
@@ -117,7 +117,7 @@
       {
         "author": "PeluruKencang",
         "avatar": "P",
-        "color": "linear-gradient(135deg,#B91C1C,#F87171)",
+        "color": "g2",
         "time": "8 jam lalu",
         "verified": false,
         "chip": "Menambahkan",
@@ -140,7 +140,7 @@
       {
         "author": "RedoksMaster",
         "avatar": "R",
-        "color": "linear-gradient(135deg,#C2410C,#FBBF24)",
+        "color": "g3",
         "time": "2 hari lalu",
         "verified": true,
         "votes": 7,
@@ -149,7 +149,7 @@
       {
         "author": "KimiaCeria",
         "avatar": "K",
-        "color": "linear-gradient(135deg,#D97706,#FBBF24)",
+        "color": "g4",
         "time": "1 hari lalu",
         "verified": false,
         "chip": "Menjawab",
@@ -172,7 +172,7 @@
       {
         "author": "BioNerd",
         "avatar": "B",
-        "color": "linear-gradient(135deg,#047857,#34D399)",
+        "color": "g5",
         "time": "3 hari lalu",
         "verified": true,
         "votes": 12,
@@ -181,7 +181,7 @@
       {
         "author": "GenX",
         "avatar": "G",
-        "color": "linear-gradient(135deg,#059669,#6EE7B7)",
+        "color": "g6",
         "time": "2 hari lalu",
         "verified": false,
         "chip": "Menjawab",
@@ -204,7 +204,7 @@
       {
         "author": "Kapankita",
         "avatar": "K",
-        "color": "linear-gradient(135deg,#B91C1C,#F87171)",
+        "color": "g1",
         "time": "4 hari lalu",
         "verified": true,
         "votes": 4,
@@ -213,7 +213,7 @@
       {
         "author": "Histori",
         "avatar": "H",
-        "color": "linear-gradient(135deg,#9D174D,#F9A8D4)",
+        "color": "g2",
         "time": "2 hari lalu",
         "verified": false,
         "chip": "Menambahkan",
@@ -236,7 +236,7 @@
       {
         "author": "KataJuara",
         "avatar": "K",
-        "color": "linear-gradient(135deg,#4F46E5,#818CF8)",
+        "color": "g3",
         "time": "6 hari lalu",
         "verified": true,
         "votes": 10,
@@ -245,7 +245,7 @@
       {
         "author": "Padil",
         "avatar": "P",
-        "color": "linear-gradient(135deg,#0F766E,#5EEAD4)",
+        "color": "g3",
         "time": "3 hari lalu",
         "verified": false,
         "chip": "Menjawab",

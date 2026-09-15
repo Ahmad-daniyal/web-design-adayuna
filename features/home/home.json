@@ -29,9 +29,9 @@
       "href": "#/forum"
     },
     "tiles": [
-      { "label": "Forum Diskusi", "href": "#/forum", "icon": "fa-comments", "accent": "#2563EB", "delay": "0s" },
-      { "label": "Study Buddy", "href": "#/friend", "icon": "fa-user-graduate", "accent": "#0EA5E9", "delay": "1s" },
-      { "label": "Badge & Poin", "href": "#/profile", "icon": "fa-trophy", "accent": "#38BDF8", "delay": "2s" },
+      { "label": "Forum Diskusi", "href": "#/forum", "icon": "fa-comments", "accent": "#4DB6E6", "delay": "0s" },
+      { "label": "Study Buddy", "href": "#/friend", "icon": "fa-user-graduate", "accent": "#AB7ED6", "delay": "1s" },
+      { "label": "Badge & Poin", "href": "#/profile", "icon": "fa-trophy", "accent": "#E9B72E", "delay": "2s" },
       { "label": "Progress Journal", "href": "#/profile", "icon": "fa-book-open", "accent": "#14B8A6", "delay": "0.5s" }
     ]
   },

@@ -256,7 +256,7 @@ export const Auth = (() => {
     pendingRegisterEmail = emailInput.value;
     emailInput.classList.add('error');
     if (errorEl) {
-      errorEl.innerHTML = 'Anda belum memiliki akun, silahkan daftar terlebih dahulu. <a href="#" data-action="register-hint" style="color:var(--primary);font-weight:600;text-decoration:underline;">Daftar sekarang</a>';
+      errorEl.innerHTML = 'Anda belum memiliki akun, silahkan daftar terlebih dahulu. <a href="#" data-action="register-hint" style="color:var(--primary-text);font-weight:600;text-decoration:underline;">Daftar sekarang</a>';
       errorEl.classList.add('show');
     }
   }

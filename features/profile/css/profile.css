@@ -13,9 +13,9 @@
 }
 
 .badge-item.earned {
-  border-color: var(--accent);
-  background: var(--accent-light);
-  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.12);
+  border-color: var(--violet);
+  background: var(--violet-light);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--violet) 15%, transparent);
 }
 
 .progress-card {
@@ -29,11 +29,11 @@
 
 .progress-card:hover {
   transform: translateY(-2px);
-  border-color: var(--primary);
+  border-color: var(--primary-text);
   box-shadow: var(--shadow-md);
 }
 
 .dark .progress-card:hover {
-  border-color: rgba(56, 189, 248, 0.45);
+  border-color: rgba(123, 63, 228, 0.55);
   box-shadow: var(--glow-soft);
 }

@@ -26,9 +26,9 @@ export function renderNavbar() { return `
       </button>
       <div id="notifDropdown" class="notif-dropdown absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-900/5 dark:shadow-black/40 hidden" style="z-index:100;">
         <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-800">
-          <p class="text-sm font-bold" style="color:var(--text-primary);"><i class="fas fa-bell mr-2" style="color:var(--primary);"></i>Notifikasi</p>
+          <p class="text-sm font-bold" style="color:var(--text-primary);"><i class="fas fa-bell mr-2" style="color:var(--primary-text);"></i>Notifikasi</p>
           <div class="flex items-center gap-2">
-            <button id="notifMarkAll" class="text-xs font-semibold hover:opacity-80 transition-opacity cursor-pointer" style="color:var(--primary); background:transparent; border:none; cursor:pointer;" onclick="event.stopPropagation(); Notifications.markAllRead();"><i class="fas fa-check-double mr-1"></i>Tandai dibaca</button>
+            <button id="notifMarkAll" class="text-xs font-semibold hover:opacity-80 transition-opacity cursor-pointer" style="color:var(--primary-text); background:transparent; border:none; cursor:pointer;" onclick="event.stopPropagation(); Notifications.markAllRead();"><i class="fas fa-check-double mr-1"></i>Tandai dibaca</button>
             <span style="color:var(--border-color);">|</span>
             <button id="notifClearAll" class="text-xs font-semibold hover:opacity-80 transition-opacity cursor-pointer" style="color:var(--text-muted); background:transparent; border:none; cursor:pointer;" onclick="event.stopPropagation(); Notifications.clearAll();"><i class="fas fa-trash mr-1"></i>Bersihkan</button>
           </div>

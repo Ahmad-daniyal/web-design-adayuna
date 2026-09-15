@@ -1,10 +1,10 @@
 [
-  { "id": 1001, "name":"Sari", "initials":"S", "mapel":"matematika", "minat":"diskusi", "kelas":"11", "color":"linear-gradient(135deg,#38BDF8,#2563EB)", "online":true },
-  { "id": 1002, "name":"Rizki", "initials":"R", "mapel":"fisika", "minat":"soal", "kelas":"12", "color":"linear-gradient(135deg,#0EA5E9,#0284C7)", "online":true },
-  { "id": 1003, "name":"Anisa", "initials":"A", "mapel":"biologi", "minat":"materi", "kelas":"10", "color":"linear-gradient(135deg,#2563EB,#1E40AF)", "online":false },
-  { "id": 1004, "name":"Fajar", "initials":"F", "mapel":"kimia", "minat":"kreatif", "kelas":"11", "color":"linear-gradient(135deg,#1D4ED8,#1E3A8A)", "online":true },
-  { "id": 1005, "name":"Dinda", "initials":"D", "mapel":"matematika", "minat":"diskusi", "kelas":"12", "color":"linear-gradient(135deg,#7DD3FC,#2563EB)", "online":false },
-  { "id": 1006, "name":"Gilang", "initials":"G", "mapel":"ips", "minat":"diskusi", "kelas":"11", "color":"linear-gradient(135deg,#0284C7,#075985)", "online":true },
-  { "id": 1007, "name":"Putri", "initials":"P", "mapel":"bahasa", "minat":"materi", "kelas":"10", "color":"linear-gradient(135deg,#38BDF8,#0EA5E9)", "online":true },
-  { "id": 1008, "name":"Raka", "initials":"R", "mapel":"sejarah", "minat":"soal", "kelas":"12", "color":"linear-gradient(135deg,#2563EB,#334155)", "online":false }
+  { "id": 1001, "name":"Sari", "initials":"S", "mapel":"matematika", "minat":"diskusi", "kelas":"11", "color": "g1", "online":true },
+  { "id": 1002, "name":"Rizki", "initials":"R", "mapel":"fisika", "minat":"soal", "kelas":"12", "color": "g2", "online":true },
+  { "id": 1003, "name":"Anisa", "initials":"A", "mapel":"biologi", "minat":"materi", "kelas":"10", "color": "g3", "online":false },
+  { "id": 1004, "name":"Fajar", "initials":"F", "mapel":"kimia", "minat":"kreatif", "kelas":"11", "color": "g4", "online":true },
+  { "id": 1005, "name":"Dinda", "initials":"D", "mapel":"matematika", "minat":"diskusi", "kelas":"12", "color": "g5", "online":false },
+  { "id": 1006, "name":"Gilang", "initials":"G", "mapel":"ips", "minat":"diskusi", "kelas":"11", "color": "g6", "online":true },
+  { "id": 1007, "name":"Putri", "initials":"P", "mapel":"bahasa", "minat":"materi", "kelas":"10", "color": "g1", "online":true },
+  { "id": 1008, "name":"Raka", "initials":"R", "mapel":"sejarah", "minat":"soal", "kelas":"12", "color": "g4", "online":false }
 ]

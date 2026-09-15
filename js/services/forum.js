@@ -249,12 +249,12 @@ export const Forum = (() => {
                 </div>
               </div>
 
-              <h3 class="text-lg font-bold mb-4 thread-anim" style="animation-delay:140ms;color:var(--text-primary);"><i class="fas fa-comments mr-2" style="color:var(--primary);"></i>Jawaban <span class="text-sm font-semibold" style="color:var(--text-muted);">(${thread.replies})</span></h3>
+              <h3 class="text-lg font-bold mb-4 thread-anim" style="animation-delay:140ms;color:var(--text-primary);"><i class="fas fa-comments mr-2" style="color:var(--primary-text);"></i>Jawaban <span class="text-sm font-semibold" style="color:var(--text-muted);">(${thread.replies})</span></h3>
 
               ${commentItems(thread)}
 
               <div class="glass-card !p-5 mt-6 thread-anim" id="threadReplyBox" style="animation-delay:260ms">
-                <h4 class="font-bold mb-3" style="color:var(--text-primary);"><i class="fas fa-reply mr-2" style="color:var(--primary);"></i>Tulis Balasan</h4>
+                <h4 class="font-bold mb-3" style="color:var(--text-primary);"><i class="fas fa-reply mr-2" style="color:var(--primary-text);"></i>Tulis Balasan</h4>
                 <form onsubmit="Forum.submitComment(event)">
                   <div class="mb-3">
                     <textarea id="discussionCommentInput" rows="3" class="w-full p-3 rounded-lg text-sm border resize-none focus:outline-none focus:ring-2" style="background:var(--bg-body);border-color:var(--border-color);color:var(--text-primary);" placeholder="Tulis jawaban atau pertanyaanmu..."></textarea>
@@ -292,7 +292,7 @@ export const Forum = (() => {
                 <div class="mt-4">
                   <div class="flex items-center justify-between text-xs mb-1">
                     <span style="color:var(--text-muted);">Keaktifan diskusi</span>
-                    <span class="font-bold" style="color:var(--primary);">${threadActivity(thread)}%</span>
+                    <span class="font-bold" style="color:var(--primary-text);">${threadActivity(thread)}%</span>
                   </div>
                   <div class="thread-progress"><span style="width:${threadActivity(thread)}%"></span></div>
                 </div>
@@ -321,7 +321,7 @@ export const Forum = (() => {
           <div class="thread-related-section mt-12">
             <div class="flex flex-wrap items-end justify-between gap-3 mb-5">
               <div>
-                <h3 class="text-xl font-bold" style="color:var(--text-primary);"><i class="fas fa-link mr-2" style="color:var(--primary);"></i>Thread Terkait</h3>
+                <h3 class="text-xl font-bold" style="color:var(--text-primary);"><i class="fas fa-link mr-2" style="color:var(--primary-text);"></i>Thread Terkait</h3>
                 <p class="text-xs mt-1" style="color:var(--text-muted);">Diskusi lain yang mungkin menarik untukmu</p>
               </div>
               <button class="btn-edquest btn-outline-glow text-sm !py-2 !px-4" onclick="Forum.backToList()"><i class="fas fa-list mr-1"></i> Lihat Semua Thread</button>
@@ -356,7 +356,7 @@ export const Forum = (() => {
     ).join('');
     div.innerHTML = '<div class="modal-content">' +
       '<div class="modal-header">' +
-        '<h3 class="text-xl font-bold" style="color:var(--text-primary);"><i class="fas fa-plus-circle mr-2" style="color:var(--primary);"></i>Buat Thread Baru</h3>' +
+        '<h3 class="text-xl font-bold" style="color:var(--text-primary);"><i class="fas fa-plus-circle mr-2" style="color:var(--primary-text);"></i>Buat Thread Baru</h3>' +
         '<button class="modal-close" onclick="Forum.closeNewThreadModal()" aria-label="Tutup"><i class="fas fa-times"></i></button>' +
       '</div>' +
       '<div class="modal-body">' +
@@ -491,7 +491,7 @@ export const Forum = (() => {
     if (!c) return '';
     const cls = 'comment-item' + (c.verified ? ' solusi' : '');
     const delay = 180 + i * 40;
-    const color = c.color || avatarColor(c.author || 'Anonim');
+    const color = avatarBg(c.color, avatarColor(c.author || 'Anonim'));
     const avatar = c.avatar || initialOf(c.author || '?');
     const badge = c.verified
       ? '<span class="thread-solusi-badge ml-auto"><i class="fas fa-circle-check"></i> Solusi Terverifikasi</span>'
@@ -590,17 +590,14 @@ export const Forum = (() => {
   }
 
   function avatarColor(name) {
-    const colors = [
-      'linear-gradient(135deg,#2563EB,#0EA5E9)',
-      'linear-gradient(135deg,#059669,#34D399)',
-      'linear-gradient(135deg,#D97706,#FBBF24)',
-      'linear-gradient(135deg,#4F46E5,#818CF8)',
-      'linear-gradient(135deg,#B91C1C,#F87171)',
-      'linear-gradient(135deg,#0F766E,#2DD4BF)'
-    ];
+    const count = 6;
     let h = 0;
     for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
-    return colors[h % colors.length];
+    return 'var(--avatar-g' + (1 + (h % count)) + ')';
+  }
+
+  function avatarBg(c, fallback) {
+    return /^g[1-6]$/.test(String(c || '')) ? 'var(--avatar-' + c + ')' : (c || fallback);
   }
 
   function initialOf(name) { return (name || '?').charAt(0).toUpperCase(); }
