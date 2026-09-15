@@ -2,6 +2,8 @@
 
 > Mulai perjalanan belajarmu tanpa rasa malu.
 
+Ardi Pebriyan
+
 Edquest adalah platform belajar digital untuk siswa SMA/SMK di mana kamu bisa berdiskusi dengan teman sebaya, mencari teman belajar yang cocok, dan melacak progress belajarmu — semua dalam lingkungan yang nyaman dan bebas dari rasa takut dihakimi.
 
 ---
