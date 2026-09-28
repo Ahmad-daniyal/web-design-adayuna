@@ -14,8 +14,8 @@ const escapeAttr = escAttr;
 function heroStats() {
   const stats = (dataStore.home && dataStore.home.stats) || [];
   if (!stats.length) return '';
-  return stats.map(s => s && s.value != null
-    ? '<div class="metric-item"><div class="metric-number">' + escHtml(s.value) + '</div><div class="metric-label">' + escHtml(s.label) + '</div></div>'
+  return stats.map((s, i) => s && s.value != null
+    ? '<div class="metric-item reveal reveal-stagger-' + (i + 1) + '"><div class="metric-number" data-counter="' + escHtml(s.value) + '">0</div><div class="metric-label">' + escHtml(s.label) + '</div></div>'
     : ''
   ).join('');
 }
@@ -30,8 +30,8 @@ function tagHTML(tag) {
 
 function iceCards() {
   const ice = (dataStore.home && dataStore.home.iceBreakers) || [];
-  return ice.map(c =>
-    '<div class="ice-card fx-shine" data-copy="' + escapeAttr(c && c.copy) + '">' +
+  return ice.map((c, i) =>
+    '<div class="ice-card fx-shine reveal reveal-stagger-' + ((i % 4) + 1) + '" data-copy="' + escapeAttr(c && c.copy) + '">' +
       '<i class="fas fa-quote-right quote-icon"></i>' +
       '<p class="text-sm font-medium leading-relaxed mb-3" style="color:var(--text-primary);">' + ((c && c.text) || '') + '"</p>' +
       '<div class="flex items-center justify-between">' +
@@ -85,8 +85,8 @@ function heroContent() {
 function featureCards() {
   const section = (dataStore.home && dataStore.home.featuresSection) || {};
   const features = (section.features || []).filter(f => f && f.title);
-  return features.map(f =>
-    '<div class="feature-card fx-card text-center sm:text-left">' +
+  return features.map((f, i) =>
+    '<div class="feature-card fx-card text-center sm:text-left reveal reveal-stagger-' + ((i % 3) + 1) + '">' +
       '<div class="feature-icon mx-auto sm:mx-0"><i class="fas ' + escAttr(f.icon || 'fa-star') + '"></i></div>' +
       '<h3 class="text-xl font-bold mt-5 mb-2" style="color:var(--text-primary);">' + escHtml(f.title) + '</h3>' +
       '<p class="text-sm leading-relaxed" style="color:var(--text-secondary);">' + escHtml(f.desc) + '</p>' +
@@ -133,31 +133,31 @@ export function renderHome() {
   <div class="max-w-6xl mx-auto px-4 sm:px-6 w-full">
     <div class="grid md:grid-cols-2 gap-12 items-center">
       <div class="text-center md:text-left">
-        <div class="hero-badge mb-6 mx-auto md:mx-0">
+        <div class="hero-badge mb-6 mx-auto md:mx-0 reveal">
           <i class="fas ${hero.badgeIcon} text-sm"></i>
           ${hero.badge}
         </div>
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6" style="color:var(--text-primary);">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 reveal reveal-stagger-1" style="color:var(--text-primary);">
           ${hero.title}
         </h1>
-        <p class="text-lg sm:text-xl mb-8 max-w-xl mx-auto md:mx-0 leading-relaxed" style="color:var(--text-secondary);">
+        <p class="text-lg sm:text-xl mb-8 max-w-xl mx-auto md:mx-0 leading-relaxed reveal reveal-stagger-2" style="color:var(--text-secondary);">
           ${hero.description}
         </p>
-        <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-6">
+        <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-6 reveal reveal-stagger-3">
           ${hero.ctaButtons}
         </div>
-        <div class="home-search-wrapper mx-auto md:mx-0" style="max-width:520px;width:100%;">
+        <div class="home-search-wrapper mx-auto md:mx-0 reveal reveal-stagger-4" style="max-width:520px;width:100%;">
           <div class="search-input-wrapper" style="position:relative;">
             <i class="fas fa-search" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-muted);z-index:2;"></i>
             <input id="homeSearchInput" type="text" class="form-input !pl-11" placeholder="Cari forum, topik, mapel, arena, atau apa saja..." autocomplete="off">
             <div id="homeSearchAc" class="search-ac-dropdown"></div>
           </div>
         </div>
-        <div class="baca-dulu mx-auto md:mx-0">
+        <div class="baca-dulu mx-auto md:mx-0 reveal reveal-stagger-5">
           ${hero.bacaDulu}
         </div>
       </div>
-      <div class="hidden md:flex items-center justify-center">
+      <div class="hidden md:flex items-center justify-center reveal-right">
         <div class="relative">
           <div class="w-80 h-80 rounded-full" style="background:radial-gradient(circle, rgba(37,99,235,0.10) 0%, transparent 70%);"></div>
           <div class="absolute inset-0 flex items-center justify-center">
@@ -171,7 +171,7 @@ export function renderHome() {
 
 <section class="relative z-10 -mt-16 pb-12" style="background:transparent;">
   <div class="max-w-5xl mx-auto px-4 sm:px-6">
-    <div class="card-panel overflow-hidden" style="box-shadow:var(--shadow-lg);">
+    <div class="card-panel overflow-hidden reveal" style="box-shadow:var(--shadow-lg);">
       <div class="metric-strip">
         ${heroStats()}
       </div>
@@ -181,7 +181,7 @@ export function renderHome() {
 
 <section class="py-16 lg:py-20" style="background:var(--bg-body);">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="text-center mb-12">
+    <div class="text-center mb-12 reveal">
       ${iceBreakerSection()}
     </div>
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -192,7 +192,7 @@ export function renderHome() {
 
 <section class="py-16 lg:py-20" style="background:var(--bg-body);">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="text-center mb-12">
+    <div class="text-center mb-12 reveal">
       ${featuresSection()}
     </div>
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -203,7 +203,7 @@ export function renderHome() {
 
 <section class="py-16 lg:py-20 cta-section" style="background:var(--gradient-hero);">
   <div class="max-w-4xl mx-auto px-4 sm:px-6">
-    <div class="cta-panel fx-card text-center">
+    <div class="cta-panel fx-card text-center reveal reveal-scale">
       ${ctaSection()}
     </div>
   </div>

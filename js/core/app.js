@@ -8,6 +8,7 @@ import { Settings } from '../services/settings.js';
 import { initHomeSearch } from '../../features/home/home.js';
 import { initForumSearch } from '../../features/forum/forum.js';
 import { searchEverything, sacHTML, bindSacItems, bindKeydown } from './search.js';
+import { ScrollAnimation } from './scrollAnimation.js';
 
 export const App = (() => {
   let activeAcDropdown = null;
@@ -25,6 +26,7 @@ export const App = (() => {
     initEscapeClose();
     initFxCards();
     initPageHandlers();
+    ScrollAnimation.init();
   }
 
   function initPageHandlers() {
@@ -39,6 +41,7 @@ export const App = (() => {
         if (page === 'friend') Matching.init();
         if (page === 'match') Match.init();
         if (page === 'profile') Profile.init();
+        ScrollAnimation.refresh();
       }, 50);
     });
   }

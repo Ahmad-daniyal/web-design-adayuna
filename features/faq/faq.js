@@ -10,7 +10,7 @@ function esc(s) {
 function faqItems() {
   const items = (dataStore.faq && dataStore.faq.items) || [];
   return items.map((it, i) =>
-    '<div class="card-panel overflow-hidden">' +
+    '<div class="card-panel overflow-hidden reveal reveal-stagger-' + ((i % 3) + 1) + '">' +
       '<button class="faq-toggle w-full text-left p-5 flex items-center justify-between" aria-expanded="false">' +
         '<span class="font-semibold text-sm text-slate-900 dark:text-slate-100"><i class="fas ' + (it.icon || 'fa-circle-question') + ' mr-2 text-slate-500 dark:text-slate-400"></i>' + esc(it.q) + '</span>' +
         '<i class="fas fa-chevron-down faq-chevron text-xs text-slate-400 dark:text-slate-500 transition-transform duration-300"></i>' +
@@ -26,16 +26,16 @@ export function renderFaq() { return `
 <section class="pt-16 md:pt-20 pb-4">
   <div class="max-w-4xl mx-auto px-4 sm:px-6">
     <div class="max-w-3xl">
-      <span class="section-badge"><i class="fas ${esc((dataStore.faq && dataStore.faq.hero && dataStore.faq.hero.badge) || 'fa-question-circle')}"></i> ${esc((dataStore.faq && dataStore.faq.hero && dataStore.faq.hero.badgeText) || 'FAQ & Kontak')}</span>
-      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-3 text-slate-900 dark:text-slate-100">${esc((dataStore.faq && dataStore.faq.hero && dataStore.faq.hero.title) || 'Punya Pertanyaan?')}</h1>
-      <p class="mt-1 text-sm sm:text-base text-slate-500 dark:text-slate-400">${esc((dataStore.faq && dataStore.faq.hero && dataStore.faq.hero.subtitle) || '')}</p>
+      <span class="section-badge reveal"><i class="fas ${esc((dataStore.faq && dataStore.faq.hero && dataStore.faq.hero.badge) || 'fa-question-circle')}"></i> ${esc((dataStore.faq && dataStore.faq.hero && dataStore.faq.hero.badgeText) || 'FAQ & Kontak')}</span>
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-3 reveal reveal-stagger-1 text-slate-900 dark:text-slate-100">${esc((dataStore.faq && dataStore.faq.hero && dataStore.faq.hero.title) || 'Punya Pertanyaan?')}</h1>
+      <p class="mt-1 text-sm sm:text-base reveal reveal-stagger-2 text-slate-500 dark:text-slate-400">${esc((dataStore.faq && dataStore.faq.hero && dataStore.faq.hero.subtitle) || '')}</p>
     </div>
   </div>
 </section>
 
 <section class="py-10">
   <div class="max-w-3xl mx-auto px-4 sm:px-6">
-    <h2 class="text-2xl font-extrabold mb-6 text-center text-slate-900 dark:text-slate-100">${esc((dataStore.faq && dataStore.faq.sectionTitle) || 'Pertanyaan Umum')}</h2>
+    <h2 class="text-2xl font-extrabold mb-6 text-center reveal text-slate-900 dark:text-slate-100">${esc((dataStore.faq && dataStore.faq.sectionTitle) || 'Pertanyaan Umum')}</h2>
     <div class="space-y-3" id="faqAccordion">
       ${faqItems()}
     </div>
@@ -44,8 +44,8 @@ export function renderFaq() { return `
 
 <section class="py-12" style="background:var(--bg-section);">
   <div class="max-w-3xl mx-auto px-4 sm:px-6">
-    <h2 class="text-2xl font-extrabold mb-6 text-center text-slate-900 dark:text-slate-100">${esc((dataStore.faq && dataStore.faq.contact && dataStore.faq.contact.sectionTitle) || 'Kirim Pesan')}</h2>
-    <form class="card-panel !p-6" onsubmit="App.submitContact(event)">
+    <h2 class="text-2xl font-extrabold mb-6 text-center reveal text-slate-900 dark:text-slate-100">${esc((dataStore.faq && dataStore.faq.contact && dataStore.faq.contact.sectionTitle) || 'Kirim Pesan')}</h2>
+    <form class="card-panel !p-6 reveal reveal-scale" onsubmit="App.submitContact(event)">
       <div class="grid sm:grid-cols-2 gap-4 mb-4">
         <div>
           <label class="form-label" for="contactName">Nama</label>

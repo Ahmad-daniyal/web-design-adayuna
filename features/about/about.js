@@ -19,16 +19,16 @@ export function renderAbout() {
     '<p>' + p + '</p>'
   ).join('\n          ');
 
-  const misiItems = (visiData.misi || []).map(m =>
-    '<div class="card-panel p-6 text-center">' +
+  const misiItems = (visiData.misi || []).map((m, i) =>
+    '<div class="card-panel p-6 text-center reveal reveal-stagger-' + (i + 1) + '">' +
       '<div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 text-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"><i class="fas ' + (m.icon || 'fa-star') + '"></i></div>' +
       '<h4 class="text-sm font-bold mb-2 text-slate-900 dark:text-slate-100">' + esc(m.title) + '</h4>' +
       '<p class="text-xs leading-relaxed text-slate-500 dark:text-slate-400">' + esc(m.desc) + '</p>' +
     '</div>'
   ).join('\n        ');
 
-  const stepItems = (stepsData.items || []).map(s =>
-    '<div class="text-center">' +
+  const stepItems = (stepsData.items || []).map((s, i) =>
+    '<div class="text-center reveal reveal-stagger-' + (i + 1) + '">' +
       '<div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-extrabold text-white" style="background:var(--gradient-primary);">' + (s.num || '') + '</div>' +
       '<h3 class="text-lg font-bold mb-2 text-slate-900 dark:text-slate-100">' + esc(s.title) + '</h3>' +
       '<p class="text-sm leading-relaxed text-slate-500 dark:text-slate-400">' + esc(s.desc) + '</p>' +
@@ -39,9 +39,9 @@ export function renderAbout() {
 <section class="pt-16 md:pt-20 pb-4">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="max-w-3xl">
-      <span class="section-badge"><i class="fas ${esc(hero.badge || 'fa-info-circle')}"></i> ${esc(hero.badgeText || 'Tentang Edquest')}</span>
-      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-3 text-slate-900 dark:text-slate-100">${hero.title || ''}</h1>
-      <p class="mt-2 text-sm sm:text-base text-slate-500 dark:text-slate-400">${esc(hero.subtitle || '')}</p>
+      <span class="section-badge reveal"><i class="fas ${esc(hero.badge || 'fa-info-circle')}"></i> ${esc(hero.badgeText || 'Tentang Edquest')}</span>
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-3 reveal reveal-stagger-1 text-slate-900 dark:text-slate-100">${hero.title || ''}</h1>
+      <p class="mt-2 text-sm sm:text-base reveal reveal-stagger-2 text-slate-500 dark:text-slate-400">${esc(hero.subtitle || '')}</p>
     </div>
   </div>
 </section>
@@ -49,14 +49,14 @@ export function renderAbout() {
 <section class="py-14 lg:py-16">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="grid md:grid-cols-2 gap-12 items-center">
-      <div>
+      <div class="reveal-left">
         <span class="section-badge"><i class="fas ${esc(latar.badge || 'fa-question-circle')}"></i> ${esc(latar.badgeText || 'Latar Belakang')}</span>
         <h2 class="text-3xl sm:text-4xl font-extrabold mt-4 mb-6 text-slate-900 dark:text-slate-100">${esc(latar.title || 'Kenapa Edquest Dibuat?')}</h2>
         <div class="space-y-4 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
           ${paragraphs}
         </div>
       </div>
-      <div class="flex items-center justify-center">
+      <div class="flex items-center justify-center reveal-right">
         <div class="card-panel p-8 text-center max-w-sm">
           <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"><i class="fas ${esc(quote.icon || 'fa-lightbulb')}"></i></div>
           <blockquote class="text-sm italic leading-relaxed text-slate-500 dark:text-slate-400">${quote.text || ''}</blockquote>
@@ -69,12 +69,12 @@ export function renderAbout() {
 
 <section class="py-14 lg:py-16" style="background:var(--bg-section);">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="text-center mb-12">
+    <div class="text-center mb-12 reveal">
       <span class="section-badge"><i class="fas ${esc(visiData.badge || 'fa-bullseye')}"></i> ${esc(visiData.badgeText || 'Visi & Misi')}</span>
       <h2 class="text-3xl sm:text-4xl font-extrabold mt-4 mb-3 text-slate-900 dark:text-slate-100">${esc(visiData.title || 'Arah dan Tujuan Kami')}</h2>
     </div>
     <div class="max-w-3xl mx-auto">
-      <div class="card-panel p-8 mb-8 text-center">
+      <div class="card-panel p-8 mb-8 text-center reveal reveal-scale">
         <i class="fas fa-eye text-3xl mb-4 text-slate-600 dark:text-slate-300"></i>
         <h3 class="text-2xl font-bold mb-3 text-slate-900 dark:text-slate-100">Visi</h3>
         <p class="text-sm leading-relaxed text-slate-500 dark:text-slate-400">${esc(visiData.visi || '')}</p>
@@ -88,7 +88,7 @@ export function renderAbout() {
 
 <section class="py-14 lg:py-16">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="text-center mb-12">
+    <div class="text-center mb-12 reveal">
       <span class="section-badge"><i class="fas ${esc(stepsData.badge || 'fa-cogs')}"></i> ${esc(stepsData.badgeText || 'Cara Kerja')}</span>
       <h2 class="text-3xl sm:text-4xl font-extrabold mt-4 mb-3 text-slate-900 dark:text-slate-100">${esc(stepsData.title || 'mudah, Kok!')}</h2>
       <p class="text-lg text-slate-500 dark:text-slate-400">${esc(stepsData.subtitle || '')}</p>

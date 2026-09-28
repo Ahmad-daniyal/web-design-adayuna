@@ -17,11 +17,11 @@ export function renderProfile() { return `
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="grid lg:grid-cols-3 gap-8">
       <div class="lg:col-span-1">
-        <div class="card-panel p-6 text-center mb-6">
+        <div class="card-panel p-6 text-center mb-6 reveal-left">
           <div id="profileAvatar" class="user-avatar w-20 h-20 rounded-full flex items-center justify-center text-2xl font-extrabold text-white mx-auto mb-3" style="background:var(--gradient-primary);">D</div>
           <h2 id="profileName" class="text-xl font-bold text-slate-900 dark:text-slate-100">Tamu</h2>
-          <p id="profileId" class="text-xs font-mono mt-1" style="color:var(--primary);">ID: —</p>
-          <p class="text-sm mt-1 text-slate-400 dark:text-slate-500">Siswa &middot; <span class="text-sm font-medium" style="color:var(--primary);">Mode Panggilan</span></p>
+          <p id="profileId" class="text-xs font-mono mt-1" style="color:var(--primary-text);">ID: —</p>
+          <p class="text-sm mt-1 text-slate-400 dark:text-slate-500">Siswa &middot; <span class="text-sm font-medium" style="color:var(--primary-text);">Mode Panggilan</span></p>
           <div class="flex items-center justify-center gap-4 mt-4">
             <div class="text-center"><div id="profilePoints" class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">0</div><div class="text-xs text-slate-400 dark:text-slate-500">Poin</div></div>
             <div class="w-px h-10" style="background:var(--border-color);"></div>
@@ -30,13 +30,13 @@ export function renderProfile() { return `
             <div class="text-center"><div id="profileContrib" class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">0</div><div class="text-xs text-slate-400 dark:text-slate-500">Kontribusi</div></div>
           </div>
         </div>
-        <div class="card-panel p-6 mb-6">
+        <div class="card-panel p-6 mb-6 reveal-left">
           <h4 class="font-bold text-sm mb-4 text-slate-900 dark:text-slate-100"><i class="fas fa-award mr-2 text-slate-500 dark:text-slate-400"></i>Badge</h4>
           <div id="profileBadges" class="flex flex-wrap gap-3"></div>
           <p class="text-xs mt-3 text-slate-400 dark:text-slate-500"><span id="profileBadgeCountText">0 dari 7</span> badge diraih</p>
           <a href="#/match" class="btn-edquest btn-primary-grad w-full mt-4 text-sm !py-2"><i class="fas fa-bolt mr-1"></i> Raih Badge di Arena</a>
         </div>
-        <div class="card-panel p-6 mb-6">
+        <div class="card-panel p-6 mb-6 reveal-left">
           <h4 class="font-bold text-sm mb-4 text-slate-900 dark:text-slate-100"><i class="fas fa-bolt mr-2" style="color:var(--accent);"></i>Ranking Arena</h4>
           <div class="flex items-center gap-3 mb-4">
             <span id="profileRating" class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">—</span>
@@ -49,7 +49,7 @@ export function renderProfile() { return `
           </div>
           <a href="#/match" class="btn-edquest btn-outline-glow w-full mt-4 text-sm !py-2"><i class="fas fa-bolt mr-1"></i> Masuk Arena</a>
         </div>
-        <div class="card-panel p-4">
+        <div class="card-panel p-4 reveal-left">
           <label class="flex items-center justify-between cursor-pointer">
             <span class="text-sm font-medium text-slate-900 dark:text-slate-100"><i class="fas fa-eye-slash mr-2 text-slate-400 dark:text-slate-500"></i>Mode Anonim</span>
             <div class="relative">
@@ -62,7 +62,7 @@ export function renderProfile() { return `
         </div>
       </div>
       <div class="lg:col-span-2">
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center justify-between mb-4 reveal-right">
           <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100"><i class="fas fa-book-open mr-2 text-slate-500 dark:text-slate-400"></i>Jurnal Belajar</h2>
           <button id="addJournalBtn" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4"><i class="fas fa-plus"></i> Catat Hari Ini</button>
         </div>

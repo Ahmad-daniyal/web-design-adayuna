@@ -11,6 +11,10 @@ export const Matching = (() => {
     return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
+  function avatarBg(c) {
+    return /^g[1-6]$/.test(String(c || '')) ? 'var(--avatar-' + c + ')' : (c || 'var(--avatar-g1)');
+  }
+
   function init() {
     bindFilterEvents();
     renderBuddies(getPool());
@@ -49,7 +53,7 @@ export const Matching = (() => {
         mapel: u.mapel || 'umum',
         minat: u.minat || 'diskusi',
         kelas: u.kelas || '10',
-        color: 'linear-gradient(135deg,#38BDF8,#2563EB)',
+        color: 'g1',
         online: true
       }));
     return accounts.concat(dataStore.buddies);
@@ -79,8 +83,8 @@ export const Matching = (() => {
     if (emptyState) emptyState.classList.add('hidden');
     container.innerHTML = list.map((b, i) => {
       const minatLabel = MINAT_LABELS[b.minat] || capitalize(String(b.minat));
-      return '<div class="buddy-card">' +
-        '<div class="flex items-center gap-3 mb-4"><div class="buddy-avatar" style="background:' + b.color + ';">' + esc(b.initials) + '</div>' +
+      return '<div class="buddy-card reveal reveal-stagger-' + ((i % 3) + 1) + '">' +
+        '<div class="flex items-center gap-3 mb-4"><div class="buddy-avatar" style="background:' + avatarBg(b.color) + ';">' + esc(b.initials) + '</div>' +
         '<div class="flex-1 min-w-0"><h4 class="font-bold text-sm" style="color:var(--text-primary);">' + esc(b.name) +
         (b.id ? ' <span class="buddy-id">ID ' + esc(b.id) + '</span>' : '') + '</h4>' +
         '<span class="text-xs" style="color:var(--text-muted);">Kelas ' + esc(b.kelas) + '</span>' +
@@ -90,6 +94,7 @@ export const Matching = (() => {
         '<div class="flex gap-2"><button class="btn-edquest btn-primary-grad text-xs !py-2 !px-3 flex-1" onclick="Matching.requestBuddy(' + i + ')"><i class="fas fa-paper-plane"></i> Ajak Berteman</button>' +
         '<button class="btn-edquest btn-outline-glow text-xs !py-2 !px-3" onclick="Matching.viewProfile(' + i + ')"><i class="fas fa-user"></i> Lihat</button></div></div>';
     }).join('');
+    if (window.ScrollAnimation) ScrollAnimation.refresh();
   }
 
   function requestBuddy(index) {

@@ -25,16 +25,16 @@ export function renderFriend() { return `
 <section class="pt-16 md:pt-20 pb-4">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="max-w-3xl">
-      <span class="section-badge"><i class="fas fa-user-friends"></i> Study Buddy Matching</span>
-      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-3 text-slate-900 dark:text-slate-100">Cari Teman Belajar?</h1>
-      <p class="mt-1 text-sm sm:text-base text-slate-500 dark:text-slate-400">Pilih mapel dan minatmu, kami akan mencocokkanmu dengan teman belajar yang cocok.</p>
+      <span class="section-badge reveal"><i class="fas fa-user-friends"></i> Study Buddy Matching</span>
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-3 reveal reveal-stagger-1 text-slate-900 dark:text-slate-100">Cari Teman Belajar?</h1>
+      <p class="mt-1 text-sm sm:text-base reveal reveal-stagger-2 text-slate-500 dark:text-slate-400">Pilih mapel dan minatmu, kami akan mencocokkanmu dengan teman belajar yang cocok.</p>
     </div>
   </div>
 </section>
 
 <section class="py-6">
   <div class="max-w-5xl mx-auto px-4 sm:px-6">
-    <div class="card-panel p-5 sm:p-6">
+    <div class="card-panel p-5 sm:p-6 reveal reveal-left">
       <h3 class="text-lg font-bold mb-4 text-slate-900 dark:text-slate-100"><i class="fas fa-sliders-h mr-2"></i>Filter Pencarian</h3>
       <div id="matchingPanel" class="space-y-4">
         <div>
@@ -81,7 +81,7 @@ export function renderFriend() { return `
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="flex items-center justify-between mb-6">
       <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100">Teman Belajar yang Cocok</h2>
-      <span class="text-sm text-slate-400 dark:text-slate-500" id="resultCount">8 teman ditemukan</span>
+      <span class="text-sm text-slate-400 dark:text-slate-500 reveal" id="resultCount">8 teman ditemukan</span>
     </div>
     <div id="buddyResults" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     <div id="emptyState" class="hidden text-center py-16">

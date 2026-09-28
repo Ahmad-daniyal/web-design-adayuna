@@ -32,7 +32,17 @@ export const Profile = (() => {
     if (nameEl) nameEl.textContent = user ? user.name : 'Tamu';
     if (idEl) idEl.textContent = user && user.id ? 'ID: ' + user.id : 'ID: —';
     if (avatarEl) avatarEl.textContent = user ? user.avatar : '?';
-    if (pointsEl) pointsEl.textContent = user ? (user.points || 0) : 0;
+    if (pointsEl) {
+      const targetPoints = user ? (user.points || 0) : 0;
+      if (targetPoints > 0 && !pointsEl.dataset.counterBound) {
+        pointsEl.dataset.counterBound = '1';
+        pointsEl.dataset.counter = targetPoints;
+        pointsEl.textContent = '0';
+        if (window.ScrollAnimation) ScrollAnimation.refresh();
+      } else {
+        pointsEl.textContent = targetPoints;
+      }
+    }
 
     const stats = user && user.matchStats;
     const ratingEl = document.getElementById('profileRating');
@@ -46,9 +56,39 @@ export const Profile = (() => {
       tierEl.textContent = t;
       tierEl.className = 'tier-chip tier-' + t.toLowerCase();
     }
-    if (winsEl) winsEl.textContent = stats ? (stats.wins || 0) : 0;
-    if (drawsEl) drawsEl.textContent = stats ? (stats.draws || 0) : 0;
-    if (lossesEl) lossesEl.textContent = stats ? (stats.losses || 0) : 0;
+    if (winsEl) {
+      const targetWins = stats ? (stats.wins || 0) : 0;
+      if (targetWins > 0 && !winsEl.dataset.counterBound) {
+        winsEl.dataset.counterBound = '1';
+        winsEl.dataset.counter = targetWins;
+        winsEl.textContent = '0';
+        if (window.ScrollAnimation) ScrollAnimation.refresh();
+      } else {
+        winsEl.textContent = targetWins;
+      }
+    }
+    if (drawsEl) {
+      const targetDraws = stats ? (stats.draws || 0) : 0;
+      if (targetDraws > 0 && !drawsEl.dataset.counterBound) {
+        drawsEl.dataset.counterBound = '1';
+        drawsEl.dataset.counter = targetDraws;
+        drawsEl.textContent = '0';
+        if (window.ScrollAnimation) ScrollAnimation.refresh();
+      } else {
+        drawsEl.textContent = targetDraws;
+      }
+    }
+    if (lossesEl) {
+      const targetLosses = stats ? (stats.losses || 0) : 0;
+      if (targetLosses > 0 && !lossesEl.dataset.counterBound) {
+        lossesEl.dataset.counterBound = '1';
+        lossesEl.dataset.counter = targetLosses;
+        lossesEl.textContent = '0';
+        if (window.ScrollAnimation) ScrollAnimation.refresh();
+      } else {
+        lossesEl.textContent = targetLosses;
+      }
+    }
     renderBadges(user);
     renderJournal(user);
   }
@@ -59,14 +99,24 @@ export const Profile = (() => {
     const textEl = document.getElementById('profileBadgeCountText');
     if (!wrap) return;
     const owned = new Set((user && user.matchStats && user.matchStats.badges) || []);
-    const chips = Match.BADGES.map(b => {
+    const chips = Match.BADGES.map((b, i) => {
       const has = owned.has(b.id);
-      return '<div class="badge-item' + (has ? ' earned' : '') + '" title="' + esc(b.name) + ' — ' + esc(b.desc) + '">' +
+      return '<div class="badge-item reveal-scale reveal-stagger-' + ((i % 4) + 1) + (has ? ' earned' : '') + '" title="' + esc(b.name) + ' — ' + esc(b.desc) + '">' +
         '<i class="fas ' + (has ? b.icon : 'fa-lock') + '"></i></div>';
     }).join('');
     wrap.innerHTML = chips;
+    if (window.ScrollAnimation) ScrollAnimation.refresh();
     const count = owned.size;
-    if (countEl) countEl.textContent = count;
+    if (countEl) {
+      if (count > 0 && !countEl.dataset.counterBound) {
+        countEl.dataset.counterBound = '1';
+        countEl.dataset.counter = count;
+        countEl.textContent = '0';
+        if (window.ScrollAnimation) ScrollAnimation.refresh();
+      } else {
+        countEl.textContent = count;
+      }
+    }
     if (textEl) textEl.textContent = count + ' dari ' + Match.BADGES.length + ' badge diraih';
 
     const contribEl = document.getElementById('profileContrib');
@@ -74,7 +124,15 @@ export const Profile = (() => {
       const ms = (user && user.matchStats) || {};
       const journalCount = (user && user.journal && user.journal.length) || 0;
       const matchCount = ms.matches || 0;
-      contribEl.textContent = user ? (journalCount + matchCount + count) : 0;
+      const targetContrib = user ? (journalCount + matchCount + count) : 0;
+      if (targetContrib > 0 && !contribEl.dataset.counterBound) {
+        contribEl.dataset.counterBound = '1';
+        contribEl.dataset.counter = targetContrib;
+        contribEl.textContent = '0';
+        if (window.ScrollAnimation) ScrollAnimation.refresh();
+      } else {
+        contribEl.textContent = targetContrib;
+      }
     }
   }
 
@@ -95,13 +153,13 @@ export const Profile = (() => {
         '<p class="text-sm" style="color:var(--text-secondary);">Klik <strong>Catat Hari Ini</strong> dan mulailah jurnal belajarmu. Setiap catatan memberi +' + JOURNAL_POINTS + ' poin.</p></div>';
       return;
     }
-    container.innerHTML = entries.map(entry => buildJournalCard(entry)).join('');
+    container.innerHTML = entries.map((entry, i) => buildJournalCard(entry, i)).join('');
   }
 
-  function buildJournalCard(entry) {
+  function buildJournalCard(entry, i) {
     if (!entry) return '';
     const label = MAPEL_LABELS[entry.mapel] || capitalize(String(entry.mapel || 'umum'));
-    return '<div class="progress-card">' +
+    return '<div class="progress-card reveal reveal-stagger-' + ((i % 3) + 1) + '">' +
       '<div class="flex items-center justify-between mb-2">' +
         '<span class="status-tag">' + esc(label) + '</span>' +
         '<span class="text-xs" style="color:var(--text-muted);">' + relativeTime(entry.time) + '</span>' +

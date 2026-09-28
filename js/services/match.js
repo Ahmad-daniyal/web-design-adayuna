@@ -72,8 +72,8 @@ export const Match = (() => {
     const rp = rankPointsOf(user);
     const tier = tierOf(rp);
     root.innerHTML = `
-      <span class="section-badge"><i class="fas fa-bolt"></i> Arena Edquest</span>
-      <div class="flex flex-wrap items-end justify-between gap-3 mt-3">
+      <span class="section-badge reveal"><i class="fas fa-bolt"></i> Arena Edquest</span>
+      <div class="flex flex-wrap items-end justify-between gap-3 mt-3 reveal reveal-stagger-1">
         <div>
           <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight" style="color:var(--text-primary);">Adu Kecerdasan, Kumpulkan Rating!</h1>
           <p class="mt-1 text-sm sm:text-base" style="color:var(--text-secondary);">Jawab soal lebih cepat dari lawan, naikkan rank & raih badge.</p>
@@ -83,20 +83,21 @@ export const Match = (() => {
           <div class="mt-2" style="min-width:220px;">${rankProgressHTML(rp)}</div>
         </div>
       </div>
-      <div class="match-tabs mt-6">
+      <div class="match-tabs mt-6 reveal reveal-stagger-2">
         <button class="match-tab${state.tab === 'duel' ? ' active' : ''}" onclick="Match.showDuel()"><i class="fas fa-hand-fist"></i> Duel</button>
         <button class="match-tab${state.tab === 'leaderboard' ? ' active' : ''}" onclick="Match.showLeaderboard()"><i class="fas fa-trophy"></i> Leaderboard</button>
       </div>
       <div class="mt-6">${state.tab === 'leaderboard' ? renderLeaderboard() : renderDuelPanel()}</div>
     `;
+    if (window.ScrollAnimation) ScrollAnimation.refresh();
   }
 
   function renderDuelPanel() {
     const modes = [
       { key: 'classic', icon: 'fa-fire', title: 'Classic', desc: 'Tanpa rating. Kumpulkan poin & badge dengan santai.', color: '#0EA5E9' },
       { key: 'ranked', icon: 'fa-trophy', title: 'Ranked', desc: 'Naikkan rank dari Bronze hingga Diamond.', color: '#2563EB' }
-    ].map(m =>
-      '<button class="mode-card fx-card' + (state.mode === m.key ? ' active' : '') + '" onclick="Match.setMode(\'' + m.key + '\')">' +
+    ].map((m, i) =>
+      '<button class="mode-card fx-card reveal reveal-stagger-' + (i + 1) + (state.mode === m.key ? ' active' : '') + '" onclick="Match.setMode(\'' + m.key + '\')">' +
       '<span class="mode-icon" style="background:' + m.color + ';"><i class="fas ' + m.icon + '"></i></span>' +
       '<span class="mode-name">' + m.title + '</span>' +
       '<span class="mode-desc">' + m.desc + '</span></button>'
@@ -104,7 +105,7 @@ export const Match = (() => {
 
     const mapelOpts = MAPELS.map(m => '<option value="' + m + '"' + (state.mapel === m ? ' selected' : '') + '>' + cap(m) + '</option>').join('');
 
-    return '<div class="card-panel p-5 sm:p-6 mb-6">' +
+    return '<div class="card-panel p-5 sm:p-6 mb-6 reveal">' +
       '<h3 class="text-lg font-bold mb-4" style="color:var(--text-primary);"><i class="fas fa-sliders-h mr-2"></i>Pengaturan Duel</h3>' +
       '<div class="grid sm:grid-cols-2 gap-4">' + modes + '</div>' +
       '<div class="mt-4"><label class="form-label" for="matchMapel">Mapel</label><select id="matchMapel" class="form-input" style="cursor:pointer;" onchange="Match.setMapel(this.value)">' + mapelOpts + '</select></div>' +
@@ -115,7 +116,7 @@ export const Match = (() => {
       '<div class="arena-info-item"><i class="fas fa-ranking-star"></i> Rank = Rating + Badge&times;' + M.BADGE_RANK_POINTS + ' + Poin&divide;' + M.POINTS_TO_RANK + '</div>' +
       '<div class="arena-info-item"><i class="fas fa-fire"></i> Bonus +1 tiap ' + M.STREAK_BONUS_EVERY + ' jawaban benar beruntun</div>' +
       '</div></div>' +
-      '<div class="card-panel p-5">' +
+      '<div class="card-panel p-5 reveal">' +
       '<h3 class="text-lg font-bold mb-3" style="color:var(--text-primary);"><i class="fas fa-info-circle mr-2"></i>Cara Bermain</h3>' +
       '<ol class="arena-steps">' +
       '<li>Pilih mode dan mapel. Rank kamu dipakai untuk mencocokkan lawan seimbang.</li>' +
@@ -124,6 +125,7 @@ export const Match = (() => {
       '<li>Di mode Ranked, selisih skor mengubah rating ±' + M.RATING_CLAMP + '. Badge & poin ikut menaikkan rank.</li>' +
       '<li>Setelah tanding, lihat pembahasan lengkap semua soal beserta penjelasannya.</li>' +
       '</ol></div>';
+    if (window.ScrollAnimation) ScrollAnimation.refresh();
   }
 
   function renderLeaderboard() {
@@ -138,7 +140,7 @@ export const Match = (() => {
       if (i === 0) rank = '<i class="fas fa-crown" style="color:#F59E0B;"></i>';
       else if (i === 1) rank = '<i class="fas fa-medal" style="color:#94A3B8;"></i>';
       else if (i === 2) rank = '<i class="fas fa-medal" style="color:#B45309;"></i>';
-      return '<div class="lb-row' + (isMe ? ' me' : '') + '">' +
+      return '<div class="lb-row reveal' + (isMe ? ' me' : '') + '">' +
         '<div class="lb-rank">' + rank + '</div>' +
         '<div class="lb-avatar" style="background:var(--gradient-primary);">' + esc(e.avatar || (e.name ? e.name[0] : '?')) + '</div>' +
         '<div class="lb-info"><div class="font-bold text-sm" style="color:var(--text-primary);">' + esc(e.name) + (isMe ? ' <span class="buddy-id">Kamu</span>' : '') + '</div>' +
@@ -146,9 +148,10 @@ export const Match = (() => {
         '<span class="tier-chip tier-' + t.toLowerCase() + '">' + t + '</span>' +
         '<div class="lb-rating">' + rp + '</div></div>';
     }).join('');
-    return '<div class="card-panel p-5 sm:p-6">' +
+    return '<div class="card-panel p-5 sm:p-6 reveal">' +
       '<h3 class="text-lg font-bold mb-4" style="color:var(--text-primary);"><i class="fas fa-trophy mr-2" style="color:var(--accent);"></i>Peringkat Teratas</h3>' +
       '<div class="lb-wrap">' + rows + '</div></div>';
+    if (window.ScrollAnimation) ScrollAnimation.refresh();
   }
 
   /* ===== Matchmaking ===== */
@@ -221,20 +224,21 @@ export const Match = (() => {
 
   function renderFinding(root) {
     root.innerHTML = `
-      <div class="card-panel text-center p-10 sm:p-14">
+      <div class="card-panel text-center p-10 sm:p-14 reveal reveal-scale">
         <div class="arena-radar mx-auto"><i class="fas fa-satellite-dish"></i></div>
         <h2 class="text-xl font-bold mt-5 mb-2" style="color:var(--text-primary);">Mencari lawan seimbang...</h2>
         <p class="text-sm" style="color:var(--text-muted);">Menghubungkan ke Arena — ${cap(state.mapel)}</p>
         <div class="searching-dots mt-5"><span></span><span></span><span></span></div>
       </div>
     `;
+    if (window.ScrollAnimation) ScrollAnimation.refresh();
   }
 
   function renderBattle(root) {
     const q = state.questions[state.index];
     const user = Auth.getUser();
     root.innerHTML = `
-      <div class="match-topbar card-panel p-4">
+      <div class="match-topbar card-panel p-4 reveal">
         <div class="opponent-chip">
           <div class="opp-avatar" style="background:${state.opponent.color};">${esc(state.opponent.initials)}</div>
           <div>
@@ -254,19 +258,19 @@ export const Match = (() => {
           <div class="opp-avatar" style="background:var(--gradient-primary);">${esc(user ? (user.avatar || '?') : 'K')}</div>
         </div>
       </div>
-      <div class="scoreboard">
-        <div class="score-cell"><span class="score-label">Lawanku</span><span class="score-num" id="oppScore">${state.oppScore}</span></div>
+      <div class="scoreboard reveal reveal-stagger-2">
+        <div class="score-cell"><span class="score-label">Lawanku</span><span class="score-num" id="oppScore" data-counter="${state.oppScore}">0</span></div>
         <div class="score-vs"><i class="fas fa-bolt"></i></div>
-        <div class="score-cell"><span class="score-label">Kamu</span><span class="score-num" id="playerScore">${state.playerScore}</span></div>
+        <div class="score-cell"><span class="score-label">Kamu</span><span class="score-num" id="playerScore" data-counter="${state.playerScore}">0</span></div>
       </div>
-      <div class="match-progress">
+      <div class="match-progress reveal reveal-stagger-3">
         <div class="flex items-center justify-between text-xs mb-1">
           <span class="font-semibold" style="color:var(--text-secondary);">Soal ${state.index + 1} / ${state.questions.length}</span>
           <span id="matchStreak" class="streak-chip">${state.streak >= 2 ? '<i class="fas fa-fire"></i> Streak ' + state.streak : ''}</span>
         </div>
         <div class="opp-progress" id="oppProgress">${progressDots(state.index)}</div>
       </div>
-      <div class="question-card">
+      <div class="question-card reveal reveal-stagger-1">
         <div class="flex flex-wrap gap-2 mb-3">
           <span class="category-tag ${q.mapel}"><i class="fas fa-book"></i> ${cap(q.mapel)}</span>
           <span class="category-tag"><i class="fas fa-signal"></i> ${cap(q.difficulty)}</span>
@@ -283,6 +287,7 @@ export const Match = (() => {
       </div>
     `;
     updateTimerUI();
+    if (window.ScrollAnimation) ScrollAnimation.refresh();
   }
 
   function progressDots(count) {
@@ -516,35 +521,36 @@ export const Match = (() => {
       kalah: { icon: 'fa-face-frown', label: 'Kalah', cls: 'defeat', msg: 'Kalah bukan berarti menyerah. Coba lagi!' }
     }[r.vs];
     root.innerHTML = `
-      <div class="card-panel text-center p-8 sm:p-12">
+      <div class="card-panel text-center p-8 sm:p-12 reveal reveal-scale">
         <div class="result-hero ${meta.cls} mx-auto"><i class="fas ${meta.icon}"></i></div>
         <h1 class="text-3xl font-extrabold mt-5 mb-1" style="color:var(--text-primary);">${meta.label}</h1>
         <p class="text-sm mb-6" style="color:var(--text-muted);">${meta.msg}</p>
-        <div class="result-score">
-          <div class="rs-cell"><div class="rs-name">${esc(state.opponent.name)}</div><div class="rs-num">${r.oppScore}</div></div>
+        <div class="result-score reveal reveal-stagger-1">
+          <div class="rs-cell"><div class="rs-name">${esc(state.opponent.name)}</div><div class="rs-num" data-counter="${r.oppScore}">0</div></div>
           <div class="rs-vs">VS</div>
-          <div class="rs-cell"><div class="rs-name">Kamu</div><div class="rs-num accent">${r.playerScore}</div></div>
+          <div class="rs-cell"><div class="rs-name">Kamu</div><div class="rs-num accent" data-counter="${r.playerScore}">0</div></div>
         </div>
-        <div class="flex flex-wrap justify-center gap-2 mt-5">
+        <div class="flex flex-wrap justify-center gap-2 mt-5 reveal reveal-stagger-2">
           ${r.mode === 'ranked' ? '<span class="result-stat ' + (r.delta >= 0 ? 'up' : 'down') + '"><i class="fas ' + (r.delta >= 0 ? 'fa-arrow-up' : 'fa-arrow-down') + '"></i> ' + (r.delta >= 0 ? '+' : '') + r.delta + ' rating</span>' : ''}
-          <span class="result-stat neutral"><i class="fas fa-star"></i> +${r.points} poin</span>
-          <span class="result-stat neutral"><i class="fas fa-ranking-star"></i> ${r.rankPoints} rank</span>
+          <span class="result-stat neutral"><i class="fas fa-star"></i> <span data-counter="${r.points}">0</span> poin</span>
+          <span class="result-stat neutral"><i class="fas fa-ranking-star"></i> <span data-counter="${r.rankPoints}">0</span> rank</span>
         </div>
-        <div class="mt-5">${rankProgressHTML(r.rankPoints)}</div>
-        ${r.badges.length ? '<div class="mt-6"><div class="text-xs font-bold uppercase tracking-wide mb-2" style="color:var(--text-muted);">Badge baru</div><div class="flex flex-wrap justify-center gap-2">' + r.badges.map(b => '<span class="badge-earned"><i class="fas fa-medal"></i> ' + b + '</span>').join('') + '</div></div>' : ''}
-        <div class="flex flex-wrap justify-center gap-3 mt-8">
+        <div class="mt-5 reveal reveal-stagger-3">${rankProgressHTML(r.rankPoints)}</div>
+        ${r.badges.length ? '<div class="mt-6 reveal reveal-stagger-4"><div class="text-xs font-bold uppercase tracking-wide mb-2" style="color:var(--text-muted);">Badge baru</div><div class="flex flex-wrap justify-center gap-2">' + r.badges.map(b => '<span class="badge-earned"><i class="fas fa-medal"></i> ' + b + '</span>').join('') + '</div></div>' : ''}
+        <div class="flex flex-wrap justify-center gap-3 mt-8 reveal reveal-stagger-5">
           <button class="btn-edquest btn-primary-grad" onclick="Match.rematch()"><i class="fas fa-rotate-right"></i> Tanding Lagi</button>
           <button class="btn-edquest btn-outline-glow" onclick="Match.backToLobby()"><i class="fas fa-left-long"></i> Kembali</button>
           ${state.mode === 'ranked' ? '<button class="btn-edquest btn-ghost" onclick="Match.showLeaderboard()"><i class="fas fa-trophy"></i> Leaderboard</button>' : ''}
         </div>
       </div>
-      <div class="review-hint">
+      <div class="review-hint reveal">
         <span class="review-hint-arrow"><i class="fas fa-angle-double-down"></i></span>
         <span>Pembahasan lengkap ada di bawah — ${r.questions.length} soal + penjelasannya</span>
       </div>
       ${renderReview(r)}
       ${r.rankUp ? renderRankUp(r.rankUp) : ''}
     `;
+    if (window.ScrollAnimation) ScrollAnimation.refresh();
   }
 
   function renderReview(r) {
@@ -569,11 +575,11 @@ export const Match = (() => {
         (q.explain ? '<p class="review-explain"><i class="fas fa-lightbulb mr-1"></i>' + esc(q.explain) + '</p>' : '') +
         '</div>';
     }).join('');
-    return '<details open class="card-panel review-panel mt-6">' +
+    return '<details open class="card-panel review-panel mt-6 reveal">' +
       '<summary class="review-summary">' +
       '<span class="review-summary-icon"><i class="fas fa-clipboard-list"></i></span>' +
       '<span class="review-summary-text">Pembahasan Lengkap</span>' +
-      '<span class="review-total">' + r.answers.filter(a => a && a.correct).length + '/' + r.questions.length + ' benar</span>' +
+      '<span class="review-total"><span data-counter="' + r.answers.filter(a => a && a.correct).length + '">0</span>/' + r.questions.length + ' benar</span>' +
       '<span class="review-summary-sub">Jawaban benar, jawabanmu &amp; penjelasan tiap soal</span>' +
       '</summary>' +
       '<div class="review-list mt-4">' + rows + '</div></details>';
@@ -600,10 +606,13 @@ export const Match = (() => {
       '<div class="rank-up-from">' + ru.from + '</div>' +
       '<div class="rank-up-arrow"><i class="fas fa-angle-down"></i></div>' +
       '<div class="rank-up-to tier-' + ru.tier.toLowerCase() + '">' + ru.tier + '</div>' +
-      '<div class="rank-up-points">' + ru.rankPoints + ' rank points</div>' +
+      '<div class="rank-up-points"><span data-counter="' + ru.rankPoints + '">0</span> rank points</div>' +
       '<div class="rank-progress rank-up-progress">' + progressHTML(ru.rankPoints) + '</div>' +
       '<button class="btn-edquest btn-primary-grad mt-4" onclick="document.getElementById(\'rankUpOverlay\').remove()"><i class="fas fa-check"></i> Lanjut</button>' +
       '</div></div>';
+    if (window.ScrollAnimation) ScrollAnimation.refresh();
+    if (window.ScrollAnimation) ScrollAnimation.refresh();
+    if (window.ScrollAnimation) ScrollAnimation.refresh();
   }
 
   /* ===== Navigation ===== */

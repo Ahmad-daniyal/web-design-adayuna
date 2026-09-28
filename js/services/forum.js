@@ -111,7 +111,7 @@ export const Forum = (() => {
     const container = document.getElementById('threadList');
     if (!container) return;
     container.innerHTML = list.map((t, i) =>
-      '<div class="thread-card" data-category="' + t.category + '" data-id="' + i + '">' +
+      '<div class="thread-card reveal reveal-stagger-' + ((i % 3) + 1) + '" data-category="' + t.category + '" data-id="' + i + '">' +
         '<div class="flex flex-wrap items-start justify-between gap-3">' +
           '<div class="flex-1 min-w-0">' +
             '<div class="flex flex-wrap items-center gap-2 mb-1">' +
@@ -131,6 +131,7 @@ export const Forum = (() => {
       '</div>'
     ).join('');
     filterThreads(state.category);
+    if (window.ScrollAnimation) ScrollAnimation.refresh();
   }
 
   function filterThreads(category) {
@@ -332,6 +333,7 @@ export const Forum = (() => {
         </div>
       </section>
     `;
+    if (window.ScrollAnimation) ScrollAnimation.refresh();
   }
 
   function openNewThread() {
