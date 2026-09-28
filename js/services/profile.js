@@ -2,6 +2,7 @@ import { CONFIG } from '../core/config.js';
 import { Auth } from './auth.js';
 import { Match } from './match.js';
 import { Notifications } from './notifications.js';
+import { ScrollAnimation } from '../core/scrollAnimation.js';
 
 export const Profile = (() => {
   const USER_KEY = CONFIG.STORAGE_KEYS.USER;
@@ -38,7 +39,7 @@ export const Profile = (() => {
         pointsEl.dataset.counterBound = '1';
         pointsEl.dataset.counter = targetPoints;
         pointsEl.textContent = '0';
-        if (window.ScrollAnimation) ScrollAnimation.refresh();
+        ScrollAnimation.refresh();
       } else {
         pointsEl.textContent = targetPoints;
       }
@@ -62,7 +63,7 @@ export const Profile = (() => {
         winsEl.dataset.counterBound = '1';
         winsEl.dataset.counter = targetWins;
         winsEl.textContent = '0';
-        if (window.ScrollAnimation) ScrollAnimation.refresh();
+        ScrollAnimation.refresh();
       } else {
         winsEl.textContent = targetWins;
       }
@@ -73,7 +74,7 @@ export const Profile = (() => {
         drawsEl.dataset.counterBound = '1';
         drawsEl.dataset.counter = targetDraws;
         drawsEl.textContent = '0';
-        if (window.ScrollAnimation) ScrollAnimation.refresh();
+        ScrollAnimation.refresh();
       } else {
         drawsEl.textContent = targetDraws;
       }
@@ -84,7 +85,7 @@ export const Profile = (() => {
         lossesEl.dataset.counterBound = '1';
         lossesEl.dataset.counter = targetLosses;
         lossesEl.textContent = '0';
-        if (window.ScrollAnimation) ScrollAnimation.refresh();
+        ScrollAnimation.refresh();
       } else {
         lossesEl.textContent = targetLosses;
       }
@@ -105,14 +106,14 @@ export const Profile = (() => {
         '<i class="fas ' + (has ? b.icon : 'fa-lock') + '"></i></div>';
     }).join('');
     wrap.innerHTML = chips;
-    if (window.ScrollAnimation) ScrollAnimation.refresh();
+    ScrollAnimation.refresh();
     const count = owned.size;
     if (countEl) {
       if (count > 0 && !countEl.dataset.counterBound) {
         countEl.dataset.counterBound = '1';
         countEl.dataset.counter = count;
         countEl.textContent = '0';
-        if (window.ScrollAnimation) ScrollAnimation.refresh();
+        ScrollAnimation.refresh();
       } else {
         countEl.textContent = count;
       }
@@ -129,7 +130,7 @@ export const Profile = (() => {
         contribEl.dataset.counterBound = '1';
         contribEl.dataset.counter = targetContrib;
         contribEl.textContent = '0';
-        if (window.ScrollAnimation) ScrollAnimation.refresh();
+        ScrollAnimation.refresh();
       } else {
         contribEl.textContent = targetContrib;
       }

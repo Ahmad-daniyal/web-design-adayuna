@@ -6,8 +6,11 @@
   --reveal-delay: 0ms;
 }
 
-/* ===== Base Reveal ===== */
-.reveal {
+/* ===== Base Reveal =====
+   Hidden state hanya aktif saat JS reveal hidup (html.js-reveal ditambahkan
+   inline di <head>), supaya konten tidak pernah putih permanen bila JS mati. */
+
+.js-reveal .reveal {
   opacity: 0;
   transform: translateY(30px);
   transition:
@@ -17,13 +20,13 @@
   will-change: opacity, transform;
 }
 
-.reveal.visible {
+.js-reveal .reveal.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
 /* ===== Reveal Variants ===== */
-.reveal-left {
+.js-reveal .reveal-left {
   opacity: 0;
   transform: translateX(-40px);
   transition:
@@ -33,12 +36,12 @@
   will-change: opacity, transform;
 }
 
-.reveal-left.visible {
+.js-reveal .reveal-left.visible {
   opacity: 1;
   transform: translateX(0);
 }
 
-.reveal-right {
+.js-reveal .reveal-right {
   opacity: 0;
   transform: translateX(40px);
   transition:
@@ -48,12 +51,12 @@
   will-change: opacity, transform;
 }
 
-.reveal-right.visible {
+.js-reveal .reveal-right.visible {
   opacity: 1;
   transform: translateX(0);
 }
 
-.reveal-scale {
+.js-reveal .reveal-scale {
   opacity: 0;
   transform: scale(0.88);
   transition:
@@ -63,12 +66,12 @@
   will-change: opacity, transform;
 }
 
-.reveal-scale.visible {
+.js-reveal .reveal-scale.visible {
   opacity: 1;
   transform: scale(1);
 }
 
-.reveal-rotate {
+.js-reveal .reveal-rotate {
   opacity: 0;
   transform: translateY(20px) rotate(-2deg);
   transition:
@@ -78,12 +81,12 @@
   will-change: opacity, transform;
 }
 
-.reveal-rotate.visible {
+.js-reveal .reveal-rotate.visible {
   opacity: 1;
   transform: translateY(0) rotate(0deg);
 }
 
-.reveal-blur {
+.js-reveal .reveal-blur {
   opacity: 0;
   transform: translateY(20px);
   filter: blur(8px);
@@ -95,7 +98,7 @@
   will-change: opacity, transform, filter;
 }
 
-.reveal-blur.visible {
+.js-reveal .reveal-blur.visible {
   opacity: 1;
   transform: translateY(0);
   filter: blur(0);

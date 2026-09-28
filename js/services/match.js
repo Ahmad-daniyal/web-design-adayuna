@@ -2,11 +2,19 @@ import { CONFIG } from '../core/config.js';
 import { dataStore } from '../data/index.js';
 import { Auth } from './auth.js';
 import { Notifications } from './notifications.js';
+import { ScrollAnimation } from '../core/scrollAnimation.js';
 
 const M = CONFIG.MATCH;
 const TIERS = M.TIERS;
 const POINTS = M.POINTS;
 const MAPELS = CONFIG.MAPELS.map(m => m.key);
+const TERR = M.TERRITORY;
+const TERR_SIZE = TERR.GRID;
+const TERR_TOTAL = TERR_SIZE * TERR_SIZE;
+const TERR_STEP = Math.max(1, Math.round((TERR.STEP_PERCENT / 100) * TERR_TOTAL));
+const TERR_DECAY = Math.max(0, Math.round((TERR.DECAY_CELLS / 100) * TERR_TOTAL));
+const P_CLAIM = 0;
+const P_OPP = 1;
 
 export const BADGES = [
   { id: 'langkah-pertama', name: 'Langkah Pertama', icon: 'fa-shoe-prints', desc: 'Mainkan tanding pertamamu' },
@@ -38,14 +46,19 @@ export const Match = (() => {
     total: 0,
     timer: null,
     advanceTimer: null,
+    decayTimer: null,
     answered: false,
-    result: null
+    decided: false,
+    result: null,
+    board: [],
+    flash: null
   };
 
   window.addEventListener('pageChanged', (e) => {
     if (e.detail.pageName !== 'match') {
       clearTimer();
       clearAdvance();
+      clearTimeout(state.findTimer);
       state.screen = 'lobby';
       state.tab = 'duel';
     }
@@ -89,7 +102,7 @@ export const Match = (() => {
       </div>
       <div class="mt-6">${state.tab === 'leaderboard' ? renderLeaderboard() : renderDuelPanel()}</div>
     `;
-    if (window.ScrollAnimation) ScrollAnimation.refresh();
+    ScrollAnimation.refresh();
   }
 
   function renderDuelPanel() {
@@ -111,6 +124,8 @@ export const Match = (() => {
       '<div class="mt-4"><label class="form-label" for="matchMapel">Mapel</label><select id="matchMapel" class="form-input" style="cursor:pointer;" onchange="Match.setMapel(this.value)">' + mapelOpts + '</select></div>' +
       '<button class="btn-edquest btn-primary-grad w-full !py-3 mt-5 text-base" onclick="Match.startSearch()"><i class="fas fa-search"></i> Cari Lawan</button>' +
       '<div class="arena-info mt-5">' +
+      '<div class="arena-info-item"><i class="fas fa-paint-roller"></i> Paint Area ' + TERR.GRID + '&times;' + TERR.GRID + ' sel — awal tanding 50/50 biru vs merah</div>' +
+      '<div class="arena-info-item"><i class="fas fa-bolt"></i> Jawaban benar merebut ' + TERR.STEP_PERCENT + '% wilayah, salah kehilangan ' + TERR.STEP_PERCENT + '%</div>' +
       '<div class="arena-info-item"><i class="fas fa-list-ol"></i> ' + M.QUESTIONS_PER_MATCH + ' soal per tanding</div>' +
       '<div class="arena-info-item"><i class="fas fa-stopwatch"></i> Timer total ' + fmtTime(M.CLASSIC_SECONDS) + ' (Classic) / ' + fmtTime(M.RANKED_SECONDS) + ' (Ranked)</div>' +
       '<div class="arena-info-item"><i class="fas fa-ranking-star"></i> Rank = Rating + Badge&times;' + M.BADGE_RANK_POINTS + ' + Poin&divide;' + M.POINTS_TO_RANK + '</div>' +
@@ -120,12 +135,13 @@ export const Match = (() => {
       '<h3 class="text-lg font-bold mb-3" style="color:var(--text-primary);"><i class="fas fa-info-circle mr-2"></i>Cara Bermain</h3>' +
       '<ol class="arena-steps">' +
       '<li>Pilih mode dan mapel. Rank kamu dipakai untuk mencocokkan lawan seimbang.</li>' +
-      '<li>Klik "Cari Lawan" — sistem mencocokkanmu dengan lawan setingkat rank.</li>' +
-      '<li>Jawab ' + M.QUESTIONS_PER_MATCH + ' soal sebelum timer habis. Soal terlewat dihitung salah.</li>' +
-      '<li>Di mode Ranked, selisih skor mengubah rating ±' + M.RATING_CLAMP + '. Badge & poin ikut menaikkan rank.</li>' +
+      '<li>Klik "Cari Lawan" — arena Paint Area dibuka 50/50 dan timer mulai berjalan.</li>' +
+      '<li>Jawab <b>benar</b> untuk merebut ' + TERR.STEP_PERCENT + '% wilayah biru, <b>salah</b> berarti lawan merebut ' + TERR.STEP_PERCENT + '% merah.</li>' +
+      '<li>Saat wilayah mencapai <b>100% / 0%</b> tanding langsung selesai. Timer habis = wilayah saat itu yang menentukan.</li>' +
+      '<li>Di mode Ranked, selisih wilayah mengubah rating &plusmn;' + M.RATING_CLAMP + '. Badge & poin ikut menaikkan rank.</li>' +
       '<li>Setelah tanding, lihat pembahasan lengkap semua soal beserta penjelasannya.</li>' +
       '</ol></div>';
-    if (window.ScrollAnimation) ScrollAnimation.refresh();
+    ScrollAnimation.refresh();
   }
 
   function renderLeaderboard() {
@@ -151,7 +167,7 @@ export const Match = (() => {
     return '<div class="card-panel p-5 sm:p-6 reveal">' +
       '<h3 class="text-lg font-bold mb-4" style="color:var(--text-primary);"><i class="fas fa-trophy mr-2" style="color:var(--accent);"></i>Peringkat Teratas</h3>' +
       '<div class="lb-wrap">' + rows + '</div></div>';
-    if (window.ScrollAnimation) ScrollAnimation.refresh();
+    ScrollAnimation.refresh();
   }
 
   /* ===== Matchmaking ===== */
@@ -165,6 +181,7 @@ export const Match = (() => {
     state.answers = [];
     state.hardCorrect = 0;
     state.geniusCorrect = 0;
+    initBoard();
     clearTimeout(state.findTimer);
     state.findTimer = setTimeout(() => {
       state.index = 0;
@@ -173,7 +190,9 @@ export const Match = (() => {
       state.oppStreak = 0;
       state.streak = 0;
       state.answered = false;
+      state.decided = false;
       state.result = null;
+      initBoard();
       state.screen = 'battle';
       startTimer();
       render();
@@ -231,7 +250,153 @@ export const Match = (() => {
         <div class="searching-dots mt-5"><span></span><span></span><span></span></div>
       </div>
     `;
-    if (window.ScrollAnimation) ScrollAnimation.refresh();
+    ScrollAnimation.refresh();
+  }
+
+  /* ===== Paint Area ===== */
+
+  function initBoard() {
+    const half = Math.round(TERR_TOTAL / 2);
+    state.board = Array.from({ length: TERR_TOTAL }, (_, i) => (i < half ? P_OPP : P_CLAIM));
+    state.flash = null;
+  }
+
+  function neighborsOf(i) {
+    const r = Math.floor(i / TERR_SIZE);
+    const c = i % TERR_SIZE;
+    const out = [];
+    if (r > 0) out.push(i - TERR_SIZE);
+    if (r < TERR_SIZE - 1) out.push(i + TERR_SIZE);
+    if (c > 0) out.push(i - 1);
+    if (c < TERR_SIZE - 1) out.push(i + 1);
+    return out;
+  }
+
+  function areaOf(owner, board) {
+    const b = board && board.length ? board : state.board;
+    if (!b.length) return 0;
+    let n = 0;
+    for (let i = 0; i < b.length; i++) if (b[i] === owner) n++;
+    return Math.round((n / b.length) * 100);
+  }
+
+  function transfer(owner, count) {
+    const enemy = owner === P_CLAIM ? P_OPP : P_CLAIM;
+    const front = [];
+    for (let i = 0; i < state.board.length; i++) {
+      if (state.board[i] !== enemy) continue;
+      const ns = neighborsOf(i);
+      for (let k = 0; k < ns.length; k++) {
+        if (state.board[ns[k]] === owner) { front.push(i); break; }
+      }
+    }
+    let pool = front;
+    if (pool.length < count) {
+      for (let i = 0; i < state.board.length; i++) {
+        if (state.board[i] === enemy && pool.indexOf(i) === -1) pool.push(i);
+      }
+    }
+    const cells = shuffle(pool).slice(0, count);
+    cells.forEach(i => { state.board[i] = owner; });
+    return cells;
+  }
+
+  function readAreas() {
+    return { playerArea: areaOf(P_CLAIM), oppArea: areaOf(P_OPP) };
+  }
+
+  function capture(owner) {
+    const cells = transfer(owner, TERR_STEP);
+    state.flash = { cells, owner, kind: 'claim' };
+    const a = readAreas();
+    return { cells, playerArea: a.playerArea, oppArea: a.oppArea, finished: a.playerArea >= 100 || a.oppArea >= 100 };
+  }
+
+  function decay() {
+    if (!TERR_DECAY) return null;
+    const a = readAreas();
+    if (a.playerArea === a.oppArea) return null;
+    const leader = a.playerArea > a.oppArea ? P_CLAIM : P_OPP;
+    const trailing = leader === P_CLAIM ? P_OPP : P_CLAIM;
+    const cells = transfer(trailing, TERR_DECAY);
+    if (!cells.length) return null;
+    state.flash = { cells, owner: trailing, kind: 'decay' };
+    const b = readAreas();
+    return { cells, owner: trailing, leader, playerArea: b.playerArea, oppArea: b.oppArea, lost: cells.length };
+  }
+
+  function boardCellsHTML(flash) {
+    const delays = {};
+    if (flash) flash.cells.forEach((idx, k) => { delays[idx] = k * 45; });
+    const kind = flash && flash.kind === 'decay' ? 'bleed' : 'claim';
+    let html = '';
+    for (let i = 0; i < state.board.length; i++) {
+      let cls = 'terr-cell ' + (state.board[i] === P_CLAIM ? 'p' : 'o');
+      let style = '';
+      if (delays[i] !== undefined) { cls += ' ' + kind; style = ' style="animation-delay:' + delays[i] + 'ms"'; }
+      html += '<span class="' + cls + '"' + style + '></span>';
+    }
+    return html;
+  }
+
+  function paintBoard() {
+    const wrap = document.getElementById('terrGrid');
+    const flash = state.flash;
+    state.flash = null;
+    if (wrap) wrap.innerHTML = boardCellsHTML(flash);
+    updateAreaUI();
+  }
+
+  function flashTerritory(owner, kind) {
+    const panel = document.getElementById('territoryPanel');
+    if (!panel) return;
+    const isDecay = kind === 'decay';
+    const on = isDecay ? (owner === P_CLAIM ? 'bleed-p' : 'bleed-o') : (owner === P_CLAIM ? 'flash-p' : 'flash-o');
+    const dur = isDecay ? TERR.DECAY_ANIM_MS : TERR.CLAIM_ANIM_MS;
+    panel.classList.remove('flash-p', 'flash-o', 'bleed-p', 'bleed-o');
+    void panel.offsetWidth;
+    panel.classList.add(on);
+    setTimeout(() => { panel.classList.remove('flash-p', 'flash-o', 'bleed-p', 'bleed-o'); }, dur);
+  }
+
+  function updateAreaUI() {
+    const pe = document.getElementById('terrAreaP');
+    const oe = document.getElementById('terrAreaO');
+    if (pe) pe.textContent = areaOf(P_CLAIM) + '%';
+    if (oe) oe.textContent = areaOf(P_OPP) + '%';
+    const sp = document.getElementById('terrScoreP');
+    const so = document.getElementById('terrScoreO');
+    if (sp) sp.textContent = state.playerScore;
+    if (so) so.textContent = state.oppScore;
+  }
+
+  function territoryHTML() {
+    const oppName = state.opponent ? esc(state.opponent.name) : 'Lawan';
+    return '<div class="territory" id="territoryPanel">' +
+      '<div class="territory-title"><i class="fas fa-paint-roller"></i> Paint Area</div>' +
+      '<div class="territory-head">' +
+        '<div class="terr-side p"><span class="terr-side-name"><i class="fas fa-bolt"></i> Kamu</span><span class="terr-area-pct" id="terrAreaP">50%</span></div>' +
+        '<div class="terr-vs">±' + TERR.STEP_PERCENT + '%</div>' +
+        '<div class="terr-side o"><span class="terr-area-pct" id="terrAreaO">50%</span><span class="terr-side-name">' + oppName + '</span></div>' +
+      '</div>' +
+      '<div class="terr-grid" id="terrGrid">' + boardCellsHTML(null) + '</div>' +
+      '<div class="terr-points">Poin <b class="p" id="terrScoreP">0</b> <span class="terr-dash">—</span> <b class="o" id="terrScoreO">0</b> ' + oppName + '</div>' +
+      '<div class="terr-legend">' +
+        '<span class="terr-cap p"><i class="fas fa-circle-check"></i> Benar · rebut ' + TERR.STEP_PERCENT + '%</span>' +
+        '<span class="terr-cap o"><i class="fas fa-circle-xmark"></i> Salah · -' + TERR.STEP_PERCENT + '%</span>' +
+      '</div>' +
+      '</div>';
+  }
+
+  function resultMapHTML(board) {
+    const b = board && board.length ? board : state.board;
+    let cells = '';
+    for (let i = 0; i < b.length; i++) {
+      cells += '<span class="terr-cell ' + (b[i] === P_CLAIM ? 'p' : 'o') + '"></span>';
+    }
+    return '<div class="result-map">' +
+      '<div class="result-map-title"><i class="fas fa-map-location-dot"></i> Peta wilayah akhir</div>' +
+      '<div class="terr-grid map">' + cells + '</div></div>';
   }
 
   function renderBattle(root) {
@@ -258,36 +423,37 @@ export const Match = (() => {
           <div class="opp-avatar" style="background:var(--gradient-primary);">${esc(user ? (user.avatar || '?') : 'K')}</div>
         </div>
       </div>
-      <div class="scoreboard reveal reveal-stagger-2">
-        <div class="score-cell"><span class="score-label">Lawanku</span><span class="score-num" id="oppScore" data-counter="${state.oppScore}">0</span></div>
-        <div class="score-vs"><i class="fas fa-bolt"></i></div>
-        <div class="score-cell"><span class="score-label">Kamu</span><span class="score-num" id="playerScore" data-counter="${state.playerScore}">0</span></div>
-      </div>
-      <div class="match-progress reveal reveal-stagger-3">
-        <div class="flex items-center justify-between text-xs mb-1">
-          <span class="font-semibold" style="color:var(--text-secondary);">Soal ${state.index + 1} / ${state.questions.length}</span>
-          <span id="matchStreak" class="streak-chip">${state.streak >= 2 ? '<i class="fas fa-fire"></i> Streak ' + state.streak : ''}</span>
+      <div class="paint-arena">
+        <div class="paint-left reveal reveal-stagger-2">${territoryHTML()}</div>
+        <div class="paint-right">
+          <div class="match-progress reveal reveal-stagger-3">
+            <div class="flex items-center justify-between text-xs mb-1">
+              <span class="font-semibold" style="color:var(--text-secondary);">Soal ${state.index + 1} / ${state.questions.length}</span>
+              <span id="matchStreak" class="streak-chip">${state.streak >= 2 ? '<i class="fas fa-fire"></i> Streak ' + state.streak : ''}</span>
+            </div>
+            <div class="opp-progress" id="oppProgress">${progressDots(state.index)}</div>
+          </div>
+          <div class="question-card reveal reveal-stagger-1">
+            <div class="flex flex-wrap gap-2 mb-3">
+              <span class="category-tag ${q.mapel}"><i class="fas fa-book"></i> ${cap(q.mapel)}</span>
+              <span class="category-tag"><i class="fas fa-signal"></i> ${cap(q.difficulty)}</span>
+            </div>
+            <h3 class="text-lg sm:text-xl font-bold leading-snug mb-4" style="color:var(--text-primary);">${esc(q.q)}</h3>
+            <div class="grid gap-3">
+              ${q.options.map((o, i) =>
+                '<button class="opt-btn" data-opt onclick="Match.answer(' + i + ')">' +
+                '<span class="opt-key">' + String.fromCharCode(65 + i) + '</span>' +
+                '<span class="opt-text">' + esc(o) + '</span></button>'
+              ).join('')}
+            </div>
+            <div id="matchFeedback"></div>
+          </div>
         </div>
-        <div class="opp-progress" id="oppProgress">${progressDots(state.index)}</div>
-      </div>
-      <div class="question-card reveal reveal-stagger-1">
-        <div class="flex flex-wrap gap-2 mb-3">
-          <span class="category-tag ${q.mapel}"><i class="fas fa-book"></i> ${cap(q.mapel)}</span>
-          <span class="category-tag"><i class="fas fa-signal"></i> ${cap(q.difficulty)}</span>
-        </div>
-        <h3 class="text-lg sm:text-xl font-bold leading-snug mb-4" style="color:var(--text-primary);">${esc(q.q)}</h3>
-        <div class="grid gap-3">
-          ${q.options.map((o, i) =>
-            '<button class="opt-btn" data-opt onclick="Match.answer(' + i + ')">' +
-            '<span class="opt-key">' + String.fromCharCode(65 + i) + '</span>' +
-            '<span class="opt-text">' + esc(o) + '</span></button>'
-          ).join('')}
-        </div>
-        <div id="matchFeedback"></div>
       </div>
     `;
     updateTimerUI();
-    if (window.ScrollAnimation) ScrollAnimation.refresh();
+    updateAreaUI();
+    ScrollAnimation.refresh();
   }
 
   function progressDots(count) {
@@ -304,7 +470,10 @@ export const Match = (() => {
       if (state.timeLeft <= 0) {
         clearTimer();
         if (!state.answered) {
-          botTurn();
+          botTurn(false);
+          capture(P_OPP);
+          state.flash = null;
+          paintBoard();
           endMatch();
         }
       }
@@ -340,7 +509,11 @@ export const Match = (() => {
       state.streak = 0;
     }
     state.answers[state.index] = { chosen: i, correct, gained, skipped: false };
-    botTurn();
+    botTurn(correct);
+    const res = capture(correct ? P_CLAIM : P_OPP);
+    if (res.finished) state.decided = true;
+    paintBoard();
+    flashTerritory(correct ? P_CLAIM : P_OPP);
     paintOppProgress(state.index + 1);
 
     document.querySelectorAll('#matchRoot [data-opt]').forEach((b, idx) => {
@@ -352,44 +525,65 @@ export const Match = (() => {
 
     const fb = document.getElementById('matchFeedback');
     if (fb) {
-      const isLast = state.index + 1 >= state.questions.length;
+      const isLast = res.finished || state.index + 1 >= state.questions.length;
+      const step = TERR.STEP_PERCENT;
+      const advMs = res.finished ? TERR.CLAIM_ANIM_MS + 650 : M.AUTO_ADVANCE_MS;
+      fb.style.setProperty('--adv-ms', advMs + 'ms');
       fb.innerHTML =
         (correct
-          ? '<div class="fb-correct"><i class="fas fa-circle-check"></i> Benar! +' + gained + ' poin</div>'
-          : '<div class="fb-wrong"><i class="fas fa-circle-xmark"></i> Salah — jawaban yang benar: ' + esc(q.options[q.correctIndex]) + '</div>') +
+          ? '<div class="fb-correct"><i class="fas fa-circle-check"></i> Benar! Wilayah <b>+' + step + '%</b><span class="fb-sub">+' + gained + ' poin</span></div>'
+          : '<div class="fb-wrong"><i class="fas fa-circle-xmark"></i> Salah — <b>' + esc(state.opponent.name) + ' merebut ' + step + '%</b><span class="fb-sub">Jawaban benar: ' + esc(q.options[q.correctIndex]) + '</span></div>') +
         (q.explain ? '<p class="fb-explain"><i class="fas fa-lightbulb mr-1"></i>' + esc(q.explain) + '</p>' : '') +
         '<div class="fb-actions">' +
         '<button class="btn-edquest btn-primary-grad text-sm !py-2 !px-5" onclick="Match.next()">' +
         (isLast ? 'Lihat Hasil <i class="fas fa-flag-checkered"></i>' : 'Lanjut <i class="fas fa-arrow-right"></i>') + '</button>' +
-        '<span class="fb-auto-hint"><i class="fas fa-forward"></i> Otomatis ' + (isLast ? 'lihat hasil' : 'lanjut') + ' dalam ' + Math.round(M.AUTO_ADVANCE_MS / 1000) + ' detik</span>' +
+        '<span class="fb-auto-hint"><i class="fas fa-forward"></i> Otomatis ' + (isLast ? 'lihat hasil' : 'lanjut') + ' dalam ' + (advMs >= 1000 ? (advMs / 1000).toFixed(1).replace('.0', '') + ' detik' : advMs + ' ms') + '</span>' +
         '</div>' +
         '<div class="auto-timer"><span></span></div>';
       fb.classList.add('show');
     }
-    updateScoreboard();
+    updateStreak();
     clearAdvance();
-    state.advanceTimer = setTimeout(() => next(), M.AUTO_ADVANCE_MS);
+    if (!res.finished) {
+      state.decayTimer = setTimeout(() => {
+        state.decayTimer = null;
+        if (state.screen !== 'battle') return;
+        const d = decay();
+        if (!d) return;
+        paintBoard();
+        flashTerritory(d.owner, 'decay');
+        const panel = document.getElementById('matchFeedback');
+        const actions = panel ? panel.querySelector('.fb-actions') : null;
+        if (actions && !panel.querySelector('.fb-decay')) {
+          const who = d.leader === P_CLAIM
+            ? 'Wilayahmu tergerus <b>−' + d.lost + '%</b>'
+            : esc(state.opponent.name) + ' menyedot <b>' + d.lost + '%</b>';
+          const el = document.createElement('div');
+          el.className = 'fb-decay';
+          el.innerHTML = '<i class="fas fa-arrow-trend-down"></i> ' + who + ' — lead harus dijaga';
+          actions.parentNode.insertBefore(el, actions);
+        }
+      }, TERR.CLAIM_ANIM_MS);
+    }
+    state.advanceTimer = setTimeout(() => next(), res.finished ? TERR.CLAIM_ANIM_MS + 650 : M.AUTO_ADVANCE_MS);
     if (state.timeLeft <= 0) endMatch();
   }
 
-  function botTurn() {
+  function botTurn(playerCorrect) {
     const q = state.questions[state.index];
-    const pts = POINTS[q.difficulty] || 1;
-    if (Math.random() < (state.opponent.accuracy || 0.7)) {
-      state.oppStreak++;
-      let g = pts;
-      if (state.oppStreak % M.STREAK_BONUS_EVERY === 0) g += 1;
-      state.oppScore += g;
-    } else {
+    if (!q) return;
+    if (playerCorrect) {
       state.oppStreak = 0;
+      return;
     }
+    const pts = POINTS[q.difficulty] || 1;
+    state.oppStreak++;
+    let g = pts;
+    if (state.oppStreak % M.STREAK_BONUS_EVERY === 0) g += 1;
+    state.oppScore += g;
   }
 
-  function updateScoreboard() {
-    const ps = document.getElementById('playerScore');
-    const os = document.getElementById('oppScore');
-    if (ps) ps.textContent = state.playerScore;
-    if (os) os.textContent = state.oppScore;
+  function updateStreak() {
     const streak = document.getElementById('matchStreak');
     if (streak) streak.innerHTML = state.streak >= 2 ? '<i class="fas fa-fire"></i> Streak ' + state.streak : '';
   }
@@ -401,6 +595,7 @@ export const Match = (() => {
 
   function next() {
     clearAdvance();
+    if (state.decided) { endMatch(); return; }
     state.index++;
     state.answered = false;
     if (state.index >= state.questions.length) { endMatch(); return; }
@@ -408,22 +603,29 @@ export const Match = (() => {
   }
 
   function endMatch() {
+    if (state.screen === 'result') return;
     clearTimer();
     clearAdvance();
+    if (!state.board.length) initBoard();
     for (let i = state.index; i < state.questions.length; i++) {
       if (!state.answers[i]) state.answers[i] = { chosen: -1, correct: false, gained: 0, skipped: true };
     }
     const playerScore = state.playerScore;
     const oppScore = state.oppScore;
-    const vs = playerScore === oppScore ? 'seri' : (playerScore > oppScore ? 'menang' : 'kalah');
+    const playerArea = areaOf(P_CLAIM);
+    const oppArea = areaOf(P_OPP);
+    const vs = playerArea === oppArea ? 'seri' : (playerArea > oppArea ? 'menang' : 'kalah');
     let delta = 0;
-    if (state.mode === 'ranked') delta = computeDelta(playerScore, oppScore);
+    if (state.mode === 'ranked') delta = computeDelta(playerArea, oppArea);
     const settled = settleStats(vs, delta);
     state.result = {
       vs,
       playerScore,
       oppScore,
       points: playerScore,
+      playerArea,
+      oppArea,
+      board: state.board.slice(),
       mode: state.mode,
       delta,
       newRating: settled.newRating,
@@ -441,17 +643,18 @@ export const Match = (() => {
     });
     const vsLabel = vs === 'menang' ? 'Menang!' : (vs === 'seri' ? 'Hasil Seri' : 'Kalah');
     const deltaText = delta ? ' · rating ' + (delta > 0 ? '+' : '') + delta : '';
-    Notifications.push({ type: 'match', title: vsLabel, message: playerScore + ' - ' + oppScore + ' · +' + playerScore + ' poin' + deltaText, link: '#/match' });
+    Notifications.push({ type: 'match', title: vsLabel, message: playerArea + '% - ' + oppArea + '% wilayah · +' + playerScore + ' poin' + deltaText, link: '#/match' });
     settled.badges.forEach(b => Notifications.push({ type: 'badge', title: 'Badge diraih: ' + b + '!', message: 'Lihat koleksi badgemu di halaman profil.', link: '#/profile' }));
     if (settled.rankUp) {
       Notifications.push({ type: 'rank', title: 'Rank naik!', message: settled.rankUp.from + ' → ' + settled.rankUp.tier + ' · ' + settled.rankUp.rankPoints + ' rank points', link: '#/profile' });
     }
   }
 
-  function computeDelta(playerScore, oppScore) {
-    const raw = Math.round((playerScore - oppScore) / 2);
+  function computeDelta(playerArea, oppArea) {
+    const diff = (playerArea || 0) - (oppArea || 0);
+    const raw = Math.round(diff / 4.2);
     const clamped = Math.max(-M.RATING_CLAMP, Math.min(M.RATING_CLAMP, raw));
-    if (playerScore !== oppScore && clamped === 0) return playerScore > oppScore ? 1 : -1;
+    if (diff !== 0 && clamped === 0) return diff > 0 ? 1 : -1;
     return clamped;
   }
 
@@ -516,7 +719,7 @@ export const Match = (() => {
   function renderResult(root) {
     const r = state.result;
     const meta = {
-      menang: { icon: 'fa-trophy', label: 'Menang!', cls: 'victory', msg: 'Kamu mengungguli lawan. Hebat!' },
+      menang: { icon: 'fa-trophy', label: 'Menang!', cls: 'victory', msg: 'Kamu menguasai wilayah. Hebat!' },
       seri: { icon: 'fa-handshake', label: 'Seri!', cls: 'draw', msg: 'Seimbang banget. Adu lagi!' },
       kalah: { icon: 'fa-face-frown', label: 'Kalah', cls: 'defeat', msg: 'Kalah bukan berarti menyerah. Coba lagi!' }
     }[r.vs];
@@ -526,17 +729,18 @@ export const Match = (() => {
         <h1 class="text-3xl font-extrabold mt-5 mb-1" style="color:var(--text-primary);">${meta.label}</h1>
         <p class="text-sm mb-6" style="color:var(--text-muted);">${meta.msg}</p>
         <div class="result-score reveal reveal-stagger-1">
-          <div class="rs-cell"><div class="rs-name">${esc(state.opponent.name)}</div><div class="rs-num" data-counter="${r.oppScore}">0</div></div>
+          <div class="rs-cell"><div class="rs-name">${esc(state.opponent.name)}</div><div class="rs-num" data-counter="${r.oppArea}">0</div><div class="rs-pct">% wilayah</div><div class="rs-pts"><span data-counter="${r.oppScore}">0</span> poin</div></div>
           <div class="rs-vs">VS</div>
-          <div class="rs-cell"><div class="rs-name">Kamu</div><div class="rs-num accent" data-counter="${r.playerScore}">0</div></div>
+          <div class="rs-cell"><div class="rs-name">Kamu</div><div class="rs-num accent" data-counter="${r.playerArea}">0</div><div class="rs-pct">% wilayah</div><div class="rs-pts"><span data-counter="${r.playerScore}">0</span> poin</div></div>
         </div>
-        <div class="flex flex-wrap justify-center gap-2 mt-5 reveal reveal-stagger-2">
+        <div class="mt-6 reveal reveal-stagger-2">${resultMapHTML(r.board)}</div>
+        <div class="flex flex-wrap justify-center gap-2 mt-5 reveal reveal-stagger-3">
           ${r.mode === 'ranked' ? '<span class="result-stat ' + (r.delta >= 0 ? 'up' : 'down') + '"><i class="fas ' + (r.delta >= 0 ? 'fa-arrow-up' : 'fa-arrow-down') + '"></i> ' + (r.delta >= 0 ? '+' : '') + r.delta + ' rating</span>' : ''}
           <span class="result-stat neutral"><i class="fas fa-star"></i> <span data-counter="${r.points}">0</span> poin</span>
           <span class="result-stat neutral"><i class="fas fa-ranking-star"></i> <span data-counter="${r.rankPoints}">0</span> rank</span>
         </div>
-        <div class="mt-5 reveal reveal-stagger-3">${rankProgressHTML(r.rankPoints)}</div>
-        ${r.badges.length ? '<div class="mt-6 reveal reveal-stagger-4"><div class="text-xs font-bold uppercase tracking-wide mb-2" style="color:var(--text-muted);">Badge baru</div><div class="flex flex-wrap justify-center gap-2">' + r.badges.map(b => '<span class="badge-earned"><i class="fas fa-medal"></i> ' + b + '</span>').join('') + '</div></div>' : ''}
+        <div class="mt-5 reveal reveal-stagger-4">${rankProgressHTML(r.rankPoints)}</div>
+        ${r.badges.length ? '<div class="mt-6 reveal reveal-stagger-5"><div class="text-xs font-bold uppercase tracking-wide mb-2" style="color:var(--text-muted);">Badge baru</div><div class="flex flex-wrap justify-center gap-2">' + r.badges.map(b => '<span class="badge-earned"><i class="fas fa-medal"></i> ' + b + '</span>').join('') + '</div></div>' : ''}
         <div class="flex flex-wrap justify-center gap-3 mt-8 reveal reveal-stagger-5">
           <button class="btn-edquest btn-primary-grad" onclick="Match.rematch()"><i class="fas fa-rotate-right"></i> Tanding Lagi</button>
           <button class="btn-edquest btn-outline-glow" onclick="Match.backToLobby()"><i class="fas fa-left-long"></i> Kembali</button>
@@ -550,7 +754,7 @@ export const Match = (() => {
       ${renderReview(r)}
       ${r.rankUp ? renderRankUp(r.rankUp) : ''}
     `;
-    if (window.ScrollAnimation) ScrollAnimation.refresh();
+    ScrollAnimation.refresh();
   }
 
   function renderReview(r) {
@@ -588,7 +792,7 @@ export const Match = (() => {
   function renderRankUp(ru) {
     setTimeout(() => {
       const el = document.getElementById('rankUpOverlay');
-      if (el) el.classList.add('reveal');
+      if (el) el.classList.add('is-shown');
     }, 500);
     setTimeout(() => {
       const el = document.getElementById('rankUpOverlay');
@@ -610,9 +814,7 @@ export const Match = (() => {
       '<div class="rank-progress rank-up-progress">' + progressHTML(ru.rankPoints) + '</div>' +
       '<button class="btn-edquest btn-primary-grad mt-4" onclick="document.getElementById(\'rankUpOverlay\').remove()"><i class="fas fa-check"></i> Lanjut</button>' +
       '</div></div>';
-    if (window.ScrollAnimation) ScrollAnimation.refresh();
-    if (window.ScrollAnimation) ScrollAnimation.refresh();
-    if (window.ScrollAnimation) ScrollAnimation.refresh();
+    ScrollAnimation.refresh();
   }
 
   /* ===== Navigation ===== */
@@ -711,6 +913,7 @@ export const Match = (() => {
 
   function clearAdvance() {
     if (state.advanceTimer) { clearTimeout(state.advanceTimer); state.advanceTimer = null; }
+    if (state.decayTimer) { clearTimeout(state.decayTimer); state.decayTimer = null; }
   }
 
   function shuffle(arr) {

@@ -2,6 +2,7 @@ import { dataStore } from '../data/index.js';
 import { CONFIG } from '../core/config.js';
 import { Auth } from './auth.js';
 import { Notifications } from './notifications.js';
+import { ScrollAnimation } from '../core/scrollAnimation.js';
 
 export const Forum = (() => {
   let globalBound = false;
@@ -131,7 +132,7 @@ export const Forum = (() => {
       '</div>'
     ).join('');
     filterThreads(state.category);
-    if (window.ScrollAnimation) ScrollAnimation.refresh();
+    ScrollAnimation.refresh();
   }
 
   function filterThreads(category) {
@@ -333,7 +334,7 @@ export const Forum = (() => {
         </div>
       </section>
     `;
-    if (window.ScrollAnimation) ScrollAnimation.refresh();
+    ScrollAnimation.refresh();
   }
 
   function openNewThread() {

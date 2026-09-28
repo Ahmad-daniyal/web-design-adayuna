@@ -44,6 +44,14 @@ export const CONFIG = {
     BONUS_WIN_MULTIPLIER: 5,
     STREAK_BONUS_EVERY: 3,
     RATING_CLAMP: 20,
+    TERRITORY: {
+      GRID: 10,
+      STEP_PERCENT: 10,
+      START_PERCENT: 50,
+      CLAIM_ANIM_MS: 550,
+      DECAY_CELLS: 3,
+      DECAY_ANIM_MS: 400
+    },
     BADGE_RANK_POINTS: 15,
     POINTS_TO_RANK: 10,
     TIERS: [

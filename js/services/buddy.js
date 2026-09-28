@@ -1,6 +1,7 @@
 import { dataStore } from '../data/index.js';
 import { Auth } from './auth.js';
 import { Notifications } from './notifications.js';
+import { ScrollAnimation } from '../core/scrollAnimation.js';
 
 export const Matching = (() => {
   let lastList = [];
@@ -94,7 +95,7 @@ export const Matching = (() => {
         '<div class="flex gap-2"><button class="btn-edquest btn-primary-grad text-xs !py-2 !px-3 flex-1" onclick="Matching.requestBuddy(' + i + ')"><i class="fas fa-paper-plane"></i> Ajak Berteman</button>' +
         '<button class="btn-edquest btn-outline-glow text-xs !py-2 !px-3" onclick="Matching.viewProfile(' + i + ')"><i class="fas fa-user"></i> Lihat</button></div></div>';
     }).join('');
-    if (window.ScrollAnimation) ScrollAnimation.refresh();
+    ScrollAnimation.refresh();
   }
 
   function requestBuddy(index) {

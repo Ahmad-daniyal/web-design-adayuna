@@ -1,31 +1,43 @@
 export const ScrollAnimation = (() => {
   let observer = null;
+  let counterObserver = null;
   let backToTopBtn = null;
-  let fallbackTimer = null;
+  let armedTimers = [];
+  let refreshToken = 0;
   const SCROLL_THRESHOLD = 400;
-  const REVEAL_SELECTOR = '.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-rotate, .reveal-blur';
+  const REVEAL_SELECTOR = ':is(.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-rotate, .reveal-blur)';
+  const HIDDEN_REVEAL_SELECTOR = `${REVEAL_SELECTOR}:not(.visible)`;
   const COUNTER_SELECTOR = '[data-counter]';
+  const SCROLL_SETTLE_MS = 140;
+  const SCROLL_SETTLE_MAX_MS = 1200;
+  const REVEAL_MARGIN = 80;
+  const FALLBACK_VISIBLE_MS = 400;
+  const FALLBACK_ALL_MS = 1500;
+
+  function supportsScrollEnd() {
+    return 'onscrollend' in window;
+  }
+
+  function prefersReducedMotion() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
 
   function init() {
     setupObserver();
     setupBackToTop();
-    observeAll();
     setupScrollFallback();
-    setupTimeoutFallback();
+    refresh();
   }
 
   function setupObserver() {
     if (observer) observer.disconnect();
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      document.querySelectorAll(REVEAL_SELECTOR).forEach(el => el.classList.add('visible'));
+    if (prefersReducedMotion()) {
+      document.querySelectorAll(REVEAL_SELECTOR).forEach((el) => el.classList.add('visible'));
       return;
     }
     observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
+        if (entry.isIntersecting) show(entry.target);
       });
     }, {
       threshold: 0,
@@ -33,26 +45,82 @@ export const ScrollAnimation = (() => {
     });
   }
 
-  function isInViewport(el) {
+  function show(el) {
+    el.classList.add('visible');
+    if (observer) observer.unobserve(el);
+  }
+
+  function hiddenRevealEls() {
+    return document.querySelectorAll(HIDDEN_REVEAL_SELECTOR);
+  }
+
+  function shouldRevealNow(el) {
     const rect = el.getBoundingClientRect();
-    return (
-      rect.top < window.innerHeight &&
-      rect.bottom > 0 &&
-      rect.left < window.innerWidth &&
-      rect.right > 0
-    );
+    if (rect.left >= window.innerWidth || rect.right <= 0) return false;
+    return rect.top < window.innerHeight + REVEAL_MARGIN;
   }
 
   function observeAll() {
-    if (!observer) return;
-    document.querySelectorAll(REVEAL_SELECTOR).forEach((el) => {
-      if (!el.classList.contains('visible')) {
-        if (isInViewport(el)) {
-          el.classList.add('visible');
-        } else {
-          observer.observe(el);
-        }
-      }
+    hiddenRevealEls().forEach((el) => {
+      if (shouldRevealNow(el)) show(el);
+      else if (observer) observer.observe(el);
+    });
+  }
+
+  function whenScrollSettled(cb) {
+    if (window.scrollY <= 0) { cb(); return; }
+    let done = false;
+    let debounce = 0;
+    let hardCap = 0;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      clearTimeout(debounce);
+      clearTimeout(hardCap);
+      window.removeEventListener('scroll', onScroll);
+      if (supportsScrollEnd()) window.removeEventListener('scrollend', finish);
+      cb();
+    };
+    const onScroll = () => {
+      clearTimeout(debounce);
+      debounce = setTimeout(finish, SCROLL_SETTLE_MS);
+    };
+    hardCap = setTimeout(finish, SCROLL_SETTLE_MAX_MS);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    if (supportsScrollEnd()) window.addEventListener('scrollend', finish);
+  }
+
+  function clearArmedTimers() {
+    armedTimers.forEach((t) => clearTimeout(t));
+    armedTimers = [];
+  }
+
+  function armFallback() {
+    clearArmedTimers();
+    armedTimers.push(setTimeout(() => {
+      hiddenRevealEls().forEach((el) => {
+        if (el.getBoundingClientRect().bottom > 0) show(el);
+      });
+    }, FALLBACK_VISIBLE_MS));
+    armedTimers.push(setTimeout(() => {
+      hiddenRevealEls().forEach((el) => show(el));
+    }, FALLBACK_ALL_MS));
+  }
+
+  function refresh() {
+    const token = ++refreshToken;
+    clearArmedTimers();
+
+    const run = () => {
+      if (token !== refreshToken) return;
+      observeAll();
+      observeCounters();
+      armFallback();
+    };
+
+    requestAnimationFrame(() => requestAnimationFrame(run));
+    whenScrollSettled(() => {
+      requestAnimationFrame(() => requestAnimationFrame(run));
     });
   }
 
@@ -62,34 +130,12 @@ export const ScrollAnimation = (() => {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        document.querySelectorAll(REVEAL_SELECTOR).forEach((el) => {
-          if (!el.classList.contains('visible') && isInViewport(el)) {
-            el.classList.add('visible');
-            if (observer) observer.unobserve(el);
-          }
+        hiddenRevealEls().forEach((el) => {
+          if (shouldRevealNow(el)) show(el);
         });
         ticking = false;
       });
     }, { passive: true });
-  }
-
-  function setupTimeoutFallback() {
-    if (fallbackTimer) clearTimeout(fallbackTimer);
-    fallbackTimer = setTimeout(() => {
-      document.querySelectorAll(REVEAL_SELECTOR).forEach((el) => {
-        if (!el.classList.contains('visible')) {
-          el.classList.add('visible');
-        }
-      });
-    }, 1500);
-  }
-
-  function refresh() {
-    setTimeout(() => {
-      observeAll();
-      observeCounters();
-      setupTimeoutFallback();
-    }, 80);
   }
 
   function setupBackToTop() {
@@ -108,7 +154,11 @@ export const ScrollAnimation = (() => {
   }
 
   function observeCounters() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (counterObserver) {
+      counterObserver.disconnect();
+      counterObserver = null;
+    }
+    if (prefersReducedMotion()) {
       document.querySelectorAll(COUNTER_SELECTOR).forEach((el) => {
         const target = parseInt(el.dataset.counter, 10);
         if (!isNaN(target)) el.textContent = target;
@@ -116,15 +166,19 @@ export const ScrollAnimation = (() => {
       return;
     }
     if (!('IntersectionObserver' in window)) return;
-    const counterObserver = new IntersectionObserver((entries) => {
+    const pending = Array.from(document.querySelectorAll(COUNTER_SELECTOR))
+      .filter((el) => !el.dataset.counterDone);
+    if (!pending.length) return;
+    counterObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
         const el = entry.target;
+        el.dataset.counterDone = '1';
         counterObserver.unobserve(el);
         animateCounter(el);
       });
     }, { threshold: 0.5 });
-    document.querySelectorAll(COUNTER_SELECTOR).forEach((el) => counterObserver.observe(el));
+    pending.forEach((el) => counterObserver.observe(el));
   }
 
   function animateCounter(el) {

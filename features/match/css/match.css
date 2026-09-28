@@ -255,47 +255,246 @@
   transition: width 1s linear;
 }
 
-/* Scoreboard */
-.scoreboard {
+/* Paint Area */
+.paint-arena {
+  display: grid;
+  grid-template-columns: minmax(230px, 300px) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.paint-left,
+.paint-right { min-width: 0; }
+
+.paint-right { display: grid; gap: 1rem; }
+
+.territory {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.territory-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.territory-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.terr-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.terr-side.o { align-items: flex-end; text-align: right; }
+
+.terr-side-name {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.terr-area-pct {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.terr-side.p .terr-area-pct { color: var(--primary); }
+.terr-side.o .terr-area-pct { color: #EF4444; }
+
+.terr-vs {
+  flex-shrink: 0;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  background: var(--bg-section);
+  border-radius: 50px;
+  padding: 0.2rem 0.5rem;
+}
+
+.terr-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 3px;
+  width: 100%;
+}
+
+.terr-cell {
+  aspect-ratio: 1 / 1;
+  border-radius: 3px;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.terr-cell.p { background: linear-gradient(135deg, #3B82F6, #2563EB); }
+.terr-cell.o { background: linear-gradient(135deg, #EF4444, #DC2626); }
+
+.dark .terr-cell.p { background: linear-gradient(135deg, #38BDF8, #2563EB); }
+.dark .terr-cell.o { background: linear-gradient(135deg, #F87171, #DC2626); }
+
+.terr-cell.claim { animation: terrClaim 0.55s cubic-bezier(0.22, 1, 0.36, 1); }
+
+@keyframes terrClaim {
+  0% { transform: scale(0.25); filter: brightness(2.6) saturate(1.7); }
+  55% { transform: scale(1.18); filter: brightness(1.35); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.territory.flash-p {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16), 0 12px 32px rgba(37, 99, 235, 0.16);
+}
+
+.territory.flash-o {
+  border-color: #EF4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.16), 0 12px 32px rgba(239, 68, 68, 0.16);
+  animation: terrHit 0.3s ease-in-out;
+}
+
+@keyframes terrHit {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* Decay: sel milik leader "bocor" ke pihak lawan. Sengaja redup + menyusut,
+   bukan pop seperti terrClaim, supaya tidak terbaca sebagai penaklukan. */
+.terr-cell.bleed { animation: terrBleed 0.4s ease-out; }
+
+@keyframes terrBleed {
+  0% { transform: scale(1); filter: grayscale(0) brightness(1); opacity: 1; }
+  40% { transform: scale(0.82); filter: grayscale(0.85) brightness(0.72); opacity: 0.7; }
+  100% { transform: scale(1); filter: grayscale(0) brightness(1); opacity: 1; }
+}
+
+.territory.bleed-p,
+.territory.bleed-o {
+  border-color: #9CA3AF;
+  box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.16), 0 12px 32px rgba(0, 0, 0, 0.08);
+  animation: terrSettle 0.4s ease-out;
+}
+
+@keyframes terrSettle {
+  0% { transform: scale(1); }
+  45% { transform: scale(0.985); }
+  100% { transform: scale(1); }
+}
+
+.fb-decay {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #6B7280;
+  animation: fbDecayIn 0.3s ease-out;
+}
+
+.dark .fb-decay { color: #9CA3AF; }
+
+.fb-decay b { color: #6B7280; font-weight: 600; }
+.dark .fb-decay b { color: #D1D5DB; }
+
+@keyframes fbDecayIn {
+  0% { opacity: 0; transform: translateY(-4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.terr-points {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.terr-points b { font-variant-numeric: tabular-nums; }
+.terr-points b.p { color: var(--primary); }
+.terr-points b.o { color: #EF4444; }
+.terr-dash { opacity: 0.5; margin: 0 0.15rem; }
+
+.terr-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  justify-content: center;
+  margin-top: 0.625rem;
+}
+
+.terr-cap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 50px;
+}
+
+.terr-cap.p { color: var(--primary); background: var(--primary-light); }
+.terr-cap.o { color: #EF4444; background: rgba(239, 68, 68, 0.1); }
+
+/* Result map */
+.result-map {
+  display: inline-block;
+  padding: 0.875rem;
+  border-radius: var(--radius-lg);
+  background: var(--bg-section);
+  border: 1px solid var(--border-color);
+}
+
+.result-map-title {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
-}
-
-.score-cell {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 72px;
-}
-
-.score-label {
+  gap: 0.4rem;
   font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.625rem;
+}
+
+.terr-grid.map { width: 168px; }
+
+.rs-pct {
+  font-size: 0.625rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text-muted);
+  margin-top: 0.1rem;
 }
 
-.score-num {
-  font-family: var(--font-heading);
-  font-size: 2.25rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-primary);
-}
-
-.score-vs {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--primary-light);
-  color: var(--primary);
-  font-size: 1rem;
+.rs-pts {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
 }
 
 /* Progress */
@@ -403,10 +602,18 @@
 .fb-correct, .fb-wrong {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
   font-weight: 700;
   font-size: 0.9375rem;
   margin-bottom: 0.5rem;
+}
+
+.fb-sub {
+  flex-basis: 100%;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  opacity: 0.85;
 }
 
 .fb-correct { color: #10B981; }
@@ -452,7 +659,7 @@
   width: 100%;
   border-radius: 50px;
   background: linear-gradient(90deg, var(--primary), var(--accent));
-  animation: autoShrink 2s linear forwards;
+  animation: autoShrink var(--adv-ms, 2000ms) linear forwards;
 }
 
 @keyframes autoShrink {
@@ -701,7 +908,7 @@
   transition: opacity 0.45s ease;
 }
 
-.rank-up-overlay.reveal { opacity: 1; }
+.rank-up-overlay.is-shown { opacity: 1; }
 .rank-up-overlay.hide { opacity: 0; }
 
 .rank-up-modal {
@@ -719,7 +926,7 @@
   overflow: hidden;
 }
 
-.rank-up-overlay.reveal .rank-up-modal { transform: scale(1); }
+.rank-up-overlay.is-shown .rank-up-modal { transform: scale(1); }
 
 .rank-up-label {
   display: inline-flex;
@@ -947,7 +1154,39 @@
   text-align: right;
 }
 
-/* ===== Mobile Arena ===== */
+/* ===== Compact Battle Layout =====
+   Scoped ke .match-page (halaman Arena) supaya satu soal + tombol jawaban
+   muat tanpa scroll di laptop 1366x768. Padding vertikal dan gap dikecilkan
+   sedikit; padding tombol HANYA di desktop (>1100px) supaya target sentuh
+   di mobile tetap lega. Reveal-on-scroll halaman lain tidak tersentuh. */
+.match-page .question-card {
+  padding: 1.25rem;
+}
+
+.match-page .paint-right {
+  gap: 0.75rem;
+}
+
+@media (min-width: 1101px) {
+  .match-page .opt-btn {
+    padding: 0.7rem 0.9rem;
+  }
+}
+
+/* ===== Responsive Arena ===== */
+@media (max-width: 1100px) {
+  .paint-arena {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .territory {
+    max-width: 420px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
 @media (max-width: 640px) {
   .match-topbar {
     gap: 0.5rem;
@@ -965,12 +1204,24 @@
     font-size: 0.8125rem;
   }
 
-  .scoreboard {
-    gap: 1rem;
+  .territory {
+    padding: 0.875rem;
   }
 
-  .score-num {
-    font-size: 1.75rem;
+  .terr-area-pct {
+    font-size: 1.5rem;
+  }
+
+  .terr-grid {
+    gap: 2px;
+  }
+
+  .terr-cell {
+    border-radius: 2px;
+  }
+
+  .terr-grid.map {
+    width: 140px;
   }
 }
 
