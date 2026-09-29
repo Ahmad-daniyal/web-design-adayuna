@@ -113,9 +113,13 @@
   align-items: center;
 }
 
-@media (min-width: 1024px) {
+/* Dua kolom baru aktif di >=1152px. Pada 1024-1151 (tablet landscape)
+   split 1.05fr/0.95fr membuat kolom teks cuma ~283px sehingga judul
+   pecah jadi tiga baris dan komposisi kartu terlalu sempit — lebih baik
+   disusun satu kolom di rentang itu. */
+@media (min-width: 1152px) {
   .hero-grid {
-    grid-template-columns: 1.05fr 0.95fr;
+    grid-template-columns: 1.08fr 0.92fr;
     gap: 3rem;
   }
 }
@@ -289,11 +293,17 @@
   gap: 3.1rem;
 }
 
+/* `--hook-fy` datang inline dari home.json, jadi nilainya tidak bisa
+   disesuaikan per breakpoint dari stylesheet. Karena itu offset-nya
+   dikalikan `--hook-fy-scale` yang dimiliki CSS: JSON tetap satu-satunya
+   sumber nilai desain, sementara tiap breakpoint bebas melempar
+   effect-nya supaya gap grid tetap cukup untuk mencegah kartu bertumpuk. */
 .hero-hook {
   display: block;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
-  transform: rotate(var(--hook-rot, 0deg)) translateY(var(--hook-fy, 0px));
+  --hook-fy-scale: 1;
+  transform: rotate(var(--hook-rot, 0deg)) translateY(calc(var(--hook-fy, 0px) * var(--hook-fy-scale)));
   transition: transform var(--transition);
 }
 
@@ -820,6 +830,127 @@
 
   .feature-card {
     padding: 1.5rem;
+  }
+}
+
+/* ===== Hero di layar kecil =====
+   Di bawah 1152px komposisi kartu turun ke bawah teks hero dalam satu
+   kolom. Semua ukuran di sini diturunkan proporsional supaya proporsi
+   kartu : gap : dekorasi tetap terasa sama seperti di desktop. */
+@media (max-width: 1151px) {
+  .hero-section {
+    padding-top: 5.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .hero-grid {
+    row-gap: 2.5rem;
+  }
+
+  .hero-lead {
+    max-width: 34rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Kaligrafi tetap di atas kartu, tapi tidak lagi bergantung pada
+     ruang kosong di dalam stage yang sempit. */
+  .hero-hook-stage {
+    padding: 3.75rem 0 0.5rem;
+  }
+
+  .hero-hand {
+    font-size: 1.6rem;
+    right: 0.25rem;
+  }
+
+  .hero-blob {
+    filter: blur(34px);
+  }
+
+  /* Sparkle/panah dekorative terlalu ramai di layar sempit; blur dan
+     garis lengkung sudah cukup untuk menjaga kesan hidup. */
+  .hero-mark {
+    display: none;
+  }
+
+  /* Offset vertikal harus tetap lebih kecil dari gap, kalau tidak kartu
+     tepat di atasnya saling menindih. Di mobile nilainya dikecilkan dan
+     gap ikut diperkecil, jadi rasio aman tetap terjaga. */
+  .hero-hook {
+    --hook-fy-scale: 0.25;
+  }
+
+  .hero-hook-grid {
+    gap: 1.95rem;
+  }
+
+  .hero-hook-card {
+    padding: 1.15rem 1.1rem;
+    gap: 0.6rem;
+  }
+
+  .hero-hook-wide .hero-hook-card {
+    padding: 1.3rem 1.15rem;
+  }
+
+  .hero-hook-label {
+    font-size: 0.95rem;
+  }
+
+  .hero-hook-desc {
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .hero-hook-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding-top: 5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .hero-hook-stage {
+    padding: 3.25rem 0 0.25rem;
+  }
+
+  .hero-hand {
+    font-size: 1.4rem;
+  }
+
+  .hero-hook {
+    --hook-fy-scale: 0.15;
+  }
+
+  .hero-hook-grid {
+    gap: 1.5rem;
+  }
+
+  .hero-hook-card {
+    padding: 1rem 0.9rem;
+    gap: 0.5rem;
+  }
+
+  .hero-hook-wide .hero-hook-card {
+    padding: 1.1rem 0.95rem;
+  }
+
+  .hero-hook-label {
+    font-size: 0.875rem;
+  }
+
+  .hero-hook-desc {
+    font-size: 0.75rem;
   }
 }
 

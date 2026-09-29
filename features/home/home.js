@@ -193,7 +193,7 @@ export function renderHome() {
           ${hero.ctaButtons}
         </div>
       </div>
-      <div class="hero-hook-stage hidden lg:block">
+      <div class="hero-hook-stage">
         <div class="hero-blob hero-blob-a" aria-hidden="true"></div>
         <div class="hero-blob hero-blob-b" aria-hidden="true"></div>
         ${decor.lines}

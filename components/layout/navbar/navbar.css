@@ -337,6 +337,16 @@
   opacity: 0.5;
 }
 
+/* Toggle "Kurangi Animasi" di aplikasi memakai class `reduce-motion`,
+   sedangkan aturan di atas hanya merespons setelan OS. Tanpa blok ini,
+   tombol tersebut tidak ikut menghentikan animasi navbar. */
+html.reduce-motion .brand-logo,
+html.reduce-motion .brand-title,
+html.reduce-motion .notif-wrap #notifBtn.has-unread .fa-bell,
+html.reduce-motion .notif-dropdown {
+  animation: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .brand-logo,
   .brand-title,

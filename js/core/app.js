@@ -19,10 +19,8 @@ export const App = (() => {
     initNavbarScroll();
     initReadingProgress();
     initHelpDropdown();
-    initSettingsButton();
     initSidebarToggle();
     initSearch();
-    initHeaderSearch();
     initUserDropdown();
     initIceBreakerCopy();
     initSmoothScroll();
@@ -31,11 +29,6 @@ export const App = (() => {
     initPageHandlers();
     ScrollAnimation.init();
     SmoothScroll.init();
-  }
-
-  function initSettingsButton() {
-    const btn = document.getElementById('settingsBtn');
-    if (btn) btn.addEventListener('click', () => Settings.openModal());
   }
 
   function initPageHandlers() {
@@ -211,8 +204,8 @@ export const App = (() => {
     if (close) close.addEventListener('click', closeSearch);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closeSearch(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSearch(); });
-    // Tombol magnifier disembunyikan di >=768px karena search bar inline sudah
-    // ada (navbar.css), jadi overlay tetap harus bisa dibuka lewat Ctrl/Cmd+K.
+    // Overlay search tetap bisa dibuka lewat Ctrl/Cmd+K, lalu ditutup
+    // lagi dengan Escape (lihat initSearch).
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'k' && e.key !== 'K') return;
       if (!(e.metaKey || e.ctrlKey)) return;
@@ -237,39 +230,6 @@ export const App = (() => {
     }
 
     input.addEventListener('input', () => { update(input.value.toLowerCase().trim()); });
-  }
-
-  /* Search bar besar di header. Memakai helper yang sama dengan
-     initSearch() (searchEverything + sacHTML + bindSacItems + bindKeydown)
-     supaya perilakanya identik dengan overlay, hanya ditampilkan inline.
-     Navbar di-render sekali (router.js), jadi cukup di-bind sekali di init. */
-  function initHeaderSearch() {
-    const input = document.getElementById('headerSearchInput');
-    const dropdown = document.getElementById('headerSearchAc');
-    if (!input || !dropdown) return;
-
-    function update() {
-      const items = searchEverything(input.value.toLowerCase().trim());
-      if (!items.length) {
-        dropdown.innerHTML = '';
-        dropdown.classList.remove('open');
-        return;
-      }
-      dropdown.innerHTML = sacHTML(items);
-      bindSacItems(dropdown, () => dropdown.classList.remove('open'));
-      bindKeydown(input, dropdown);
-      dropdown.classList.add('open');
-    }
-
-    function close() { dropdown.classList.remove('open'); }
-
-    input.addEventListener('input', update);
-    input.addEventListener('focus', () => { if (input.value.trim()) update(); });
-    input.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
-    document.addEventListener('click', (e) => {
-      if (dropdown.contains(e.target) || input === e.target) return;
-      close();
-    });
   }
 
   function initUserDropdown() {

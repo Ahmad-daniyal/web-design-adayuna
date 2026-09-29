@@ -5,13 +5,6 @@ injectStyle('components/layout/sidebar/sidebar.css');
 export function renderSidebar() { return `
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-inner">
-    <a href="#/home" class="sidebar-logo" aria-label="Edquest — Beranda">
-      <span class="sidebar-logo-mark">E</span>
-      <span class="sidebar-logo-text">
-        <span class="sidebar-logo-name">Edquest</span>
-        <span class="sidebar-logo-sub">Community</span>
-      </span>
-    </a>
     <nav class="sidebar-nav">
       <a href="#/home" data-link="home" class="sidebar-link"><i class="fas fa-th-large"></i><span>Home</span></a>
       <a href="#/forum" data-link="forum" class="sidebar-link"><i class="fas fa-comments"></i><span>Forum</span></a>
