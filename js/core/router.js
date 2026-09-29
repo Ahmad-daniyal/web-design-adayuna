@@ -9,6 +9,7 @@ import { renderAbout } from '../../features/about/about.js';
 import { renderFaq } from '../../features/faq/faq.js';
 import { renderProfile } from '../../features/profile/profile.js';
 import { renderMatch } from '../../features/match/match.js';
+import { SmoothScroll } from './smoothScroll.js';
 
 export const Router = (() => {
   const routes = {
@@ -47,7 +48,11 @@ export const Router = (() => {
     if (render && app) app.innerHTML = render();
 
     updateNavActive(pageName);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Reset scroll secara INSTAN, bukan smooth: halaman baru masih dalam
+    // keadaan reveal (opacity 0), jadi scroll halus akan terlihat sebagai
+    // halaman kosong yang ter-scroll dari bawah ke atas.
+    SmoothScroll.scrollToTop({ immediate: true });
+    SmoothScroll.refresh();
     setTimeout(() => window.dispatchEvent(new CustomEvent('pageChanged', { detail: { pageName } })), 0);
 
     if (window.innerWidth < 768) {

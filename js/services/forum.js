@@ -3,6 +3,7 @@ import { CONFIG } from '../core/config.js';
 import { Auth } from './auth.js';
 import { Notifications } from './notifications.js';
 import { ScrollAnimation } from '../core/scrollAnimation.js';
+import { SmoothScroll } from '../core/smoothScroll.js';
 
 export const Forum = (() => {
   let globalBound = false;
@@ -162,13 +163,13 @@ export const Forum = (() => {
     currentThreadId = state.threadId;
     render();
     const root = document.getElementById('forumRoot');
-    if (root) root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (root) SmoothScroll.scrollToEl(root);
   }
 
   function backToList() {
     state.screen = 'list';
     render();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    SmoothScroll.scrollToTop();
   }
 
   function renderThreadDetail(root) {
@@ -347,7 +348,12 @@ export const Forum = (() => {
 
   function openNewThreadModal() {
     const existing = document.getElementById('newThreadModal');
-    if (existing) { existing.classList.add('active'); document.body.style.overflow = 'hidden'; return; }
+    if (existing) {
+      const wasActive = existing.classList.contains('active');
+      existing.classList.add('active');
+      if (!wasActive) SmoothScroll.lockScroll();
+      return;
+    }
     const user = Auth.getUser();
     const div = document.createElement('div');
     div.id = 'newThreadModal';
@@ -387,7 +393,7 @@ export const Forum = (() => {
       '</div>' +
     '</div>';
     document.body.appendChild(div);
-    document.body.style.overflow = 'hidden';
+    SmoothScroll.lockScroll();
     document.getElementById('newThreadForm').addEventListener('submit', (e) => { e.preventDefault(); submitNewThread(e); });
     div.addEventListener('click', (e) => { if (e.target === div) closeNewThreadModal(); });
     setTimeout(() => { const el = document.getElementById('newThreadTitle'); if (el) el.focus(); }, 100);
@@ -395,7 +401,12 @@ export const Forum = (() => {
 
   function closeNewThreadModal() {
     const modal = document.getElementById('newThreadModal');
-    if (modal) { modal.classList.remove('active'); document.body.style.overflow = ''; setTimeout(() => { if (modal && !modal.classList.contains('active')) modal.remove(); }, 300); }
+    if (modal) {
+      const wasActive = modal.classList.contains('active');
+      modal.classList.remove('active');
+      if (wasActive) SmoothScroll.unlockScroll();
+      setTimeout(() => { if (modal && !modal.classList.contains('active')) modal.remove(); }, 300);
+    }
   }
 
   function submitNewThread(e) {
@@ -611,7 +622,7 @@ export const Forum = (() => {
   function scrollToReply() {
     const box = document.getElementById('threadReplyBox');
     if (!box) return;
-    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    SmoothScroll.scrollToEl(box, { block: 'center' });
     setTimeout(() => { const el = document.getElementById('discussionCommentInput'); if (el) el.focus(); }, 450);
   }
 

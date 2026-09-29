@@ -12,48 +12,52 @@
 
 .js-reveal .reveal {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translate3d(0, 30px, 0);
   transition:
     opacity var(--reveal-duration) var(--reveal-ease),
     transform var(--reveal-duration) var(--reveal-ease);
   transition-delay: var(--reveal-delay);
-  will-change: opacity, transform;
 }
 
 .js-reveal .reveal.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
+}
+
+/* will-change hanya aktif selama transisi (class .is-animating dipasang
+   sebentar oleh scrollAnimation.js lalu dilepas saat transitionend).
+   Versi lama meng-promote 200+ elemen secara permanen (GPU memory bloat). */
+.js-reveal .reveal.is-animating {
+  will-change: opacity, transform;
 }
 
 /* ===== Reveal Variants ===== */
 .js-reveal .reveal-left {
   opacity: 0;
-  transform: translateX(-40px);
+  transform: translate3d(-40px, 0, 0);
   transition:
     opacity var(--reveal-duration) var(--reveal-ease),
     transform var(--reveal-duration) var(--reveal-ease);
   transition-delay: var(--reveal-delay);
-  will-change: opacity, transform;
 }
 
 .js-reveal .reveal-left.visible {
   opacity: 1;
-  transform: translateX(0);
+  transform: translate3d(0, 0, 0);
 }
 
 .js-reveal .reveal-right {
   opacity: 0;
-  transform: translateX(40px);
+  transform: translate3d(40px, 0, 0);
   transition:
     opacity var(--reveal-duration) var(--reveal-ease),
     transform var(--reveal-duration) var(--reveal-ease);
   transition-delay: var(--reveal-delay);
-  will-change: opacity, transform;
 }
 
 .js-reveal .reveal-right.visible {
   opacity: 1;
-  transform: translateX(0);
+  transform: translate3d(0, 0, 0);
 }
 
 .js-reveal .reveal-scale {
@@ -63,7 +67,6 @@
     opacity var(--reveal-duration) var(--reveal-ease),
     transform var(--reveal-duration) var(--reveal-ease);
   transition-delay: var(--reveal-delay);
-  will-change: opacity, transform;
 }
 
 .js-reveal .reveal-scale.visible {
@@ -73,35 +76,37 @@
 
 .js-reveal .reveal-rotate {
   opacity: 0;
-  transform: translateY(20px) rotate(-2deg);
+  transform: translate3d(0, 20px, 0) rotate(-2deg);
   transition:
     opacity var(--reveal-duration) var(--reveal-ease),
     transform var(--reveal-duration) var(--reveal-ease);
   transition-delay: var(--reveal-delay);
-  will-change: opacity, transform;
 }
 
 .js-reveal .reveal-rotate.visible {
   opacity: 1;
-  transform: translateY(0) rotate(0deg);
+  transform: translate3d(0, 0, 0) rotate(0deg);
 }
 
 .js-reveal .reveal-blur {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translate3d(0, 20px, 0);
   filter: blur(8px);
   transition:
     opacity var(--reveal-duration) var(--reveal-ease),
     transform var(--reveal-duration) var(--reveal-ease),
     filter var(--reveal-duration) var(--reveal-ease);
   transition-delay: var(--reveal-delay);
-  will-change: opacity, transform, filter;
 }
 
 .js-reveal .reveal-blur.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
   filter: blur(0);
+}
+
+.js-reveal .reveal-blur.is-animating {
+  will-change: opacity, transform, filter;
 }
 
 /* ===== Stagger Delays (via CSS custom property) ===== */
@@ -114,7 +119,9 @@
 .reveal-stagger-7 { --reveal-delay: 560ms; }
 .reveal-stagger-8 { --reveal-delay: 640ms; }
 
-/* ===== Reduced Motion ===== */
+/* ===== Reduced Motion =====
+   Dua pemicu: setelan OS (prefers-reduced-motion) dan toggle manual
+   "Kurangi animasi" di Pengaturan yang men-set html.reduce-motion. */
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .reveal-left,
@@ -127,6 +134,18 @@
     filter: none !important;
     transition: none !important;
   }
+}
+
+html.reduce-motion .reveal,
+html.reduce-motion .reveal-left,
+html.reduce-motion .reveal-right,
+html.reduce-motion .reveal-scale,
+html.reduce-motion .reveal-rotate,
+html.reduce-motion .reveal-blur {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  transition: none !important;
 }
 
 /* ===== Back to Top Button ===== */
@@ -171,11 +190,6 @@
 /* ===== Counter Animation ===== */
 .counter-animate {
   font-variant-numeric: tabular-nums;
-}
-
-/* ===== Parallax Subtle ===== */
-.parallax-slow {
-  will-change: transform;
 }
 
 /* ===== Skeleton Shimmer ===== */

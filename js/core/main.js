@@ -7,9 +7,11 @@ import { Matching } from '../services/buddy.js';
 import { Match } from '../services/match.js';
 import { Notifications } from '../services/notifications.js';
 import { initTheme } from './theme.js';
+import { Motion } from './motion.js';
 import { preloadData } from '../data/index.js';
 
 initTheme();
+Motion.init();
 
 window.Auth = Auth;
 window.Settings = Settings;

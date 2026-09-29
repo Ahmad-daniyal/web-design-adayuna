@@ -1,38 +1,66 @@
+import { Motion } from './motion.js';
+import { SmoothScroll } from './smoothScroll.js';
+
 export const ScrollAnimation = (() => {
   let observer = null;
   let counterObserver = null;
   let backToTopBtn = null;
+  let running = false;
   let armedTimers = [];
   let refreshToken = 0;
+  let pending = new Set();
+
   const SCROLL_THRESHOLD = 400;
   const REVEAL_SELECTOR = ':is(.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-rotate, .reveal-blur)';
-  const HIDDEN_REVEAL_SELECTOR = `${REVEAL_SELECTOR}:not(.visible)`;
   const COUNTER_SELECTOR = '[data-counter]';
   const SCROLL_SETTLE_MS = 140;
   const SCROLL_SETTLE_MAX_MS = 1200;
   const REVEAL_MARGIN = 80;
-  const FALLBACK_VISIBLE_MS = 400;
-  const FALLBACK_ALL_MS = 1500;
+  const WILL_CHANGE_TIMEOUT = 1500;
+  const SAFETY_REVEAL_MS = 4000;
+  const SAFETY_TRANSITION_PROPS = ['opacity', 'transform', 'filter'];
 
   function supportsScrollEnd() {
     return 'onscrollend' in window;
   }
 
-  function prefersReducedMotion() {
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  }
-
   function init() {
     setupObserver();
     setupBackToTop();
-    setupScrollFallback();
+    setupScrollListener();
+    setupResizeWatch();
     refresh();
+    window.addEventListener(Motion.EVENT, onMotionChange);
   }
+
+  function onMotionChange(e) {
+    if (e.detail.reduced) revealAll();
+    else refresh();
+  }
+
+  /* Kalau tinggi konten berubah (ganti font, gambar muat, panel dibuka),
+     elemen yang tadinya di bawah viewport bisa naik ke layar tanpa ada
+     event scroll — sehingga reveal-nya tidak pernah terpicu. */
+  function setupResizeWatch() {
+    if (!('ResizeObserver' in window)) return;
+    const app = document.getElementById('app');
+    if (!app) return;
+    let lastHeight = app.offsetHeight;
+    const observer = new ResizeObserver(() => {
+      const height = app.offsetHeight;
+      if (height === lastHeight) return;
+      lastHeight = height;
+      if (pending.size) startScrollLoop();
+    });
+    observer.observe(app);
+  }
+
+  /* ===== Observer ===== */
 
   function setupObserver() {
     if (observer) observer.disconnect();
-    if (prefersReducedMotion()) {
-      document.querySelectorAll(REVEAL_SELECTOR).forEach((el) => el.classList.add('visible'));
+    if (!('IntersectionObserver' in window) || Motion.isReduced()) {
+      revealAll();
       return;
     }
     observer = new IntersectionObserver((entries) => {
@@ -41,17 +69,35 @@ export const ScrollAnimation = (() => {
       });
     }, {
       threshold: 0,
-      rootMargin: '0px 0px 0px 0px'
+      // Reveal sedikit sebelum elemen menyentuh tepi layar
+      rootMargin: `0px 0px ${REVEAL_MARGIN}px 0px`
     });
   }
 
+  /* ===== Reveal ===== */
+
   function show(el) {
-    el.classList.add('visible');
+    if (!el.classList.contains('visible')) {
+      el.classList.add('visible', 'is-animating');
+      trackTransition(el);
+    }
+    pending.delete(el);
     if (observer) observer.unobserve(el);
+    if (!pending.size) stopScrollLoop();
   }
 
-  function hiddenRevealEls() {
-    return document.querySelectorAll(HIDDEN_REVEAL_SELECTOR);
+  function trackTransition(el) {
+    const cleanup = () => {
+      el.classList.remove('is-animating');
+      el.removeEventListener('transitionend', onEnd);
+    };
+    const onEnd = (e) => {
+      if (e.target !== el) return;
+      if (!SAFETY_TRANSITION_PROPS.includes(e.propertyName)) return;
+      cleanup();
+    };
+    el.addEventListener('transitionend', onEnd);
+    setTimeout(cleanup, WILL_CHANGE_TIMEOUT);
   }
 
   function shouldRevealNow(el) {
@@ -61,11 +107,52 @@ export const ScrollAnimation = (() => {
   }
 
   function observeAll() {
-    hiddenRevealEls().forEach((el) => {
-      if (shouldRevealNow(el)) show(el);
-      else if (observer) observer.observe(el);
+    pending = new Set();
+    if (!observer) { revealAll(); return; }
+    document.querySelectorAll(REVEAL_SELECTOR).forEach((el) => {
+      if (el.classList.contains('visible')) return;
+      if (shouldRevealNow(el)) { show(el); return; }
+      pending.add(el);
+      observer.observe(el);
     });
+    if (pending.size) startScrollLoop();
+    else stopScrollLoop();
   }
+
+  function revealAll() {
+    document.querySelectorAll(REVEAL_SELECTOR).forEach((el) => show(el));
+    pending = new Set();
+    stopScrollLoop();
+  }
+
+  /* ===== Scroll loop (hanya iterasi elemen pending, bukan query ulang) ===== */
+
+  function setupScrollListener() {
+    window.addEventListener('scroll', () => {
+      if (pending.size) startScrollLoop();
+    }, { passive: true });
+  }
+
+  function startScrollLoop() {
+    if (running) return;
+    running = true;
+    const step = () => {
+      if (!pending.size) { running = false; return; }
+      pending.forEach((el) => {
+        if (!el.isConnected) { pending.delete(el); return; }
+        if (shouldRevealNow(el)) show(el);
+      });
+      if (pending.size && running) requestAnimationFrame(step);
+      else running = false;
+    };
+    requestAnimationFrame(step);
+  }
+
+  function stopScrollLoop() {
+    running = false;
+  }
+
+  /* ===== Scroll settle detection ===== */
 
   function whenScrollSettled(cb) {
     if (window.scrollY <= 0) { cb(); return; }
@@ -90,6 +177,8 @@ export const ScrollAnimation = (() => {
     if (supportsScrollEnd()) window.addEventListener('scrollend', finish);
   }
 
+  /* ===== Safety net ===== */
+
   function clearArmedTimers() {
     armedTimers.forEach((t) => clearTimeout(t));
     armedTimers = [];
@@ -97,15 +186,19 @@ export const ScrollAnimation = (() => {
 
   function armFallback() {
     clearArmedTimers();
+    // Jaring pengaman terakhir: kalau ada elemen yang masih tersembunyi
+    // jauh di bawah viewport setelah 4 detik, tampilkan agar konten
+    // tidak pernah terkunci di opacity 0.
     armedTimers.push(setTimeout(() => {
-      hiddenRevealEls().forEach((el) => {
-        if (el.getBoundingClientRect().bottom > 0) show(el);
+      document.querySelectorAll(REVEAL_SELECTOR).forEach((el) => {
+        if (el.classList.contains('visible')) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) show(el);
       });
-    }, FALLBACK_VISIBLE_MS));
-    armedTimers.push(setTimeout(() => {
-      hiddenRevealEls().forEach((el) => show(el));
-    }, FALLBACK_ALL_MS));
+    }, SAFETY_REVEAL_MS));
   }
+
+  /* ===== Public ===== */
 
   function refresh() {
     const token = ++refreshToken;
@@ -124,51 +217,39 @@ export const ScrollAnimation = (() => {
     });
   }
 
-  function setupScrollFallback() {
-    let ticking = false;
-    window.addEventListener('scroll', () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        hiddenRevealEls().forEach((el) => {
-          if (shouldRevealNow(el)) show(el);
-        });
-        ticking = false;
-      });
-    }, { passive: true });
-  }
-
   function setupBackToTop() {
     backToTopBtn = document.createElement('button');
     backToTopBtn.className = 'back-to-top';
     backToTopBtn.setAttribute('aria-label', 'Kembali ke atas');
     backToTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
-    backToTopBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    backToTopBtn.addEventListener('click', () => SmoothScroll.scrollToTop());
     document.body.appendChild(backToTopBtn);
+
+    let ticking = false;
     window.addEventListener('scroll', () => {
-      if (!backToTopBtn) return;
-      backToTopBtn.classList.toggle('visible', window.scrollY > SCROLL_THRESHOLD);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (backToTopBtn) backToTopBtn.classList.toggle('visible', window.scrollY > SCROLL_THRESHOLD);
+        ticking = false;
+      });
     }, { passive: true });
   }
 
+  /* ===== Counters ===== */
+
   function observeCounters() {
-    if (counterObserver) {
-      counterObserver.disconnect();
-      counterObserver = null;
-    }
-    if (prefersReducedMotion()) {
-      document.querySelectorAll(COUNTER_SELECTOR).forEach((el) => {
-        const target = parseInt(el.dataset.counter, 10);
-        if (!isNaN(target)) el.textContent = target;
-      });
+    if (!('IntersectionObserver' in window)) return;
+    const pendingCounters = Array.from(document.querySelectorAll(COUNTER_SELECTOR))
+      .filter((el) => !el.dataset.counterDone);
+    if (!pendingCounters.length) return;
+
+    if (Motion.isReduced()) {
+      pendingCounters.forEach((el) => setCounterValue(el, parseInt(el.dataset.counter, 10)));
       return;
     }
-    if (!('IntersectionObserver' in window)) return;
-    const pending = Array.from(document.querySelectorAll(COUNTER_SELECTOR))
-      .filter((el) => !el.dataset.counterDone);
-    if (!pending.length) return;
+
+    if (counterObserver) counterObserver.disconnect();
     counterObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
@@ -178,7 +259,12 @@ export const ScrollAnimation = (() => {
         animateCounter(el);
       });
     }, { threshold: 0.5 });
-    pending.forEach((el) => counterObserver.observe(el));
+    pendingCounters.forEach((el) => counterObserver.observe(el));
+  }
+
+  function setCounterValue(el, target) {
+    if (isNaN(target)) return;
+    el.textContent = target;
   }
 
   function animateCounter(el) {

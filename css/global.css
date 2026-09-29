@@ -69,8 +69,14 @@
   --glow-soft: 0 0 0 1px rgba(56, 189, 248, 0.10), 0 12px 36px rgba(56, 189, 248, 0.18);
 }
 
+/* Offset scroll anchor agar target tidak tertutup navbar fixed (56px).
+   scrollbar-gutter mencegah content melompat saat scrollbar hilang
+   (mis. ketika modal mengunci scroll). overscroll-behavior-y menahan
+   pull-to-refresh yang bisa menampilkan area putih di atas header. */
 html {
-  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+  scrollbar-gutter: stable;
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -83,7 +89,7 @@ body {
   text-rendering: optimizeLegibility;
   letter-spacing: -0.011em;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body::before {
@@ -758,7 +764,9 @@ html {
   }
 }
 
-/* ===== Reduced Motion ===== */
+/* ===== Reduced Motion =====
+   Dua pemicu: setelan OS (prefers-reduced-motion) dan toggle manual
+   "Kurangi animasi" di Pengaturan yang men-set class .reduce-motion. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -766,4 +774,14 @@ html {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+html.reduce-motion,
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
 }

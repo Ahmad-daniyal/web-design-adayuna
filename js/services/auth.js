@@ -1,5 +1,6 @@
 import { CONFIG } from '../core/config.js';
 import { dataStore } from '../data/index.js';
+import { SmoothScroll } from '../core/smoothScroll.js';
 
 const USER_KEY = CONFIG.STORAGE_KEYS.USER;
 const REGISTERED_KEY = CONFIG.STORAGE_KEYS.REGISTERED_USERS;
@@ -69,7 +70,9 @@ export const Auth = (() => {
     const wasActive = modal.classList.contains('active');
     if (!wasActive) resetAuthForms();
     modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    // Idempoten: openModal bisa dipanggil lagi saat modal sudah aktif
+    // (mis. ganti tab), dan lockScroll menambah counter.
+    if (!wasActive) SmoothScroll.lockScroll();
     if (tab) {
       if (tab === 'register' && pendingRegisterEmail) {
         const regEmail = document.getElementById('regEmail');
@@ -83,8 +86,9 @@ export const Auth = (() => {
   function closeModal() {
     const modal = document.getElementById('authModal');
     if (!modal) return;
+    const wasActive = modal.classList.contains('active');
     modal.classList.remove('active');
-    document.body.style.overflow = '';
+    if (wasActive) SmoothScroll.unlockScroll();
   }
 
   function togglePassword(btn) {

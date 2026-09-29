@@ -9,6 +9,7 @@ import { initHomeSearch } from '../../features/home/home.js';
 import { initForumSearch } from '../../features/forum/forum.js';
 import { searchEverything, sacHTML, bindSacItems, bindKeydown } from './search.js';
 import { ScrollAnimation } from './scrollAnimation.js';
+import { SmoothScroll } from './smoothScroll.js';
 
 export const App = (() => {
   let activeAcDropdown = null;
@@ -27,22 +28,25 @@ export const App = (() => {
     initFxCards();
     initPageHandlers();
     ScrollAnimation.init();
+    SmoothScroll.init();
   }
 
   function initPageHandlers() {
     window.addEventListener('pageChanged', (e) => {
       const page = e.detail.pageName;
-      document.body.style.overflow = '';
+      SmoothScroll.unlockAll();
       const sm = document.getElementById('settingsModal');
       if (sm) Settings.closeModal();
-      setTimeout(() => {
+      // Double rAF instead of setTimeout(50): menunggu frame di mana layout
+      // sudah selesai dihitung, tanpa tebakan milidetik.
+      requestAnimationFrame(() => requestAnimationFrame(() => {
         if (page === 'home') { initHomeTiles(); initHomeSearch(); }
         if (page === 'forum') { Forum.refresh(); initForumSearch(); }
         if (page === 'friend') Matching.init();
         if (page === 'match') Match.init();
         if (page === 'profile') Profile.init();
         ScrollAnimation.refresh();
-      }, 50);
+      }));
     });
   }
 
@@ -58,6 +62,10 @@ export const App = (() => {
       const card = e.target.closest ? e.target.closest('.fx-card') : null;
       if (card !== current) { reset(); current = card; }
       if (!card) return;
+      // .fx-card dan .reveal bisa berada di elemen yang sama (home.js,
+      // match.js). Keduanya memakai `transform`, jadi tilt inline akan
+      // menabrak animasi reveal. Reveal harus menang sampai selesai.
+      if (card.classList.contains('is-animating')) return;
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
         const r = card.getBoundingClientRect();
@@ -120,7 +128,15 @@ export const App = (() => {
   function initNavbarScroll() {
     const navbar = document.querySelector('.top-navbar');
     if (!navbar) return;
-    const check = () => navbar.classList.toggle('scrolled', window.scrollY > 10);
+    let ticking = false;
+    const check = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        navbar.classList.toggle('scrolled', window.scrollY > 10);
+        ticking = false;
+      });
+    };
     window.addEventListener('scroll', check, { passive: true });
     check();
   }
@@ -128,10 +144,16 @@ export const App = (() => {
   function initReadingProgress() {
     const bar = document.getElementById('readingProgress');
     if (!bar) return;
+    let ticking = false;
     const update = () => {
-      const doc = document.documentElement;
-      const pct = doc.scrollHeight - doc.clientHeight > 0 ? (doc.scrollTop / (doc.scrollHeight - doc.clientHeight)) * 100 : 0;
-      bar.style.width = pct + '%';
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const doc = document.documentElement;
+        const range = doc.scrollHeight - doc.clientHeight;
+        bar.style.width = (range > 0 ? (doc.scrollTop / range) * 100 : 0) + '%';
+        ticking = false;
+      });
     };
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
@@ -231,15 +253,18 @@ export const App = (() => {
   }
 
   function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      if (a.getAttribute('href').startsWith('#/')) return;
-      a.addEventListener('click', (e) => {
-        const href = a.getAttribute('href');
-        if (href === '#') return;
-        e.preventDefault();
-        const target = document.querySelector(href);
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
+    // Delegated di document: link yang di-render setelah init (halaman,
+    // thread forum, hasil search) ikut ter-handle tanpa bind ulang.
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+      if (!a) return;
+      const href = a.getAttribute('href');
+      // "#/forum" adalah route, bukan anchor — biarkan router yang menangani.
+      if (!href || href === '#' || href.startsWith('#/')) return;
+      const target = document.querySelector(href);
+      if (!target) return;
+      e.preventDefault();
+      SmoothScroll.scrollToEl(target);
     });
   }
 

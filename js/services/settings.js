@@ -1,4 +1,6 @@
 import { Auth } from './auth.js';
+import { SmoothScroll } from '../core/smoothScroll.js';
+import { Motion } from '../core/motion.js';
 
 export const Settings = (() => {
 
@@ -8,7 +10,12 @@ export const Settings = (() => {
 
   function openModal() {
     const existing = document.getElementById('settingsModal');
-    if (existing) { existing.classList.add('active'); document.body.style.overflow = 'hidden'; return; }
+    if (existing) {
+      const wasActive = existing.classList.contains('active');
+      existing.classList.add('active');
+      if (!wasActive) SmoothScroll.lockScroll();
+      return;
+    }
     const user = Auth.getUser();
     const div = document.createElement('div');
     div.id = 'settingsModal';
@@ -29,12 +36,29 @@ export const Settings = (() => {
       '<div class="relative"><input type="checkbox" id="settingsAnon" class="sr-only peer" checked>' +
       '<div class="w-10 h-5 rounded-full bg-slate-200 dark:bg-slate-700 peer-checked:bg-slate-900 dark:peer-checked:bg-slate-100 transition-colors"></div>' +
       '<div class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-5 shadow-sm"></div></div></label></div>' +
+      '<div class="mb-4"><label class="flex items-center justify-between cursor-pointer"><span class="text-sm font-medium" style="color:var(--text-primary);">Kurangi Animasi</span>' +
+      '<div class="relative"><input type="checkbox" id="settingsReduceMotion" class="sr-only peer">' +
+      '<div class="w-10 h-5 rounded-full bg-slate-200 dark:bg-slate-700 peer-checked:bg-slate-900 dark:peer-checked:bg-slate-100 transition-colors"></div>' +
+      '<div class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-5 shadow-sm"></div></div></label>' +
+      '<p class="text-xs mt-1" style="color:var(--text-muted);">Matikan animasi scroll dan efek muncul. Ikuti setelan sistem secara default.</p></div>' +
       '<hr style="border-color:var(--border-color);margin:1.5rem 0;">' +
       '<button type="submit" class="btn-edquest btn-primary-grad w-full"><i class="fas fa-save"></i> Simpan Perubahan</button>' +
       '<button type="button" onclick="Settings.deleteAccount()" class="btn-edquest w-full mt-3" style="background:transparent;color:#ef4444;border:1.5px solid #ef4444;"><i class="fas fa-trash"></i> Hapus Akun</button>' +
       '</form></div></div>';
     document.body.appendChild(div);
-    document.body.style.overflow = 'hidden';
+    SmoothScroll.lockScroll();
+
+    const motionToggle = document.getElementById('settingsReduceMotion');
+    if (motionToggle) {
+      motionToggle.checked = Motion.isReduced();
+      motionToggle.addEventListener('change', (e) => {
+        Motion.setReduced(e.target.checked);
+        Auth.showToast(e.target.checked
+          ? 'Animasi dikurangi aktif'
+          : 'Animasi dikurangi nonaktif', 'success');
+      });
+    }
+
     document.getElementById('settingsForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const name = document.getElementById('settingsName').value.trim();
@@ -55,7 +79,11 @@ export const Settings = (() => {
 
   function closeModal() {
     const modal = document.getElementById('settingsModal');
-    if (modal) { modal.classList.remove('active'); document.body.style.overflow = ''; setTimeout(() => { if (modal && !modal.classList.contains('active')) modal.remove(); }, 300); }
+    if (!modal) return;
+    const wasActive = modal.classList.contains('active');
+    modal.classList.remove('active');
+    if (wasActive) SmoothScroll.unlockScroll();
+    setTimeout(() => { if (modal && !modal.classList.contains('active')) modal.remove(); }, 300);
   }
 
   function deleteAccount() {
