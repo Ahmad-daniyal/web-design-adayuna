@@ -1,8 +1,4 @@
-/* ===== Top Navbar =====
-   Dibagi jadi tiga zona. Di bawah 1024px tetap flex (brand di kiri,
-   ikon di kanan). Di 1024px ke atas jadi grid 3 kolom supaya search bar
-   benar-benar di tengah, dan brand disembunyikan karena logo-nya sudah
-   ada di sidebar. */
+/* ===== Top Navbar ===== */
 .top-navbar {
   position: fixed;
   top: 0;
@@ -18,121 +14,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
   padding: 0 1.5rem;
   transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
-}
-
-.navbar-left,
-.navbar-right {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.navbar-left {
-  gap: 0.75rem;
-}
-
-.navbar-right {
-  gap: 0.25rem;
-}
-
-.navbar-center {
-  display: none;
-  flex: 1 1 auto;
-  min-width: 0;
-  justify-content: center;
-}
-
-@media (min-width: 768px) {
-  .navbar-center {
-    display: flex;
-  }
-}
-
-@media (min-width: 1024px) {
-  .top-navbar {
-    display: grid;
-    grid-template-columns: 1fr minmax(0, 640px) 1fr;
-    gap: 1.5rem;
-  }
-
-  .navbar-left {
-    justify-self: start;
-  }
-
-  .navbar-right {
-    justify-self: end;
-  }
-
-  /* Logo sudah ada di sidebar pada ukuran ini. */
-  .navbar-brand {
-    display: none;
-  }
-}
-
-/* Di atas 768px sudah ada search bar inline, jadi tombol magnifier
-   disembunyikan agar tidak terlihat seperti kontrol ganda. Shortcut
-   "Ctrl/Cmd+K" tetap membuka overlay pencarian lanjut. */
-@media (min-width: 768px) {
-  #searchBtn {
-    display: none;
-  }
-}
-
-/* ===== Search Bar Header ===== */
-.header-search {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  width: 100%;
-  height: 40px;
-  padding: 0 1.1rem;
-  border-radius: 999px;
-  background: var(--bg-section);
-  border: 1px solid transparent;
-  transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
-}
-
-.header-search:hover {
-  border-color: var(--border-color);
-}
-
-.header-search:focus-within {
-  background: var(--bg-card);
-  border-color: rgba(37, 99, 235, 0.45);
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-}
-
-.dark .header-search:focus-within {
-  border-color: rgba(56, 189, 248, 0.45);
-  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
-}
-
-.header-search-icon {
-  flex-shrink: 0;
-  font-size: 0.875rem;
-  color: var(--text-muted);
-}
-
-.header-search:focus-within .header-search-icon {
-  color: var(--primary);
-}
-
-.header-search-input {
-  flex: 1;
-  min-width: 0;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-size: 0.875rem;
-  color: var(--text-primary);
-}
-
-.header-search-input::placeholder {
-  color: var(--text-muted);
 }
 
 .dark .top-navbar {
