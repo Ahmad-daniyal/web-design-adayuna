@@ -48,7 +48,6 @@ function heroContent() {
   const lines = h.titleLines || ['Mulai Perjalanan', 'Belajarmu', 'Tanpa Rasa Malu'];
   const highlight = h.highlightIndex || 1;
   const ctas = h.ctas || [];
-  const baca = h.bacaDulu || {};
 
   const title = lines.map((line, i) =>
     i === highlight
@@ -61,25 +60,71 @@ function heroContent() {
       '<i class="fas ' + escAttr(c.icon || 'fa-arrow-right') + '"></i> ' + escHtml(c.label) + '</a>'
   ).join('\n          ');
 
-  const tiles = ((h.tiles) || []).filter(t => t && t.label).map(t =>
-    '<a href="' + escAttr(t.href || '#') + '" class="hero-tile hero-tile-enter" style="--tile-accent:' + escAttr(t.accent || '#2563EB') + '; animation:float 6s ease-in-out infinite; animation-delay:' + escAttr(t.delay || '0s') + ';">' +
-      '<div class="glass-card hero-tile-card !p-5 text-center">' +
-        '<div class="hero-tile-icon"><i class="fas ' + escAttr(t.icon || 'fa-star') + '"></i></div>' +
-        '<p class="hero-tile-label text-xs font-medium mt-2">' + escHtml(t.label) + '</p>' +
-        '<span class="hero-tile-cta"><i class="fas fa-arrow-right"></i> Buka</span>' +
-      '</div>' +
-    '</a>'
-  ).join('\n              ');
-
   return {
     badge: badge,
     badgeIcon: h.icon || 'fa-sparkles',
     title,
     description: h.description || '',
-    ctaButtons,
-    bacaDulu: '<i class="fas ' + (baca.icon || 'fa-eye') + '"></i>\n          ' + escHtml(baca.text || '') + ' <a href="' + escAttr(baca.href || '#/forum') + '" style="font-weight:600; text-decoration:underline; text-underline-offset:2px;">' + escHtml(baca.linkText || 'Jelajahi Forum') + '</a>',
-    heroVisual: '<div class="grid grid-cols-2 gap-4 p-4">\n                ' + (tiles || '<p class="text-sm" style="color:var(--text-muted);">Fitur segera hadir</p>') + '\n              </div>'
+    ctaButtons
   };
+}
+
+/* Komposisi kartu di kanan hero.
+   Tiga lapis sengaja dipisah agar tidak ada dua `transform` pada satu elemen:
+     .hero-hook        -> rotasi statis + offset vertikal (dari data)
+     .hero-hook-inner  -> animasi float
+     .hero-hook-card   -> tampilan + animasi masuk
+   Animation reveal TIDAK dipakai di sini: elemennya diposisikan lewat
+   transform, jadi bisa luput dari IntersectionObserver dan tertahan tak
+   terlihat selamanya. */
+function hookCards() {
+  const tiles = ((dataStore.home && dataStore.home.hero) || {}).tiles || [];
+  return tiles.filter(t => t && t.label).map(t =>
+    '<a href="' + escAttr(t.href || '#') + '" class="hero-hook hero-hook-enter' + (t.span ? ' hero-hook-wide' : '') + '" ' +
+      'style="--hook-accent:' + escAttr(t.accent || '#2563EB') + '; --hook-rot:' + escAttr(t.rot || '0deg') + '; --hook-fy:' + escAttr(t.fy || '0px') + '; --hook-delay:' + escAttr(t.delay || '0s') + ';" ' +
+      'aria-label="' + escAttr(t.label + ' — ' + (t.desc || '')) + '">' +
+      '<span class="hero-hook-inner"><span class="hero-hook-card">' +
+        '<span class="hero-hook-icon"><i class="fas ' + escAttr(t.icon || 'fa-star') + '"></i></span>' +
+        '<span class="hero-hook-body">' +
+          '<span class="hero-hook-label">' + escHtml(t.label) + '</span>' +
+          '<span class="hero-hook-desc">' + escHtml(t.desc || '') + '</span>' +
+        '</span>' +
+        (t.span ? '<span class="hero-hook-go" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>' : '') +
+      '</span></span>' +
+    '</a>'
+  ).join('\n                ');
+}
+
+function heroDecor() {
+  const d = ((dataStore.home && dataStore.home.hero) || {}).decor || {};
+  const phrase = (d.phrase || []).filter(Boolean).map(escHtml).join('<br>\n          ');
+  const marks = (d.marks || []).filter(m => m && m.icon).map((m, i) =>
+    '<span class="hero-mark hero-mark-' + (i + 1) + ' hero-mark-' + escAttr(m.tone || 'blue') + '" aria-hidden="true">' +
+      '<i class="fas ' + escAttr(m.icon) + '"></i></span>'
+  ).join('\n            ');
+  return {
+    phrase,
+    marks,
+    lines: '<svg class="hero-curve" viewBox="0 0 240 240" aria-hidden="true" focusable="false">' +
+      '<path d="M10 226 C58 186 50 104 118 68 C168 41 214 62 230 118" />' +
+      '<path d="M34 240 C92 208 104 148 164 132" />' +
+    '</svg>'
+  };
+}
+
+function quickSearchSection() {
+  const h = (dataStore.home && dataStore.home.hero) || {};
+  const baca = h.bacaDulu || {};
+  const placeholder = 'Cari forum, topik, mapel, arena, atau apa saja...';
+  return '<div class="quick-search reveal reveal-stagger-1">' +
+      '<i class="fas fa-search quick-search-icon" aria-hidden="true"></i>' +
+      '<input id="homeSearchInput" type="text" class="quick-search-input" placeholder="' + escAttr(placeholder) + '" aria-label="' + escAttr(placeholder) + '" autocomplete="off">' +
+      '<span class="quick-search-go" aria-hidden="true"><i class="fas fa-magnifying-glass"></i></span>' +
+      '<div id="homeSearchAc" class="search-ac-dropdown"></div>' +
+    '</div>' +
+    '<div class="baca-dulu mx-auto reveal reveal-stagger-2">' +
+      '<i class="fas ' + (baca.icon || 'fa-eye') + '" aria-hidden="true"></i>\n      ' + escHtml(baca.text || '') + ' <a href="' + escAttr(baca.href || '#/forum') + '">' + escHtml(baca.linkText || 'Jelajahi Forum') + ' <i class="fas fa-arrow-right" aria-hidden="true"></i></a>' +
+    '</div>';
 }
 
 function featureCards() {
@@ -128,48 +173,49 @@ const CTA_STYLES = {
 
 export function renderHome() {
   const hero = heroContent();
+  const decor = heroDecor();
   return `
-<section class="hero-section min-h-[85vh] flex items-center pt-20 pb-16">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 w-full">
-    <div class="grid md:grid-cols-2 gap-12 items-center">
-      <div class="text-center md:text-left">
-        <div class="hero-badge mb-6 mx-auto md:mx-0 reveal">
+<section class="hero-section min-h-[86vh] flex items-center pt-20 pb-14">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 w-full">
+    <div class="hero-grid">
+      <div class="text-center lg:text-left">
+        <div class="hero-badge mb-6 mx-auto lg:mx-0 reveal">
           <i class="fas ${hero.badgeIcon} text-sm"></i>
           ${hero.badge}
         </div>
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 reveal reveal-stagger-1" style="color:var(--text-primary);">
+        <h1 class="hero-title mb-6 reveal reveal-stagger-1">
           ${hero.title}
         </h1>
-        <p class="text-lg sm:text-xl mb-8 max-w-xl mx-auto md:mx-0 leading-relaxed reveal reveal-stagger-2" style="color:var(--text-secondary);">
+        <p class="hero-lead mb-8 mx-auto lg:mx-0 reveal reveal-stagger-2">
           ${hero.description}
         </p>
-        <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-6 reveal reveal-stagger-3">
+        <div class="flex flex-wrap gap-3 justify-center lg:justify-start reveal reveal-stagger-3">
           ${hero.ctaButtons}
         </div>
-        <div class="home-search-wrapper mx-auto md:mx-0 reveal reveal-stagger-4" style="max-width:520px;width:100%;">
-          <div class="search-input-wrapper" style="position:relative;">
-            <i class="fas fa-search" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-muted);z-index:2;"></i>
-            <input id="homeSearchInput" type="text" class="form-input !pl-11" placeholder="Cari forum, topik, mapel, arena, atau apa saja..." autocomplete="off">
-            <div id="homeSearchAc" class="search-ac-dropdown"></div>
-          </div>
-        </div>
-        <div class="baca-dulu mx-auto md:mx-0 reveal reveal-stagger-5">
-          ${hero.bacaDulu}
-        </div>
       </div>
-      <div class="hidden md:flex items-center justify-center reveal-right">
-        <div class="relative">
-          <div class="w-80 h-80 rounded-full" style="background:radial-gradient(circle, rgba(37,99,235,0.10) 0%, transparent 70%);"></div>
-          <div class="absolute inset-0 flex items-center justify-center">
-            ${hero.heroVisual}
-          </div>
+      <div class="hero-hook-stage hidden lg:block">
+        <div class="hero-blob hero-blob-a" aria-hidden="true"></div>
+        <div class="hero-blob hero-blob-b" aria-hidden="true"></div>
+        ${decor.lines}
+        <p class="hero-hand" aria-hidden="true">
+          ${decor.phrase}
+        </p>
+        ${decor.marks}
+        <div class="hero-hook-grid">
+                ${hookCards() || '<p class="text-sm" style="color:var(--text-muted);">Fitur segera hadir</p>'}
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="relative z-10 -mt-16 pb-12" style="background:transparent;">
+<section class="quick-search-section">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+    ${quickSearchSection()}
+  </div>
+</section>
+
+<section class="relative z-10 -mt-10 pb-12" style="background:transparent;">
   <div class="max-w-5xl mx-auto px-4 sm:px-6">
     <div class="card-panel overflow-hidden reveal" style="box-shadow:var(--shadow-lg);">
       <div class="metric-strip">

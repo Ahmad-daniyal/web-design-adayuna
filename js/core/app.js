@@ -19,8 +19,10 @@ export const App = (() => {
     initNavbarScroll();
     initReadingProgress();
     initHelpDropdown();
+    initSettingsButton();
     initSidebarToggle();
     initSearch();
+    initHeaderSearch();
     initUserDropdown();
     initIceBreakerCopy();
     initSmoothScroll();
@@ -29,6 +31,11 @@ export const App = (() => {
     initPageHandlers();
     ScrollAnimation.init();
     SmoothScroll.init();
+  }
+
+  function initSettingsButton() {
+    const btn = document.getElementById('settingsBtn');
+    if (btn) btn.addEventListener('click', () => Settings.openModal());
   }
 
   function initPageHandlers() {
@@ -40,7 +47,7 @@ export const App = (() => {
       // Double rAF instead of setTimeout(50): menunggu frame di mana layout
       // sudah selesai dihitung, tanpa tebakan milidetik.
       requestAnimationFrame(() => requestAnimationFrame(() => {
-        if (page === 'home') { initHomeTiles(); initHomeSearch(); }
+        if (page === 'home') { initHookCards(); initHomeSearch(); }
         if (page === 'forum') { Forum.refresh(); initForumSearch(); }
         if (page === 'friend') Matching.init();
         if (page === 'match') Match.init();
@@ -79,26 +86,17 @@ export const App = (() => {
     document.addEventListener('scroll', reset, { passive: true, capture: true });
   }
 
-  function initHomeTiles() {
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const isCoarse = window.matchMedia('(pointer: coarse)').matches;
-    const tiles = document.querySelectorAll('.hero-tile');
-    if (!tiles.length) return;
-    tiles.forEach((tile) => {
-      const card = tile.querySelector('.hero-tile-card');
-      if (!card) return;
+  /* Kartu hook hero memakai animasi masuk `heroHookIn ... both`. Setelah
+     selesai, animasi tetap "tertanam" karena fill mode both, sehingga
+     elemennya bisa tetap nempel di compositor. Diam-diam lepaskan begitu
+     `animationend` datang. */
+  function initHookCards() {
+    const cards = document.querySelectorAll('.hero-hook-card');
+    if (!cards.length) return;
+    cards.forEach((card) => {
       card.addEventListener('animationend', (e) => {
-        if (e.animationName === 'heroTileIn') card.style.animation = 'none';
+        if (e.animationName === 'heroHookIn') card.style.animation = 'none';
       });
-      if (reduceMotion || isCoarse) return;
-      const BASE = 'translateY(-10px) scale(1.06) ';
-      tile.addEventListener('pointermove', (e) => {
-        const r = card.getBoundingClientRect();
-        card.style.setProperty('--mx', (e.clientX - r.left) / r.width * 100 + '%');
-        card.style.setProperty('--my', (e.clientY - r.top) / r.height * 100 + '%');
-        card.style.transform = `${BASE}perspective(700px) rotateX(${(e.clientY - r.top) / r.height * -14}deg) rotateY(${(e.clientX - r.left) / r.width * 14}deg)`;
-      });
-      tile.addEventListener('pointerleave', () => { card.style.transform = ''; });
     });
   }
 
@@ -213,6 +211,14 @@ export const App = (() => {
     if (close) close.addEventListener('click', closeSearch);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closeSearch(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSearch(); });
+    // Tombol magnifier disembunyikan di >=768px karena search bar inline sudah
+    // ada (navbar.css), jadi overlay tetap harus bisa dibuka lewat Ctrl/Cmd+K.
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'k' && e.key !== 'K') return;
+      if (!(e.metaKey || e.ctrlKey)) return;
+      e.preventDefault();
+      openSearch();
+    });
 
     function update(q) {
       const items = searchEverything(q);
@@ -231,6 +237,39 @@ export const App = (() => {
     }
 
     input.addEventListener('input', () => { update(input.value.toLowerCase().trim()); });
+  }
+
+  /* Search bar besar di header. Memakai helper yang sama dengan
+     initSearch() (searchEverything + sacHTML + bindSacItems + bindKeydown)
+     supaya perilakanya identik dengan overlay, hanya ditampilkan inline.
+     Navbar di-render sekali (router.js), jadi cukup di-bind sekali di init. */
+  function initHeaderSearch() {
+    const input = document.getElementById('headerSearchInput');
+    const dropdown = document.getElementById('headerSearchAc');
+    if (!input || !dropdown) return;
+
+    function update() {
+      const items = searchEverything(input.value.toLowerCase().trim());
+      if (!items.length) {
+        dropdown.innerHTML = '';
+        dropdown.classList.remove('open');
+        return;
+      }
+      dropdown.innerHTML = sacHTML(items);
+      bindSacItems(dropdown, () => dropdown.classList.remove('open'));
+      bindKeydown(input, dropdown);
+      dropdown.classList.add('open');
+    }
+
+    function close() { dropdown.classList.remove('open'); }
+
+    input.addEventListener('input', update);
+    input.addEventListener('focus', () => { if (input.value.trim()) update(); });
+    input.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    document.addEventListener('click', (e) => {
+      if (dropdown.contains(e.target) || input === e.target) return;
+      close();
+    });
   }
 
   function initUserDropdown() {

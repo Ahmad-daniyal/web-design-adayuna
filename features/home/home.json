@@ -29,11 +29,21 @@
       "href": "#/forum"
     },
     "tiles": [
-      { "label": "Forum Diskusi", "href": "#/forum", "icon": "fa-comments", "accent": "#2563EB", "delay": "0s" },
-      { "label": "Study Buddy", "href": "#/friend", "icon": "fa-user-graduate", "accent": "#0EA5E9", "delay": "1s" },
-      { "label": "Badge & Poin", "href": "#/profile", "icon": "fa-trophy", "accent": "#38BDF8", "delay": "2s" },
-      { "label": "Progress Journal", "href": "#/profile", "icon": "fa-book-open", "accent": "#14B8A6", "delay": "0.5s" }
-    ]
+      { "label": "Forum Diskusi", "desc": "Tanya, jawab, berbagi ilmu.", "href": "#/forum", "icon": "fa-comments", "accent": "#2563EB", "delay": "0s", "rot": "-2.4deg", "fy": "0px" },
+      { "label": "Study Buddy", "desc": "Cari teman belajar sesuai minatmu.", "href": "#/friend", "icon": "fa-user-graduate", "accent": "#0EA5E9", "delay": "0.9s", "rot": "1.6deg", "fy": "30px" },
+      { "label": "Badge & Poin", "desc": "Semakin aktif, semakin keren!", "href": "#/profile", "icon": "fa-trophy", "accent": "#38BDF8", "delay": "1.7s", "rot": "-1.4deg", "fy": "-16px" },
+      { "label": "Progress Journal", "desc": "Pantau progres belajarmu.", "href": "#/profile", "icon": "fa-book-open", "accent": "#14B8A6", "delay": "0.4s", "rot": "1.1deg", "fy": "18px" },
+      { "label": "Arena", "desc": "Uji kemampuanmu di berbagai tantangan.", "href": "#/match", "icon": "fa-bolt", "accent": "#7C3AED", "delay": "1.2s", "rot": "-0.7deg", "fy": "-2px", "span": true }
+    ],
+    "decor": {
+      "phrase": ["Belajar Bersama,", "Tumbuh Bersama"],
+      "marks": [
+        { "icon": "fa-sparkles", "tone": "blue" },
+        { "icon": "fa-sparkles", "tone": "cyan" },
+        { "icon": "fa-arrow-right-long", "tone": "violet" },
+        { "icon": "fa-arrow-right-long", "tone": "sky" }
+      ]
+    }
   },
   "iceBreakerSection": {
     "badge": "fa-sparkles",

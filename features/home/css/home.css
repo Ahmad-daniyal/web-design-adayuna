@@ -1,4 +1,15 @@
-/* ===== Hero ===== */
+/* ===== Hero =====
+   --radius-hero / --radius-hero-lg sengaja lokal di halaman ini: token
+   radius global (max 16px) sengaja tidak diubah supaya Forum, Friend,
+   Arena, dan Profile tidak ikut bergeser. Dideklarasikan di dua section
+   yang bersebelahan (bukan hanya .hero-section) karena search bar ada di
+   section terpisah dan tidak mewarisi dari hero. */
+.hero-section,
+.quick-search-section {
+  --radius-hero: 20px;
+  --radius-hero-lg: 28px;
+}
+
 .hero-section {
   background: var(--gradient-hero);
   position: relative;
@@ -93,190 +104,447 @@
   color: #38BDF8;
 }
 
-/* ===== Hero Tiles (kartu navigasi) ===== */
-.hero-tile {
+/* ===== Hero Grid & Tipografi =====
+   Radius sengaja lokal (--radius-hero) supaya halaman Forum/Friend/Arena
+   tidak ikut berubah; token radius global sengaja tidak disentuh. */
+.hero-grid {
+  display: grid;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 3rem;
+  }
+}
+
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.25rem, 4.8vw, 4rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: var(--text-primary);
+}
+
+.hero-lead {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  max-width: 33rem;
+}
+
+@media (min-width: 1024px) {
+  .hero-lead {
+    font-size: 1.125rem;
+  }
+}
+
+/* ===== Komposisi Kartu Kanan (Visual Hook) =====
+   Tiga lapis, satu `transform` per elemen:
+     .hero-hook       rotasi statis + offset vertikal (inline dari JSON)
+     .hero-hook-inner animasi float
+     .hero-hook-card  permukaan + animasi masuk
+   Ditambah garis melengkung, blob, sparkle, panah, dan tulisan tangan. */
+/* Padding atas diberi ruang untuk kaligrafi. Yang harus menyeimbangkan
+   kolom teks hero (551px) adalah tinggi grid kartu, bukan posisi
+   kaligrafi — jadi grid dinaikkan ke ~425px lewat gap + padding kartu. */
+.hero-hook-stage {
+  position: relative;
+  isolation: isolate;
+  padding: 5.5rem 0 1.5rem;
+  --hook-surface: rgba(255, 255, 255, 0.78);
+}
+
+.dark .hero-hook-stage {
+  --hook-surface: rgba(15, 23, 42, 0.72);
+}
+
+.hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(46px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-blob-a {
+  width: 320px;
+  height: 320px;
+  top: -8%;
+  right: -6%;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.22), transparent 68%);
+  animation: hookBlob 11s ease-in-out infinite;
+}
+
+.hero-blob-b {
+  width: 260px;
+  height: 260px;
+  bottom: -10%;
+  left: -8%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.22), transparent 68%);
+  animation: hookBlob 13s ease-in-out infinite reverse;
+}
+
+.hero-curve {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.hero-curve path {
+  fill: none;
+  stroke: rgba(37, 99, 235, 0.24);
+  stroke-width: 1.25;
+  stroke-dasharray: 4 6;
+  stroke-linecap: round;
+}
+
+.dark .hero-curve path {
+  stroke: rgba(125, 211, 252, 0.24);
+}
+
+/* Kaligrafi di ATAS kartu, mengikuti brief. */
+.hero-hand {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 0.75rem;
+  margin: 0;
+  font-family: var(--font-hand);
+  font-size: 1.95rem;
+  line-height: 1.1;
+  text-align: right;
+  color: var(--primary);
+  transform: rotate(-3deg);
+  text-shadow: 0 2px 12px rgba(37, 99, 235, 0.14);
+  pointer-events: none;
+}
+
+.dark .hero-hand {
+  color: #7DD3FC;
+  text-shadow: 0 2px 12px rgba(56, 189, 248, 0.2);
+}
+
+.hero-mark {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.hero-mark-blue { color: var(--primary); }
+.hero-mark-cyan { color: #38BDF8; }
+.hero-mark-violet { color: #7C3AED; }
+.hero-mark-sky { color: #0284C7; }
+
+.hero-mark-1 {
+  top: 32%;
+  left: -3%;
+  font-size: 1.15rem;
+  animation: hookSparkle 3.6s ease-in-out infinite;
+}
+
+.hero-mark-2 {
+  top: 56%;
+  right: -4%;
+  font-size: 0.95rem;
+  animation: hookSparkle 4.2s ease-in-out 0.6s infinite;
+}
+
+/* Rotasi dasar disimpan di custom property, bukan `transform`, karena
+   keyframes hookPulse ikut menulis `transform` dan akan menimpanya.
+   Posisi ketiga & keempat digeser ke atas supaya tidak menabrak
+   kaligrafi yang sekarang ada di kiri bawah. */
+.hero-mark-3 {
+  --mark-rot: 140deg;
+  bottom: 6%;
+  left: 1%;
+  font-size: 1.1rem;
+  animation: hookPulse 3.2s ease-in-out infinite;
+}
+
+.hero-mark-4 {
+  --mark-rot: -45deg;
+  bottom: 1%;
+  right: 7%;
+  font-size: 0.9rem;
+  animation: hookPulse 3.8s ease-in-out 0.9s infinite;
+}
+
+/* Jarak antar kartu = gap - fy_kartu_atas - fy_kartu_bawah (fy positif
+   = ke bawah). Offset terlalu besar akan memakan gap dan membuat kartu
+   bertumpuk, jadi gap ini harus selalu lebih besar dari jumlah fy
+   dua kartu yang bersebelahan. */
+.hero-hook-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3.1rem;
+}
+
+.hero-hook {
   display: block;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
+  transform: rotate(var(--hook-rot, 0deg)) translateY(var(--hook-fy, 0px));
+  transition: transform var(--transition);
 }
 
-.hero-tile-card {
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  transform-style: preserve-3d;
-  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
-  will-change: transform;
+.hero-hook-wide {
+  grid-column: 1 / -1;
 }
 
-.hero-tile-card::before {
-  content: '';
-  position: absolute;
-  inset: -40%;
-  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--tile-accent) 30%, transparent) 0%, transparent 55%);
-  opacity: 0;
-  transition: opacity var(--transition);
-  pointer-events: none;
+.hero-hook-inner {
+  display: block;
+  animation: hookFloat 7s ease-in-out infinite;
+  animation-delay: var(--hook-delay, 0s);
+  transition: transform var(--transition);
 }
 
-.hero-tile:hover .hero-tile-card::before,
-.hero-tile:focus-visible .hero-tile-card::before {
-  opacity: 1;
+.hero-hook:hover .hero-hook-inner,
+.hero-hook:focus-visible .hero-hook-inner {
+  animation-play-state: paused;
+  transform: translateY(-8px);
 }
 
-.hero-tile-card::after {
-  content: '';
-  position: absolute;
-  top: -60%;
-  left: -80%;
-  width: 55%;
-  height: 220%;
-  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.45), transparent);
-  transform: skewX(-14deg) translateX(-140%);
-  pointer-events: none;
+.hero-hook-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  height: 100%;
+  padding: 1.55rem 1.6rem;
+  border-radius: var(--radius-hero);
+  background: var(--hook-surface);
+  border: 1px solid color-mix(in srgb, var(--hook-accent) 16%, transparent);
+  box-shadow:
+    0 10px 30px -12px color-mix(in srgb, var(--hook-accent) 40%, transparent),
+    0 2px 6px rgba(15, 23, 42, 0.04);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  transition: box-shadow var(--transition), border-color var(--transition), background-color var(--transition);
 }
 
-.hero-tile:hover .hero-tile-card::after,
-.hero-tile:focus-visible .hero-tile-card::after {
-  animation: heroTileShine 0.9s ease forwards;
+.dark .hero-hook-card {
+  box-shadow:
+    0 10px 30px -12px color-mix(in srgb, var(--hook-accent) 55%, transparent),
+    0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-@keyframes heroTileShine {
-  0% { transform: skewX(-14deg) translateX(-140%); }
-  100% { transform: skewX(-14deg) translateX(420%); }
+.hero-hook-wide .hero-hook-card {
+  align-items: center;
+  padding: 1.85rem 1.7rem;
+  gap: 1rem;
 }
 
-.hero-tile-icon {
-  width: 46px;
-  height: 46px;
-  margin: 0 auto;
-  border-radius: 14px;
+/* Chip panah di kartu span: penanda bahwa kartu ini sekaligus CTA. */
+.hero-hook-go {
+  margin-left: auto;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.15rem;
-  color: var(--tile-accent);
-  background: color-mix(in srgb, var(--tile-accent) 16%, transparent);
-  border: 1px solid color-mix(in srgb, var(--tile-accent) 32%, transparent);
-  box-shadow: 0 4px 14px color-mix(in srgb, var(--tile-accent) 22%, transparent);
-  transition: all var(--transition);
+  font-size: 0.85rem;
+  color: #fff;
+  background: var(--hook-accent);
+  box-shadow: 0 6px 16px -6px color-mix(in srgb, var(--hook-accent) 70%, transparent);
+  transition: transform var(--transition), box-shadow var(--transition);
 }
 
-.hero-tile:hover .hero-tile-icon,
-.hero-tile:focus-visible .hero-tile-icon {
-  color: #fff;
-  background: var(--tile-accent);
-  border-color: transparent;
-  transform: scale(1.12) rotate(-4deg);
+.hero-hook:hover .hero-hook-go,
+.hero-hook:focus-visible .hero-hook-go {
+  transform: translateX(4px);
+  box-shadow: 0 8px 20px -6px color-mix(in srgb, var(--hook-accent) 80%, transparent);
+}
+
+.hero-hook:hover .hero-hook-card,
+.hero-hook:focus-visible .hero-hook-card {
+  border-color: color-mix(in srgb, var(--hook-accent) 42%, transparent);
   box-shadow:
-    0 0 0 6px color-mix(in srgb, var(--tile-accent) 22%, transparent),
-    0 10px 24px color-mix(in srgb, var(--tile-accent) 45%, transparent);
+    0 18px 40px -14px color-mix(in srgb, var(--hook-accent) 55%, transparent),
+    0 2px 6px rgba(15, 23, 42, 0.05);
 }
 
-.hero-tile-label {
-  color: var(--text-secondary);
-  font-weight: 600;
-  transition: color var(--transition);
+.hero-hook:focus-visible {
+  outline: none;
 }
 
-.hero-tile:hover .hero-tile-label,
-.hero-tile:focus-visible .hero-tile-label {
-  color: var(--primary);
-}
-
-.dark .hero-tile:hover .hero-tile-label,
-.dark .hero-tile:focus-visible .hero-tile-label {
-  color: #fff;
-}
-
-.hero-tile-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  margin-top: 0.6rem;
-  height: 1.4rem;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--tile-accent);
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity var(--transition), transform var(--transition);
-}
-
-.hero-tile:hover .hero-tile-cta,
-.hero-tile:focus-visible .hero-tile-cta {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.hero-tile:hover .hero-tile-cta i,
-.hero-tile:focus-visible .hero-tile-cta i {
-  animation: heroCtaArrow 0.8s ease infinite;
-}
-
-@keyframes heroCtaArrow {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(4px); }
-}
-
-.hero-tile:hover .hero-tile-card,
-.hero-tile:focus-visible .hero-tile-card {
-  transform: translateY(-10px) scale(1.06);
-  border-color: color-mix(in srgb, var(--tile-accent) 55%, transparent);
-  box-shadow: 0 18px 44px color-mix(in srgb, var(--tile-accent) 38%, transparent);
-}
-
-.hero-tile:focus-visible .hero-tile-card {
-  outline: 2px solid var(--tile-accent);
+.hero-hook:focus-visible .hero-hook-card {
+  outline: 2px solid var(--hook-accent);
   outline-offset: 3px;
 }
 
-.hero-tile-enter .hero-tile-card {
-  animation: heroTileIn 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+.hero-hook-icon {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  color: var(--hook-accent);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--hook-accent) 20%, transparent),
+    color-mix(in srgb, var(--hook-accent) 7%, transparent));
+  border: 1px solid color-mix(in srgb, var(--hook-accent) 26%, transparent);
+  transition: transform var(--transition), background var(--transition), color var(--transition);
 }
 
-.hero-tile-enter:nth-child(1) .hero-tile-card { animation-delay: 0.05s; }
-.hero-tile-enter:nth-child(2) .hero-tile-card { animation-delay: 0.15s; }
-.hero-tile-enter:nth-child(3) .hero-tile-card { animation-delay: 0.25s; }
-.hero-tile-enter:nth-child(4) .hero-tile-card { animation-delay: 0.35s; }
+.hero-hook:hover .hero-hook-icon,
+.hero-hook:focus-visible .hero-hook-icon {
+  color: #fff;
+  background: var(--hook-accent);
+  transform: scale(1.1) rotate(-5deg);
+}
 
-@keyframes heroTileIn {
-  0% { opacity: 0; transform: translateY(22px) scale(0.88); filter: blur(6px); }
+.hero-hook-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.hero-hook-label {
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  color: var(--text-primary);
+}
+
+.hero-hook-desc {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.hero-hook-enter .hero-hook-card {
+  animation: heroHookIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-hook-enter:nth-child(1) .hero-hook-card { animation-delay: 0.05s; }
+.hero-hook-enter:nth-child(2) .hero-hook-card { animation-delay: 0.14s; }
+.hero-hook-enter:nth-child(3) .hero-hook-card { animation-delay: 0.23s; }
+.hero-hook-enter:nth-child(4) .hero-hook-card { animation-delay: 0.32s; }
+.hero-hook-enter:nth-child(5) .hero-hook-card { animation-delay: 0.41s; }
+
+@keyframes heroHookIn {
+  0% { opacity: 0; transform: translateY(20px) scale(0.9); filter: blur(6px); }
   100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
 }
 
-.dark .hero-tile-label {
-  color: rgba(203, 213, 225, 0.85);
+@keyframes hookFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
 }
 
-.dark .hero-tile:hover .hero-tile-label,
-.dark .hero-tile:focus-visible .hero-tile-label {
+@keyframes hookBlob {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-14px, 12px, 0) scale(1.08); }
+}
+
+@keyframes hookSparkle {
+  0%, 100% { transform: scale(1) rotate(0); opacity: 0.55; }
+  50% { transform: scale(1.28) rotate(22deg); opacity: 1; }
+}
+
+@keyframes hookPulse {
+  0%, 100% { transform: rotate(var(--mark-rot, 0deg)) translate(0, 0); opacity: 0.5; }
+  50% { transform: rotate(var(--mark-rot, 0deg)) translate(4px, -4px); opacity: 1; }
+}
+
+/* ===== Search Bar Bawah =====
+   Memegang #homeSearchInput + #homeSearchAc yang dipindah dari kolom kiri
+   hero. Id dipertahankan agar initHomeSearch() tidak perlu diubah. */
+.quick-search-section {
+  position: relative;
+  z-index: 5;
+  padding: 0 0 3.5rem;
+  /* Bar search + baris "Jelajahi Forum" sengaja naik agar keduanya
+     masuk layar 900px, tidak terbelah oleh garis fold. */
+  margin-top: -3.5rem;
+}
+
+.quick-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 0.5rem 0.6rem 0.5rem 1.35rem;
+  border-radius: var(--radius-hero-lg);
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  box-shadow: 0 20px 48px -20px rgba(15, 23, 42, 0.28), 0 2px 6px rgba(15, 23, 42, 0.04);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.quick-search:focus-within {
+  border-color: rgba(37, 99, 235, 0.5);
+  box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.1), 0 20px 48px -20px rgba(37, 99, 235, 0.4);
+}
+
+.dark .quick-search {
+  box-shadow: 0 20px 48px -20px rgba(0, 0, 0, 0.7);
+}
+
+.dark .quick-search:focus-within {
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 0 5px rgba(56, 189, 248, 0.12), 0 20px 48px -20px rgba(56, 189, 248, 0.4);
+}
+
+.quick-search-icon {
+  color: var(--primary);
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+
+.quick-search-input {
+  flex: 1;
+  min-width: 0;
+  height: 3rem;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.quick-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Tombol submit dekoratif di dalam bar. Sengaja pakai elemen <i> asli
+   (bukan ::after + content codepoint Font Awesome) supaya glyph-nya
+   ikut dari CDN Font Awesome, tidak bergantung nama family tebakan. */
+.quick-search-go {
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: var(--gradient-primary);
   color: #fff;
+  font-size: 0.95rem;
+  box-shadow: 0 6px 16px -4px rgba(37, 99, 235, 0.55);
+  transition: transform var(--transition);
+  user-select: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .hero-tile-enter .hero-tile-card {
-    animation: none;
-  }
-
-  .hero-tile:hover .hero-tile-card,
-  .hero-tile:focus-visible .hero-tile-card {
-    transform: translateY(-4px);
-  }
-
-  .hero-tile:hover .hero-tile-card::after,
-  .hero-tile:focus-visible .hero-tile-card::after {
-    animation: none;
-    display: none;
-  }
-
-  .hero-tile:hover .hero-tile-cta i,
-  .hero-tile:focus-visible .hero-tile-cta i {
-    animation: none;
-  }
+.quick-search:focus-within .quick-search-go {
+  transform: scale(1.06);
 }
 
 /* ===== Baca Dulu Badge ===== */
@@ -284,6 +552,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  margin-top: 1.15rem;
   padding: 0.5rem 1rem;
   background: rgba(37, 99, 235, 0.06);
   border: 1px solid rgba(37, 99, 235, 0.16);
@@ -295,6 +564,18 @@
 
 .baca-dulu a {
   color: #2563EB;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.baca-dulu a:hover .fa-arrow-right {
+  animation: bacaArrow 0.8s ease infinite;
+}
+
+@keyframes bacaArrow {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
 }
 
 .dark .baca-dulu {
@@ -533,7 +814,7 @@
 }
 
 @media (max-width: 640px) {
-  .hero-section h1 {
+  .hero-title {
     font-size: 2rem;
   }
 
@@ -556,11 +837,45 @@
     padding-bottom: 2.5rem;
   }
 
-  .hero-section h1 {
+  .hero-title {
     font-size: 1.75rem;
   }
 
   .cta-panel {
     padding: 2.5rem 1.25rem;
   }
+}
+
+/* ===== Reduced Motion =====
+   Dua pemicu, sama seperti scroll-animation.css: setelan OS
+   (prefers-reduced-motion) dan toggle manual "Kurangi animasi" di
+   Pengaturan yang men-set html.reduce-motion. Semua animasi tak
+   berujung di halaman ini (float, blob, sparkle, pulse, shine) wajib
+   ikut berhenti, kalau tidak toggle tersebut tidak berguna. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-blob,
+  .hero-mark,
+  .hero-hook-inner,
+  .hero-hook-enter .hero-hook-card,
+  .baca-dulu a:hover .fa-arrow-right {
+    animation: none;
+  }
+
+  .hero-hook:hover .hero-hook-inner,
+  .hero-hook:focus-visible .hero-hook-inner {
+    transform: translateY(-4px);
+  }
+}
+
+html.reduce-motion .hero-blob,
+html.reduce-motion .hero-mark,
+html.reduce-motion .hero-hook-inner,
+html.reduce-motion .hero-hook-enter .hero-hook-card,
+html.reduce-motion .baca-dulu a:hover .fa-arrow-right {
+  animation: none;
+}
+
+html.reduce-motion .hero-hook:hover .hero-hook-inner,
+html.reduce-motion .hero-hook:focus-visible .hero-hook-inner {
+  transform: translateY(-4px);
 }

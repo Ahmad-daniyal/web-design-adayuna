@@ -6,7 +6,7 @@ export function renderNavbar() { return `
 <div id="readingProgress" class="reading-progress" aria-hidden="true"></div>
 
 <nav class="top-navbar">
-  <div class="flex items-center gap-3">
+  <div class="navbar-zone navbar-left">
     <button id="sidebarToggle" class="btn-ghost !p-2 rounded-lg text-lg md:hidden" aria-label="Toggle sidebar">
       <i class="fas fa-bars"></i>
     </button>
@@ -15,8 +15,15 @@ export function renderNavbar() { return `
       <span class="brand-title hidden sm:inline">Edquest</span>
     </a>
   </div>
-  <div class="flex items-center gap-1">
-    <button id="searchBtn" class="btn-ghost !p-2 rounded-lg text-base" aria-label="Cari">
+  <div class="navbar-zone navbar-center">
+    <div class="header-search">
+      <i class="fas fa-search header-search-icon" aria-hidden="true"></i>
+      <input id="headerSearchInput" type="text" class="header-search-input" placeholder="Cari forum, topik, mapel, arena, atau apa saja..." aria-label="Cari forum, topik, mapel, arena, atau apa saja" autocomplete="off">
+      <div id="headerSearchAc" class="search-ac-dropdown"></div>
+    </div>
+  </div>
+  <div class="navbar-zone navbar-right">
+    <button id="searchBtn" class="btn-ghost !p-2 rounded-lg text-base" aria-label="Cari" title="Pencarian lanjut">
       <i class="fas fa-search" style="color:var(--text-secondary);"></i>
     </button>
     <div class="relative notif-wrap" id="notifWrap">
@@ -55,6 +62,9 @@ export function renderNavbar() { return `
         </div>
       </div>
     </div>
+    <button id="settingsBtn" class="btn-ghost !p-2 rounded-lg text-base" aria-label="Pengaturan" title="Pengaturan">
+      <i class="fas fa-gear" style="color:var(--text-secondary);"></i>
+    </button>
     <button id="darkModeToggle" class="dark-mode-toggle" role="switch" aria-checked="false" aria-label="Toggle dark mode">
       <span class="dm-track">
         <i class="fas fa-sun dm-track-sun"></i>

@@ -165,6 +165,13 @@ export function bindSacItems(container, closeFn) {
 }
 
 export function bindKeydown(input, dropdown) {
+  // Idempoten: pemanggil (initSearch, initHeaderSearch, initHomeSearch)
+  // memanggil fungsi ini tiap kali input berubah. Tanpa guard, satu
+  // ketikan memasang N listener; ArrowDown lalu dijalankan N kali dan
+  // karena tiap handler membaca state DOM terbaru, fokus melompat ke
+  // item terakhir alih-alih ke item berikutnya.
+  if (input.dataset.kdBound) return;
+  input.dataset.kdBound = '1';
   input.addEventListener('keydown', (e) => {
     const items = dropdown.querySelectorAll('.sac-item');
     if (!items.length) return;
