@@ -83,4 +83,20 @@ Siswa butuh tempat untuk berpendapat, mencoba, dan melihat perkembangan diri mer
 
 ---
 
+## Menjalankan Proyek
+
+Proyek ini memakai **ES Modules** dan **`fetch()`** untuk memuat data JSON. Keduanya diblokir browser saat dibuka langsung dari file, jadi halaman **wajib** dijalankan lewat server statis.
+
+```bash
+npx serve .
+# atau
+npx http-server -p 8080 .
+```
+
+Kemudian buka `http://localhost:8080` di browser.
+
+> Jangan membuka `index.html` dengan double-click. Pada mode `file://` browser memblokir pemuatan modul dan data, sehingga halaman tampil kosong.
+
+---
+
 *Dibangun dengan semangat "belajar tanpa rasa malu" — untuk semua siswa yang berani memulai.*
