@@ -55,3 +55,17 @@
   transition: transform 0.3s ease;
   transform-origin: center;
 }
+/* ===== Jeda di dalam judul hero =====
+   Judul ditulis sebagai array baris di data/about.json. Di layar lebar
+   baris-baris itu tetap menyatu jadi satu judul dengan jeda; di layar kecil
+   pemenggal baris dari view yang bekerja, jadi jeda ini dimatikan. */
+.about-title-gap {
+  display: inline-block;
+  width: 1.25rem;
+}
+
+@media (max-width: 639px) {
+  .about-title-gap {
+    display: none;
+  }
+}

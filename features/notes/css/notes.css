@@ -468,17 +468,34 @@
    .progress-card tetap berlaku dan tidak menimbulkan garis bawah. */
 .journal-card {
   display: block;
+  position: relative;
+  overflow: hidden;
   color: inherit;
   text-decoration: none;
 }
 
-.journal-open {
-  color: var(--text-muted);
-  transition: color var(--transition);
+/* Garis aksen kiri muncul saat kursor masuk, penanda jelas bahwa kartu ini
+   bisa diklik. Dipakai pseudo-element supaya tidak menambah node di markup. */
+.journal-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--gradient-primary);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform var(--transition);
 }
 
-.journal-card:hover .journal-open {
-  color: var(--primary);
+.journal-card:hover::before,
+.journal-card:focus-visible::before {
+  transform: scaleY(1);
+}
+
+.dark .journal-card::before {
+  background: var(--primary-dark);
 }
 
 /* Catatan panjang tetap dipangkas jadi 3 baris supaya daftar tetap ringkas;
@@ -498,6 +515,7 @@
 /* Tombol hapus di pojok kartu. Terpisah dari tautan kartu supaya diklik tanpa
    ikut membuka catatan. */
 .notes-del {
+  flex-shrink: 0;
   color: var(--text-muted);
   background: transparent;
   border: 1px solid var(--border-color);
@@ -508,6 +526,27 @@
   align-items: center;
   justify-content: center;
   transition: all var(--transition);
+}
+
+/* Di perangkat dengan pointer presisi, tombol disembunyikan sampai kursor
+   masuk ke kartu supaya daftar tetap rapi. Di perangkat sentuh tidak ada
+   hover, jadi tombol harus selalu terlihat agar tetap bisa dipakai. */
+@media (hover: hover) and (pointer: fine) {
+  .notes-del {
+    opacity: 0;
+  }
+
+  .journal-card:hover .notes-del,
+  .journal-card:focus-within .notes-del {
+    opacity: 1;
+  }
+}
+
+/* Fokus keyboard harus selalu terlihat, termasuk saat tombol masih "tersembunyi". */
+.notes-del:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 .notes-del:hover {
@@ -524,4 +563,182 @@
   display: flex;
   align-items: flex-start;
   gap: 0.25rem;
+}
+
+/* ===== Grid daftar catatan =====
+   Satu kolom di ponsel/tablet, dua kolom di layar lebar. Sebelumnya daftar
+   full-width satu kolom sehingga tiap baris teks terlalu panjang dan mata
+   cepat lelah saat membaca daftar. */
+.notes-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .notes-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Notifikasi tautan usang dan kartu jurnal kosong tetap melebar penuh,
+   bukan jadi satu sel dari grid. */
+.notes-grid .notes-notice,
+.notes-grid > .card-panel:only-child {
+  grid-column: 1 / -1;
+}
+
+/* ===== Chip status AI di kartu ===== */
+.notes-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-section);
+  color: var(--text-secondary);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  transition: all var(--transition);
+}
+
+.notes-chip-done {
+  color: var(--accent);
+  border-color: rgba(16, 185, 129, 0.35);
+  background: var(--accent-light);
+}
+
+.dark .notes-chip-done {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(16, 185, 129, 0.28);
+}
+
+.journal-card:hover .notes-chip {
+  border-color: var(--primary);
+}
+
+/* Panah kecil di ujung baris bawah kartu, ikut bergeser saat hover. */
+.notes-open-chevron {
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  transition: transform var(--transition), color var(--transition);
+}
+
+.journal-card:hover .notes-open-chevron {
+  color: var(--primary);
+  transform: translateX(2px);
+}
+
+/* ===== Kartu isi catatan (mode detail) =====
+   Garis aksen di tepi kiri memberi kesan kertas catatan, terpisah dari
+   kartu hasil AI yang memakai gradien penuh. */
+.notes-note-card {
+  border-left: 3px solid var(--gradient-primary);
+}
+
+.dark .notes-note-card {
+  border-left-color: var(--primary-dark);
+}
+
+.journal-body-text {
+  line-height: 1.75;
+}
+
+/* ===== Panel AI menempel saat digulir =====
+   Di layar lebar panel kanan dibuat sticky supaya tombol bantuan AI tetap
+   terlihat walaupun isi catatan panjang. Di layar kecil tetap mengalir
+   normal mengikuti urutan baca. */
+@media (min-width: 1024px) {
+  .ai-panel {
+    position: sticky;
+    top: 5rem;
+  }
+}
+
+/* ===== Kepala kartu hasil AI ===== */
+.ai-card-ico {
+  flex-shrink: 0;
+  width: 1.375rem;
+  height: 1.375rem;
+  margin-left: -0.125rem;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  color: var(--primary);
+  background: var(--bg-section);
+}
+
+.dark .ai-card-ico {
+  color: var(--primary-dark);
+  background: rgba(56, 189, 248, 0.12);
+}
+
+.ai-card-extra {
+  margin-left: auto;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text-secondary);
+}
+
+.ai-card {
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.ai-card:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: var(--shadow-sm);
+}
+
+.dark .ai-card:hover {
+  border-color: rgba(56, 189, 248, 0.35);
+  box-shadow: var(--glow-soft);
+}
+
+/* ===== Opsi kuis ===== */
+.ai-quiz-opt:hover:not(:disabled) {
+  transform: translateX(2px);
+  background: var(--bg-section);
+}
+
+.ai-quiz-opt:disabled {
+  cursor: default;
+}
+
+/* Penanda jawaban benar/salah didorong ke kanan supaya tidak menggeser teks. */
+.ai-quiz-mark {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-left: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.ai-quiz-opt.correct .ai-quiz-mark {
+  color: var(--accent);
+}
+
+.ai-quiz-opt.wrong .ai-quiz-mark {
+  color: #ef4444;
+}
+
+/* ===== Reduced motion =====
+   Blok global hanya mematikan transisi, bukan pergeseran posisi. Efek hover
+   yang memindahkan elemen dimatikan di sini supaya tetap sesuai pengaturan
+   "Kurangi animasi" milik user. */
+html.reduce-motion .journal-card:hover,
+html.reduce-motion .journal-card:focus-visible,
+html.reduce-motion .ai-action:hover:not(:disabled),
+html.reduce-motion .ai-quiz-opt:hover:not(:disabled),
+html.reduce-motion .notes-switch-item:hover,
+html.reduce-motion .progress-card:hover {
+  transform: none;
+}
+
+html.reduce-motion .ai-dots span {
+  animation: none;
 }

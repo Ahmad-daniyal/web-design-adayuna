@@ -32,6 +32,7 @@ function aboutKeywords() {
   push('tentang');
   push('tentang edquest');
   push(d.hero && d.hero.title);
+  ((d.hero && d.hero.titleLines) || []).forEach(push);
   push(d.hero && d.hero.subtitle);
   push(d.latarBelakang && d.latarBelakang.title);
   ((d.latarBelakang && d.latarBelakang.paragraphs) || []).forEach(push);

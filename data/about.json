@@ -2,7 +2,7 @@
   "hero": {
     "badge": "fa-info-circle",
     "badgeText": "Tentang Edquest",
-    "title": "Belajar Bareng,<br class=\"sm:hidden\">&nbsp;&nbsp;Tumbuh Bareng",
+    "titleLines": ["Belajar Bareng,", "Tumbuh Bareng"],
     "subtitle": "Edquest lahir dari keprihatinan bahwa banyak siswa pintar tapi ragu bertanya. Kami hadir sebagai solusi."
   },
   "latarBelakang": {

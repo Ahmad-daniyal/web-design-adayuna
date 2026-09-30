@@ -33,7 +33,7 @@ export function renderNotes() {
         <h1 id="notesTitle" class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-3 reveal reveal-stagger-1 text-slate-900 dark:text-slate-100">Catatan Belajar</h1>
         <div id="notesMeta" class="notes-meta mt-2 reveal reveal-stagger-2"></div>
       </div>
-      <button id="addNoteBtn" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4 flex-shrink-0 reveal reveal-right" hidden>
+      <button id="addNoteBtn" data-note-new class="btn-edquest btn-primary-grad text-sm !py-2 !px-4 flex-shrink-0 reveal reveal-right" hidden>
         <i class="fas fa-plus"></i> Catat Hari Ini
       </button>
     </div>
@@ -62,7 +62,7 @@ export function renderNotes() {
           </div>
         </form>
       </div>
-      <div id="notesList" class="space-y-4"></div>
+      <div id="notesList" class="notes-grid"></div>
     </div>
 
     <div id="notesDetailMode" class="mt-8" hidden>

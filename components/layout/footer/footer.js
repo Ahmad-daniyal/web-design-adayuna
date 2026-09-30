@@ -29,8 +29,6 @@ export function renderFooter() { return `
           <a href="#/forum" data-link="forum" class="text-sm no-underline" style="color:var(--text-secondary);">Forum Diskusi</a>
           <a href="#/friend" data-link="friend" class="text-sm no-underline" style="color:var(--text-secondary);">Study Buddy</a>
           <a href="#/match" data-link="match" class="text-sm no-underline" style="color:var(--text-secondary);">Arena Duel</a>
-          <a href="#/profile" data-link="profile" class="text-sm no-underline" style="color:var(--text-secondary);">Progress Journal</a>
-          <a href="#/catatan" data-link="catatan" class="text-sm no-underline" style="color:var(--text-secondary);">Asisten AI Catatan</a>
         </div>
       </div>
       <div>

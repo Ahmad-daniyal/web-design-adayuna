@@ -644,7 +644,7 @@ export const Match = (() => {
     const vsLabel = vs === 'menang' ? 'Menang!' : (vs === 'seri' ? 'Hasil Seri' : 'Kalah');
     const deltaText = delta ? ' · rating ' + (delta > 0 ? '+' : '') + delta : '';
     Notifications.push({ type: 'match', title: vsLabel, message: playerArea + '% - ' + oppArea + '% wilayah · +' + playerScore + ' poin' + deltaText, link: '#/match' });
-    settled.badges.forEach(b => Notifications.push({ type: 'badge', title: 'Badge diraih: ' + b + '!', message: 'Lihat koleksi badgemu di halaman profil.', link: '#/profile' }));
+    settled.badges.forEach(b => Notifications.push({ type: 'badge', title: 'Badge diraih: ' + b + '!', message: 'Lihat koleksi badge-mu di halaman profil.', link: '#/profile' }));
     if (settled.rankUp) {
       Notifications.push({ type: 'rank', title: 'Rank naik!', message: settled.rankUp.from + ' → ' + settled.rankUp.tier + ' · ' + settled.rankUp.rankPoints + ' rank points', link: '#/profile' });
     }

@@ -8,6 +8,22 @@ function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 }
 
+// Judul hero ditulis sebagai array baris di data, lalu digabung di sini.
+// Sebelumnya judulnya berupa string berisi <br> dan &nbsp; mentah di dalam
+// data, tapi dirender lewat esc() sehingga tag-nya ikut ter-escape dan
+// tampil literal di layar. Sekarang tiap baris di-escape dan pemenggal
+// baris dibangun di view, sama seperti judul halaman Home.
+function heroTitle(hero, fallback) {
+  const lines = (hero && Array.isArray(hero.titleLines) && hero.titleLines.length)
+    ? hero.titleLines
+    : [(hero && hero.title) || fallback];
+  // Di layar kecil judul jadi dua baris; di layar lebar tetap satu baris
+  // dengan jeda. Jeda dibuat lewat span, bukan &nbsp; di dalam data.
+  return lines
+    .map(esc)
+    .join('<br class="sm:hidden"><span class="about-title-gap" aria-hidden="true"></span>');
+}
+
 const TABS = [
   { key: 'tentang', label: 'Tentang', icon: 'fa-info-circle' },
   { key: 'faq', label: 'FAQ', icon: 'fa-question-circle' },
@@ -145,9 +161,9 @@ export function renderAbout(params) {
   const active = TABS.some(t => t.key === wanted) ? wanted : 'tentang';
 
   const titles = {
-    tentang: { badge: hero.badge, badgeText: hero.badgeText, title: hero.title, subtitle: hero.subtitle },
-    faq: { badge: faqHero.badge, badgeText: faqHero.badgeText, title: faqHero.title, subtitle: faqHero.subtitle },
-    kontak: { badge: 'fa-envelope', badgeText: 'Hubungi Kami', title: 'Mau Ngobrol?', subtitle: 'Ada yang mau ditanyakan atau hanya ingin menyapa? Tulis di sini, kami baca semuanya.' }
+    tentang: { badge: hero.badge, badgeText: hero.badgeText, titleHtml: heroTitle(hero, 'Tentang Edquest'), subtitle: hero.subtitle },
+    faq: { badge: faqHero.badge, badgeText: faqHero.badgeText, titleHtml: heroTitle(faqHero, 'FAQ'), subtitle: faqHero.subtitle },
+    kontak: { badge: 'fa-envelope', badgeText: 'Hubungi Kami', titleHtml: esc('Mau Ngobrol?'), subtitle: 'Ada yang mau ditanyakan atau hanya ingin menyapa? Tulis di sini, kami baca semuanya.' }
   };
   const h = titles[active];
 
@@ -156,7 +172,7 @@ export function renderAbout(params) {
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="max-w-3xl">
       <span class="section-badge reveal"><i class="fas ${esc(h.badge || 'fa-info-circle')}"></i> ${esc(h.badgeText || 'Tentang Edquest')}</span>
-      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-3 reveal reveal-stagger-1 text-slate-900 dark:text-slate-100">${esc(h.title || 'Tentang Edquest')}</h1>
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-3 reveal reveal-stagger-1 text-slate-900 dark:text-slate-100">${h.titleHtml}</h1>
       <p class="mt-2 text-sm sm:text-base reveal reveal-stagger-2 text-slate-500 dark:text-slate-400">${esc(h.subtitle || '')}</p>
     </div>
     <div class="mt-8 reveal reveal-stagger-3">

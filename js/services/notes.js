@@ -130,7 +130,7 @@ export const Notes = (() => {
       '<span><i class="fas fa-align-left mr-1"></i>' + st.words + ' kata</span>' +
       '<span><i class="fas fa-stopwatch mr-1"></i>±' + st.minutes + ' menit baca</span>');
 
-    setHtml(els.body, noteCard(text));
+    setHtml(els.body, noteCard(text, entry.mapel));
     setHtml(els.switcher, switcher(user));
     renderActions();
     renderResults();
@@ -179,7 +179,8 @@ export const Notes = (() => {
       '<div class="flex items-center justify-between gap-3 mt-3 text-xs" style="color:var(--primary);">' +
         '<span><i class="fas fa-circle-check mr-1"></i>+' + (Number(entry.points) || JOURNAL_POINTS) + ' poin</span>' +
         '<span class="flex items-center gap-2">' +
-          '<span class="journal-open">' + (entry.ai ? '<i class="fas fa-circle-check mr-1"></i>Sudah dirangkum' : 'Minta bantuan AI') + ' <i class="fas fa-chevron-right text-[0.625rem] ml-1"></i></span>' +
+          '<span class="notes-chip ' + (entry.ai ? 'notes-chip-done' : '') + '"><i class="fas ' + (entry.ai ? 'fa-circle-check' : 'fa-wand-magic-sparkles') + ' mr-1"></i>' + (entry.ai ? 'Sudah dirangkum' : 'Minta bantuan AI') + '</span>' +
+          '<i class="fas fa-chevron-right notes-open-chevron"></i>' +
           '<button class="notes-del" data-note-del="' + esc(refOf(entry, i)) + '" title="Hapus catatan ini" aria-label="Hapus catatan"><i class="fas fa-trash-can text-xs"></i></button>' +
         '</span>' +
       '</div>' +
@@ -192,7 +193,7 @@ export const Notes = (() => {
       '<h3 class="text-lg font-bold mb-1" style="color:var(--text-primary);">Belum ada catatan</h3>' +
       '<p class="text-sm mb-4" style="color:var(--text-secondary);">Klik <strong>Catat Hari Ini</strong> lalu tulislah apa saja yang sudah kamu pelajari. Kalau masih bingung, muat catatan contoh dulu supaya kelihatan cara menulisnya.</p>' +
       '<div class="flex flex-wrap items-center justify-center gap-2">' +
-        '<button id="addNoteBtnEmpty" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4"><i class="fas fa-plus"></i> Catat Hari Ini</button>' +
+        '<button data-note-new class="btn-edquest btn-primary-grad text-sm !py-2 !px-4"><i class="fas fa-plus"></i> Catat Hari Ini</button>' +
         '<button data-load-samples class="btn-edquest btn-outline-glow text-sm !py-2 !px-4"><i class="fas fa-wand-magic-sparkles"></i> Muat catatan contoh</button>' +
       '</div>' +
     '</div>';
@@ -221,8 +222,6 @@ export const Notes = (() => {
   /* ===== Simpan & hapus catatan ===== */
 
   function bindForm() {
-    const addBtn = document.getElementById('addNoteBtn');
-    const emptyBtn = document.getElementById('addNoteBtnEmpty');
     const form = document.getElementById('notesForm');
     const cancelBtn = document.getElementById('cancelNoteBtn');
     const entryForm = document.getElementById('noteForm');
@@ -230,20 +229,6 @@ export const Notes = (() => {
     if (cancelBtn) cancelBtn.addEventListener('click', () => {
       formOpen = false;
       if (form) form.style.display = 'none';
-    });
-    // Tombol "Catat Hari Ini" ada di header dan (kalau jurnal kosong) di dalam
-    // kartu kosong, jadi keduanya pakai handler yang sama.
-    [addBtn, emptyBtn].forEach(btn => {
-      if (!btn) return;
-      btn.addEventListener('click', () => {
-        if (!Auth.isLoggedIn()) { Auth.openModal('register'); return; }
-        formOpen = true;
-        if (!form) return;
-        form.style.display = 'block';
-        const textEl = document.getElementById('noteText');
-        if (textEl) textEl.focus();
-        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      });
     });
     if (!entryForm) return;
     entryForm.addEventListener('submit', (e) => {
@@ -282,12 +267,25 @@ export const Notes = (() => {
     });
   }
 
+  function openForm() {
+    if (!Auth.isLoggedIn()) { Auth.openModal('register'); return; }
+    formOpen = true;
+    const form = document.getElementById('notesForm');
+    if (!form) return;
+    form.style.display = 'block';
+    const textEl = document.getElementById('noteText');
+    if (textEl) textEl.focus();
+    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
   function loadSamples() {
     const user = Auth.getUser();
     if (!user) { Auth.openModal('register'); return; }
     const samples = buildSampleEntries();
     if (!samples.length) return;
-    user.journal = (user.journal || []).concat(samples);
+    // Contoh ditaruh di depan, bukan di akhir, supaya langsung terlihat begitu
+    // tombol "Muat catatan contoh" ditekan tanpa harus menggulir ke bawah.
+    user.journal = samples.concat(user.journal || []);
     Profile.persist(user);
     Auth.showToast(samples.length + ' catatan contoh dimuat', 'success');
     render();
@@ -329,12 +327,13 @@ export const Notes = (() => {
     '</div>';
   }
 
-  function noteCard(text) {
-    return '<div class="card-panel">' +
+  function noteCard(text, mapel) {
+    return '<div class="card-panel notes-note-card">' +
       '<div class="flex items-center justify-between mb-3">' +
         '<h3 class="text-sm font-bold text-slate-900 dark:text-slate-100"><i class="fas fa-quote-left mr-2 text-slate-400"></i>Isi Catatan</h3>' +
+        (mapel ? '<span class="category-tag ' + esc(mapel) + '">' + esc(mapelLabel(mapel)) + '</span>' : '') +
       '</div>' +
-      '<p class="text-sm leading-relaxed whitespace-pre-wrap break-words" style="color:var(--text-secondary);">' + esc(text) + '</p>' +
+      '<p class="text-sm leading-relaxed whitespace-pre-wrap break-words journal-body-text" style="color:var(--text-secondary);">' + esc(text) + '</p>' +
     '</div>';
   }
 
@@ -405,8 +404,8 @@ export const Notes = (() => {
   }
 
   function cardHead(action, extra) {
-    return '<div class="ai-card-head"><i class="fas ' + esc(action.icon || 'fa-sparkles') + '"></i>' + esc(action.label) +
-      (extra ? '<span class="ml-auto" style="font-weight:600;text-transform:none;letter-spacing:0;">' + esc(extra) + '</span>' : '') +
+    return '<div class="ai-card-head"><span class="ai-card-ico"><i class="fas ' + esc(action.icon || 'fa-sparkles') + '"></i></span>' + esc(action.label) +
+      (extra ? '<span class="ai-card-extra">' + esc(extra) + '</span>' : '') +
       '</div>';
   }
 
@@ -508,6 +507,12 @@ export const Notes = (() => {
     root.dataset.notesBound = '1';
 
     root.addEventListener('click', (e) => {
+      // Tombol "Catat Hari Ini" ada dua: di header dan di dalam kartu jurnal
+      // kosong. Keduanya pakai delegasi, bukan listener langsung, karena
+      // kartu kosong baru disisipkan saat render sedangkan tombol header sudah
+      // ada di shell. Satu jalur ini menutup celah "tombol mati" yang dulu ada.
+      if (e.target.closest('[data-note-new]')) { openForm(); return; }
+
       const action = e.target.closest('[data-ai-action]');
       if (action) { runAction(action.dataset.aiAction); return; }
 
@@ -549,8 +554,10 @@ export const Notes = (() => {
     item.querySelectorAll('.ai-quiz-opt').forEach(o => {
       o.disabled = true;
       const i = Number(o.dataset.opt);
-      if (i === answer) o.classList.add('correct');
-      else if (i === picked) o.classList.add('wrong');
+      // Ikon ditambahkan lewat JS supaya penanda jawaban benar/salah tidak
+      // hanya mengandalkan warna (lebih terbaca dan ramah kontras rendah).
+      if (i === answer) { o.classList.add('correct'); markQuizOpt(o, 'fa-check'); }
+      else if (i === picked) { o.classList.add('wrong'); markQuizOpt(o, 'fa-xmark'); }
     });
     const explain = item.querySelector('[data-quiz-explain]');
     if (explain) explain.hidden = false;
@@ -558,11 +565,20 @@ export const Notes = (() => {
     if (reset) reset.hidden = false;
   }
 
+  function markQuizOpt(opt, icon) {
+    if (opt.querySelector('.ai-quiz-mark')) return;
+    const mark = document.createElement('i');
+    mark.className = 'fas ' + icon + ' ai-quiz-mark';
+    opt.appendChild(mark);
+  }
+
   function resetQuiz(reset) {
     document.querySelectorAll('[data-quiz-item]').forEach(item => {
       item.querySelectorAll('.ai-quiz-opt').forEach(o => {
         o.disabled = false;
         o.classList.remove('correct', 'wrong');
+        const mark = o.querySelector('.ai-quiz-mark');
+        if (mark) mark.remove();
       });
       const explain = item.querySelector('[data-quiz-explain]');
       if (explain) explain.hidden = true;
