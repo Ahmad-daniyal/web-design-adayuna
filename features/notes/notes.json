@@ -1,0 +1,158 @@
+{
+  "ai": {
+    "badge": "Asisten AI",
+    "badgeIcon": "fa-wand-magic-sparkles",
+    "disclaimer": "Demo — hasil dibuat di perangkatmu dari isi catatan, tanpa dikirim ke server.",
+    "thinking": "AI sedang membaca catatanmu",
+    "actions": [
+      {
+        "key": "summary",
+        "label": "Rangkum Catatan",
+        "hint": "Ringkasan singkat + poin utama",
+        "icon": "fa-align-left",
+        "cta": "Buat Ringkasan"
+      },
+      {
+        "key": "keyPoints",
+        "label": "Poin Penting",
+        "hint": "Istilah kunci buat daftar hafalan",
+        "icon": "fa-key",
+        "cta": "Tarik Poin Penting"
+      },
+      {
+        "key": "nextSteps",
+        "label": "Langkah Belajar",
+        "hint": "Saran latihan berikutnya",
+        "icon": "fa-shoe-prints",
+        "cta": "Susun Langkah Belajar"
+      },
+      {
+        "key": "quiz",
+        "label": "Latihan Soal",
+        "hint": "Kuis singkat dari bank soal",
+        "icon": "fa-circle-question",
+        "cta": "Buat Latihan"
+      }
+    ]
+  },
+  "summaryStems": [
+    "Inti catatanmu: ",
+    "Catatanmu berputar pada ",
+    "Kalau diringkas, materinya adalah ",
+    "Pokok yang kamu catat hari ini: "
+  ],
+  "mapelProfiles": {
+    "umum": {
+      "subject": "Umum",
+      "terms": [
+        { "term": "konsep dasar", "desc": "Fondasi yang perlu dikuatkan sebelum masuk materi lanjutan." },
+        { "term": "langkah kerja", "desc": "Tulis ulang dalam bentuk kalimat pendek supaya mudah diingat." },
+        { "term": "contoh soal", "desc": "Cari minimal dua soal berbeda untuk mengecek pemahamanmu." },
+        { "term": "kesalahan umum", "desc": "Catat kesalahan yang pernah kamu buat, itu bahan evaluasi terbaik." }
+      ],
+      "nextSteps": [
+        { "title": "Tulis ulang pakai kalimat sendiri", "desc": "Jelaskan ulang catatan ini tanpa melihat teks aslinya. Kalau tersendat, bagian itu yang perlu diulang." },
+        { "title": "Uji dengan soal latihan", "desc": "Ambil tiga soal dari bank soal dengan mapel yang sama, lalu kerjakan tanpa catatan." },
+        { "title": "Jadwalkan baca ulang", "desc": "Tandai catatan ini untuk dibaca ulang tiga hari lagi. Mengulang dengan jeda jauh lebih kuat daripada baca berulang." }
+      ]
+    },
+    "matematika": {
+      "subject": "Matematika",
+      "terms": [
+        { "term": "rumus", "desc": "Tulis bentuk simbolnya dan satu kalimat arti dari tiap simbol." },
+        { "term": "syarat pakai rumus", "desc": "Rumus hanya berlaku pada kondisi tertentu, dan salah syarat bisa menghasilkan jawaban yang jauh meleset." },
+        { "term": "langkah penyelesaian", "desc": "Pecah jadi minimal tiga langkah bernomor, jangan langsung melompat ke jawaban." },
+        { "term": "salah hitung", "desc": "Kesalahan aritmetik lebih sering jadi penyebab jawaban salah daripada salah konsep." }
+      ],
+      "nextSteps": [
+        { "title": "Kerjakan lima soal sejenis tanpa contoh", "desc": "Pakai soal-soal dari bank soal Matematika dengan tingkat kesulitan yang sama. Kalau mentok di langkah yang sama, itu titik lemahnya." },
+        { "title": "Buat tabel nilai untuk tiap kasus", "desc": "Rumus matematika sering punya beberapa kasus. Tulis tabelnya agar tidak salah memilih rumus." },
+        { "title": "Coba balik: dari jawaban ke rumus", "desc": "Ambil satu soal, sembunyikan rumusnya, lalu tebak rumus mana yang dipakai. Ini latihan membaca soal." }
+      ]
+    },
+    "fisika": {
+      "subject": "Fisika",
+      "terms": [
+        { "term": "besaran dan satuan", "desc": "Pastikan semua besaran memakai satuan yang konsisten sebelum masuk perhitungan." },
+        { "term": "vektor dan arah", "desc": "Tentukan arah lebih dulu, baru besarannya. Menggambar diagram gaya biasanya sangat membantu." },
+        { "term": "hukum atau rumus dasar", "desc": "Tulis rumus induk beserta asumsi penggunaannya." },
+        { "term": "konversi satuan", "desc": "Simpan konversi yang sering dipakai, misalnya 1 kWh = 3,6 juta joule." }
+      ],
+      "nextSteps": [
+        { "title": "Gambar ulang diagram gaya", "desc": "Tulis ulang soalnya secara visual. Sebagian besar soal fisika selesai begitu diagramnya sudah benar." },
+        { "title": "Cek satuan di setiap baris", "desc": "Kerjakan ulang sambil menulis satuan pada setiap langkah. Salah satuan langsung ketahuan." },
+        { "title": "Bandingkan dengan contoh resmi", "desc": "Cocokkan urutan penyelesaianmu dengan contoh soal resmi untuk melihat langkah yang sering terlewat." }
+      ]
+    },
+    "kimia": {
+      "subject": "Kimia",
+      "terms": [
+        { "term": "persamaan reaksi", "desc": "Tulis reaksi dalam bentuk persamaan seimbang, bukan kalimat." },
+        { "term": "mol dan massa molar", "desc": "Konversi gram ke mol dan sebaliknya sering jadi inti soal." },
+        { "term": "pH larutan", "desc": "Pahami bahwa skalanya logaritmik: selisih satu pH berarti sepuluh kali." },
+        { "term": "sifat unsur", "desc": "Cek posisi atom di tabel periodik untuk ingat sifatnya: makin ke kanan makin elektronegatif, makin ke bawah makin besar." }
+      ],
+      "nextSteps": [
+        { "title": "Tulis ulang reaksi sampai setimbang", "desc": "Latihan menulis dan menyeimbangkan persamaan reaksi sampai bisa otomatis tanpa melihat catatan." },
+        { "title": "Hitung ulang tiga soal mol", "desc": "Bank soal Kimia punya banyak soal tipe ini. Fokus ke langkah konversi gram ke mol." },
+        { "title": "Buat mind map sifat unsur", "desc": "Kelompokkan unsur berdasarkan sifat kimianya supaya lebih mudah diingat lewat pola, bukan daftar." }
+      ]
+    },
+    "biologi": {
+      "subject": "Biologi",
+      "terms": [
+        { "term": "struktur dan fungsi", "desc": "Pasangkan tiap bagian dengan fungsinya, bukan menghafal urutan nama saja." },
+        { "term": "urutan proses", "desc": "Tulis proses sebagai rangkaian tahap berurutan, lalu ucapkan dengan kalimat sendiri." },
+        { "term": "nama latin", "desc": "Sebut nama latin sekali saja di awal agar tidak menebak saat membaca tabel." },
+        { "term": "tabel perbandingan", "desc": "Catatan biologi sering berupa pembedaan. Tulis ulang dalam bentuk tabel yang rapi dan jelas." }
+      ],
+      "nextSteps": [
+        { "title": "Jelaskan aloud tanpa catatan", "desc": "Bayangkan mengulang materi ini ke teman. Bagian yang tidak bisa kamu jelaskan adalah bagian yang belum dipahami." },
+        { "title": "Buat tabel persamaan dan perbedaan", "desc": "Pisahkan yang mirip dan yang berbeda, karena pembedaan jauh lebih sulit dicatat daripada persamaan." },
+        { "title": "Kaitkan dengan sistem tubuh lain", "desc": "Sambungkan proses ini ke sistem lain agar materinya tidak terasa terpisah-pisah." }
+      ]
+    },
+    "sejarah": {
+      "subject": "Sejarah",
+      "terms": [
+        { "term": "tokoh dan perannya", "desc": "Satu tokoh satu peran utama. Tulis dalam pola nama, peran, lalu hasil karyanya." },
+        { "term": "tahun kunci", "desc": "Hafalkan tanggal pembuka dan penutup peristiwa, bukan setiap tanggal di antaranya." },
+        { "term": "sebab dan akibat", "desc": "Setiap peristiwa perlu sebab dan akibat. Kalau salah satu kosong, catatannya belum utuh." },
+        { "term": "konteks", "desc": "Peristiwa terjadi karena kondisi sosial dan ekonomi waktu itu, bukan berdiri sendiri." }
+      ],
+      "nextSteps": [
+        { "title": "Buat garis waktu", "desc": "Tarik garis waktu manual dan tandai tiga sampai lima peristiwa terpenting dari materi ini. Urutan waktu jauh lebih mudah diingat daripada daftar." },
+        { "title": "Tulis sebab lalu akibat", "desc": "Dua kolom: sebab dan akibat. Isi dari ingatan dulu, baru cek ulang ke catatan setelahnya." },
+        { "title": "Bandingkan dengan peristiwa mirip", "desc": "Cari satu peristiwa lain dengan pola sebab-akibat serupa supaya polanya makin melekat." }
+      ]
+    },
+    "bahasa": {
+      "subject": "Bahasa Indonesia",
+      "terms": [
+        { "term": "kalimat dan klausa", "desc": "Tandai mana subjek dan mana predikat sebelum menilai keabsahan sebuah kalimat." },
+        { "term": "majas", "desc": "Kaitkan majas dengan maksud pengarangnya, bukan hanya definisinya." },
+        { "term": "denotasi dan konotasi", "desc": "Bedakan makna literal dan makna dalam konteks tulisan." },
+        { "term": "ejaan dan tanda baca", "desc": "Perhatikan kapitalisasi dan tanda baca, karena sering menentukan nilai di soal uraian." }
+      ],
+      "nextSteps": [
+        { "title": "Analisis tiga teks berbeda", "desc": "Tandai kalimat bermajas pada tiga bacaan berbeda supaya polanya cepat terasa." },
+        { "title": "Perbaiki struktur kalimat", "desc": "Tulis ulang kalimat yang strukturnya ragukan, lalu jelaskan bagian mana yang diperbaiki dan alasannya." },
+        { "title": "Baca sepuluh menit tiap hari", "desc": "Kemandirian bacaan naik cepat. Catat satu frasa baru setiap hari." }
+      ]
+    },
+    "ips": {
+      "subject": "IPS",
+      "terms": [
+        { "term": "konsep dan definisi", "desc": "Tulis definisi dengan kalimatmu sendiri, bukan istilah buku." },
+        { "term": "fenomena terkait", "desc": "Kaitkan konsep dengan peristiwa nyata yang pernah kamu lihat atau baca." },
+        { "term": "faktor penyebab", "desc": "Pisahkan faktor alam dan faktor manusia supaya tidak tercampur." },
+        { "term": "data dan grafik", "desc": "Membaca grafik sering lebih menentukan daripada menghafal teori." }
+      ],
+      "nextSteps": [
+        { "title": "Hubungkan ke peristiwa terkini", "desc": "Cari satu berita atau contoh nyata yang memakai konsep ini, supaya tidak terasa abstrak." },
+        { "title": "Buat peta konsep", "desc": "Letakkan konsep utama di tengah, lalu hubungkan ke konsep lain dan contoh kasusnya." },
+        { "title": "Jawab tiga soal uraian", "desc": "Tulis jawaban lengkap dengan kalimat sendiri, lalu bandingkan dengan kunci jawaban." }
+      ]
+    }
+  }
+}

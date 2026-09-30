@@ -43,7 +43,7 @@ export function renderNavbar() { return `
       <div id="helpDropdown" class="absolute right-0 top-full mt-2 w-56 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-lg shadow-slate-900/5 dark:shadow-black/40 hidden" style="z-index:100;">
         <div class="p-2">
           <p class="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">Bantuan</p>
-          <a href="#/faq" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm no-underline hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" style="color:var(--text-secondary);">
+          <a href="#/about?tab=faq" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm no-underline hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" style="color:var(--text-secondary);">
             <i class="fas fa-circle-question w-4 text-center"></i> FAQ
           </a>
           <a href="#/about" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm no-underline hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" style="color:var(--text-secondary);">

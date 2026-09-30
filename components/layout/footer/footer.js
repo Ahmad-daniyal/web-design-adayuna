@@ -18,8 +18,9 @@ export function renderFooter() { return `
           <a href="#/home" data-link="home" class="text-sm no-underline" style="color:var(--text-secondary);">Home</a>
           <a href="#/forum" data-link="forum" class="text-sm no-underline" style="color:var(--text-secondary);">Forum</a>
           <a href="#/friend" data-link="friend" class="text-sm no-underline" style="color:var(--text-secondary);">Friend</a>
-          <a href="#/about" data-link="about" class="text-sm no-underline" style="color:var(--text-secondary);">About</a>
-          <a href="#/faq" data-link="faq" class="text-sm no-underline" style="color:var(--text-secondary);">FAQ</a>
+          <a href="#/match" data-link="match" class="text-sm no-underline" style="color:var(--text-secondary);">Arena</a>
+          <a href="#/catatan" data-link="catatan" class="text-sm no-underline" style="color:var(--text-secondary);">Catatan AI</a>
+          <a href="#/about" data-link="about" class="text-sm no-underline" style="color:var(--text-secondary);">Tentang &amp; FAQ</a>
         </div>
       </div>
       <div>
@@ -29,6 +30,7 @@ export function renderFooter() { return `
           <a href="#/friend" data-link="friend" class="text-sm no-underline" style="color:var(--text-secondary);">Study Buddy</a>
           <a href="#/match" data-link="match" class="text-sm no-underline" style="color:var(--text-secondary);">Arena Duel</a>
           <a href="#/profile" data-link="profile" class="text-sm no-underline" style="color:var(--text-secondary);">Progress Journal</a>
+          <a href="#/catatan" data-link="catatan" class="text-sm no-underline" style="color:var(--text-secondary);">Asisten AI Catatan</a>
         </div>
       </div>
       <div>

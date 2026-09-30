@@ -6,7 +6,7 @@ import { renderHome } from '../../features/home/home.js';
 import { renderForum } from '../../features/forum/forum.js';
 import { renderFriend } from '../../features/friend/friend.js';
 import { renderAbout } from '../../features/about/about.js';
-import { renderFaq } from '../../features/faq/faq.js';
+import { renderNotes } from '../../features/notes/notes.js';
 import { renderProfile } from '../../features/profile/profile.js';
 import { renderMatch } from '../../features/match/match.js';
 import { SmoothScroll } from './smoothScroll.js';
@@ -19,11 +19,17 @@ export const Router = (() => {
     'friend': renderFriend,
     'match': renderMatch,
     'about': renderAbout,
-    'faq': renderFaq,
-    'profile': renderProfile
+    'profile': renderProfile,
+    'catatan': renderNotes
   };
 
-  let currentPage = null;
+  // Page About dan FAQ digabung jadi satu halaman ber-tab demi batas
+  // LIMITS.MAX_PAGES. Tautan lama `#/faq` (bookmark, hasil pencarian)
+  // resolve di memori tanpa menulis ulang location, jadi tidak mungkin
+  // memicu hashchange berulang.
+  const ALIASES = { faq: 'about?tab=faq' };
+
+  let currentKey = null;
 
   function init() {
     document.getElementById('navbar-slot').innerHTML = renderNavbar();
@@ -37,15 +43,31 @@ export const Router = (() => {
 
   function handleRoute() {
     const hash = window.location.hash.slice(1) || '/';
-    const path = hash.split('?')[0].replace(/^\/+/, '');
+    const parts = hash.split('?');
+    const rawPath = parts[0].replace(/^\/+/, '');
+    let path = rawPath;
+    let query = parts.slice(1).join('?');
+
+    const alias = ALIASES[rawPath];
+    if (alias) {
+      const a = alias.split('?');
+      path = a[0];
+      query = a[1] || query;
+    }
+
     const render = routes[path] || routes.home;
     const pageName = path === '' ? 'home' : (routes[path] ? path : 'home');
 
-    if (pageName === currentPage && pageName !== 'home') return;
-    currentPage = pageName;
+    // Guard memakai key yang ikut query, bukan pageName saja: pindah dari
+    // `#/catatan?note=a` ke `#/catatan?note=b` tetap harus merender ulang,
+    // padahal pageName-nya sama.
+    const routeKey = pageName + (query ? '?' + query : '');
+    if (routeKey === currentKey && pageName !== 'home') return;
+    currentKey = routeKey;
 
+    const params = new URLSearchParams(query);
     const app = document.getElementById('app');
-    if (render && app) app.innerHTML = render();
+    if (render && app) app.innerHTML = render(params);
 
     updateNavActive(pageName);
     // Reset scroll secara INSTAN, bukan smooth: halaman baru masih dalam
@@ -53,7 +75,7 @@ export const Router = (() => {
     // halaman kosong yang ter-scroll dari bawah ke atas.
     SmoothScroll.scrollToTop({ immediate: true });
     SmoothScroll.refresh();
-    setTimeout(() => window.dispatchEvent(new CustomEvent('pageChanged', { detail: { pageName } })), 0);
+    setTimeout(() => window.dispatchEvent(new CustomEvent('pageChanged', { detail: { pageName, query, params } })), 0);
 
     if (window.innerWidth < 768) {
       const sidebar = document.getElementById('sidebar');
@@ -63,8 +85,8 @@ export const Router = (() => {
     }
   }
 
-  function navigate(page) {
-    window.location.hash = '#/' + page;
+  function navigate(page, query) {
+    window.location.hash = '#/' + page + (query ? '?' + query : '');
   }
 
   function updateNavActive(pageName) {

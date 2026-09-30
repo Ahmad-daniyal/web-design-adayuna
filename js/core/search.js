@@ -15,14 +15,17 @@ const PAGE_ENTRIES = [
   { page: 'match', title: 'Arena Duel Kuis Cerdas', desc: 'Arena duel, kuis, ranked, classic, leaderboard, tier, poin, badge, soal', icon: 'fa-bolt', source: 'Halaman' },
   { page: 'friend', title: 'Study Buddy Matching', desc: 'Teman belajar, matching, mapel, minat, kelas, cari teman', icon: 'fa-user-friends', source: 'Halaman' },
   { page: 'forum', title: 'Forum Diskusi', desc: 'Forum diskusi, thread, topik, komunitas, balasan, komentar', icon: 'fa-comments', source: 'Halaman' },
+  { page: 'catatan', title: 'Catatan AI', desc: 'Catatan AI, jurnal belajar, catatan harian, catat hari ini, asisten AI, rangkum catatan, poin penting, langkah belajar, latihan soal, kuis, hapus catatan', icon: 'fa-wand-magic-sparkles', source: 'Halaman' },
   { page: 'home', title: 'Beranda', desc: 'Beranda, ice breaker, fitur unggulan, progress, mulai', icon: 'fa-home', source: 'Halaman' },
-  { page: 'about', title: 'Tentang Edquest', desc: 'Tentang Edquest, visi, misi, latar belakang, langkah kerja', icon: 'fa-info-circle', source: 'Halaman' },
-  { page: 'faq', title: 'Pertanyaan Umum (FAQ)', desc: 'FAQ, anonimitas, poin, badge, jurnal, keamanan data, pengaturan, bantuan', icon: 'fa-question-circle', source: 'Halaman' },
-  { page: 'profile', title: 'Profil & Progress', desc: 'Profil, jurnal belajar, badge, poin, statistik, akun, progress', icon: 'fa-user', source: 'Halaman' },
+  { page: 'about', title: 'Tentang Edquest & FAQ', desc: 'Tentang Edquest, visi, misi, latar belakang, langkah kerja, FAQ, anonimitas, poin, badge, jurnal, keamanan data, pengaturan, bantuan, kontak, kirim pesan', icon: 'fa-info-circle', source: 'Halaman' },
+  { page: 'profile', title: 'Profil & Progress', desc: 'Profil, badge, poin, statistik, akun, progress, identitas', icon: 'fa-user', source: 'Halaman' },
 ];
 
+// Isi About dan FAQ kini hidup di satu halaman (#/about), jadi keduanya
+// digabung jadi satu haystack agar pencarian tetap menemukan isi FAQ.
 function aboutKeywords() {
   const d = dataStore.about || {};
+  const f = dataStore.faq || {};
   const parts = [];
   const push = (v) => { if (v) parts.push(String(v)); };
   push('about');
@@ -39,6 +42,12 @@ function aboutKeywords() {
   push(d.steps && d.steps.title);
   push(d.steps && d.steps.subtitle);
   ((d.steps && d.steps.items) || []).forEach(s => { push(s.title); push(s.desc); });
+  push('faq');
+  push(f.hero && f.hero.title);
+  push(f.hero && f.hero.subtitle);
+  push(f.sectionTitle);
+  ((f.items) || []).forEach(it => { push(it.q); push(it.a); });
+  push(f.contact && f.contact.sectionTitle);
   return parts.join(' ').toLowerCase();
 }
 
@@ -91,7 +100,7 @@ export function searchEverything(q) {
   if (dataStore.faq && dataStore.faq.items) {
     dataStore.faq.items.forEach(item => {
       if ((esc(item.q) + ' ' + esc(item.a || '')).toLowerCase().includes(ql)) {
-        items.push({ type: 'faq', page: 'faq', title: esc(item.q), desc: esc(item.a || '').slice(0, 60) + (item.a && item.a.length > 60 ? '...' : ''), icon: item.icon || 'fa-question-circle', source: 'FAQ' });
+        items.push({ type: 'faq', page: 'about', title: esc(item.q), desc: esc(item.a || '').slice(0, 60) + (item.a && item.a.length > 60 ? '...' : ''), icon: item.icon || 'fa-question-circle', source: 'FAQ' });
       }
     });
   }
@@ -129,6 +138,11 @@ export function openResult(r) {
     }
     case 'buddy':
       Router.navigate('friend');
+      break;
+    // Isi FAQ sudah jadi satu halaman dengan About, jadi arahkan ke tab
+    // yang benar supaya pengguna langsung melihat jawabannya.
+    case 'faq':
+      Router.navigate('about', 'tab=faq');
       break;
     default:
       Router.navigate(r.page);

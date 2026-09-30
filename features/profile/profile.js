@@ -1,22 +1,14 @@
 import { injectStyle } from '../../js/utils/styleLoader.js';
-import { CONFIG } from '../../js/core/config.js';
 import { Auth } from '../../js/services/auth.js';
 
 injectStyle('features/profile/css/profile.css');
 injectStyle('features/match/css/match.css');
 
-const JOURNAL_POINTS = CONFIG.LIMITS.JOURNAL_POINTS;
-
-function journalMapelOptions() {
-  return '<option value="umum">Umum</option>' +
-    CONFIG.MAPELS.map(m => '<option value="' + m.key + '">' + m.label + '</option>').join('');
-}
-
 export function renderProfile() { return `
 <section class="pt-16 md:pt-20 pb-10">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="grid lg:grid-cols-3 gap-8">
-      <div class="lg:col-span-1">
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
         <div class="card-panel p-6 text-center mb-6 reveal-left">
           <div id="profileAvatar" class="user-avatar w-20 h-20 rounded-full flex items-center justify-center text-2xl font-extrabold text-white mx-auto mb-3" style="background:var(--gradient-primary);">D</div>
           <h2 id="profileName" class="text-xl font-bold text-slate-900 dark:text-slate-100">Tamu</h2>
@@ -36,7 +28,9 @@ export function renderProfile() { return `
           <p class="text-xs mt-3 text-slate-400 dark:text-slate-500"><span id="profileBadgeCountText">0 dari 7</span> badge diraih</p>
           <a href="#/match" class="btn-edquest btn-primary-grad w-full mt-4 text-sm !py-2"><i class="fas fa-bolt mr-1"></i> Raih Badge di Arena</a>
         </div>
-        <div class="card-panel p-6 mb-6 reveal-left">
+      </div>
+      <div>
+        <div class="card-panel p-6 mb-6 reveal-right">
           <h4 class="font-bold text-sm mb-4 text-slate-900 dark:text-slate-100"><i class="fas fa-bolt mr-2" style="color:var(--accent);"></i>Ranking Arena</h4>
           <div class="flex items-center gap-3 mb-4">
             <span id="profileRating" class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">—</span>
@@ -49,7 +43,7 @@ export function renderProfile() { return `
           </div>
           <a href="#/match" class="btn-edquest btn-outline-glow w-full mt-4 text-sm !py-2"><i class="fas fa-bolt mr-1"></i> Masuk Arena</a>
         </div>
-        <div class="card-panel p-4 reveal-left">
+        <div class="card-panel p-4 reveal-right">
           <label class="flex items-center justify-between cursor-pointer">
             <span class="text-sm font-medium text-slate-900 dark:text-slate-100"><i class="fas fa-eye-slash mr-2 text-slate-400 dark:text-slate-500"></i>Mode Anonim</span>
             <div class="relative">
@@ -61,34 +55,24 @@ export function renderProfile() { return `
           <p class="text-xs mt-2 text-slate-400 dark:text-slate-500">Posting tanpa nama asli. Tetap bisa dapat poin & badge.</p>
         </div>
       </div>
-      <div class="lg:col-span-2">
-        <div class="flex items-center justify-between mb-4 reveal-right">
-          <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100"><i class="fas fa-book-open mr-2 text-slate-500 dark:text-slate-400"></i>Jurnal Belajar</h2>
-          <button id="addJournalBtn" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4"><i class="fas fa-plus"></i> Catat Hari Ini</button>
-        </div>
-        <div id="journalForm" class="card-panel p-5 mb-6" style="display:none;">
-          <h4 class="font-bold mb-3 text-slate-900 dark:text-slate-100">Apa yang sudah kamu pelajari?</h4>
-          <form id="journalEntryForm">
-            <div class="mb-3">
-              <label for="journalMapel" class="form-label">Mapel (opsional)</label>
-              <select id="journalMapel" class="form-input" style="cursor:pointer;">
-                ${journalMapelOptions()}
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="journalText" class="form-label">Catatan Progress</label>
-              <textarea id="journalText" rows="3" class="form-input resize-none" placeholder="Contoh: Hari ini aku belajar tentang turunan fungsi..." required></textarea>
-            </div>
-            <div class="flex items-center justify-between">
-              <span class="text-xs text-slate-400 dark:text-slate-500">Setiap catatan = +${JOURNAL_POINTS} poin</span>
-              <div class="flex gap-2">
-                <button type="button" id="cancelJournalBtn" class="btn-ghost text-sm !py-1 !px-3">Batal</button>
-                <button type="submit" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4">Simpan</button>
+
+      <!-- Teaser: catatan belajar hidup di halaman Catatan AI, bukan di profil.
+           Yang tampil di sini cuma ringkasannya supaya jurnal tidak hilang. -->
+      <div class="card-panel p-6 md:col-span-2 reveal">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-start gap-4">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style="background:var(--accent-light);color:var(--accent);"><i class="fas fa-book-open"></i></div>
+            <div>
+              <h4 class="font-bold text-sm text-slate-900 dark:text-slate-100">Jurnal Belajar</h4>
+              <p id="profileJournalHint" class="text-xs mt-1" style="color:var(--text-muted);">Catatan belajar disimpan terpisah dari profil, di halaman Catatan AI.</p>
+              <div class="flex items-center gap-5 mt-3 text-xs">
+                <span><strong id="profileJournalCount" class="text-lg font-extrabold text-slate-900 dark:text-slate-100">0</strong> <span class="text-slate-400 dark:text-slate-500">catatan</span></span>
+                <span><strong id="profileJournalAiCount" class="text-lg font-extrabold" style="color:var(--primary);">0</strong> <span class="text-slate-400 dark:text-slate-500">sudah dirangkum AI</span></span>
               </div>
             </div>
-          </form>
+          </div>
+          <a href="#/catatan" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4 flex-shrink-0"><i class="fas fa-wand-magic-sparkles mr-1"></i> Buka Catatan AI</a>
         </div>
-        <div id="journalEntries" class="space-y-4"></div>
       </div>
     </div>
   </div>

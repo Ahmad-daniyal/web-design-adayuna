@@ -1,6 +1,7 @@
 import { CONFIG } from '../core/config.js';
 import { dataStore } from '../data/index.js';
 import { SmoothScroll } from '../core/smoothScroll.js';
+import { buildSampleEntries } from '../utils/journalSamples.js';
 
 const USER_KEY = CONFIG.STORAGE_KEYS.USER;
 const REGISTERED_KEY = CONFIG.STORAGE_KEYS.REGISTERED_USERS;
@@ -194,11 +195,13 @@ export const Auth = (() => {
       points: 0,
       badges: [],
       matchStats: defaultMatchStats(),
-      journal: []
+      // Jurnal diisi catatan contoh supaya setelah daftar user
+      // sudah punya contoh nyata cara memakai fitur Catatan AI.
+      journal: buildSampleEntries()
     };
     registered.push(account);
     saveRegisteredUsers(registered);
-    currentUser = { name: account.name, email: account.email, school: account.school, mapel: account.mapel, minat: account.minat, kelas: account.kelas, avatar: account.avatar, id: account.id, joined: account.joined, points: 0, badges: [], matchStats: defaultMatchStats(), journal: [] };
+    currentUser = { name: account.name, email: account.email, school: account.school, mapel: account.mapel, minat: account.minat, kelas: account.kelas, avatar: account.avatar, id: account.id, joined: account.joined, points: 0, badges: [], matchStats: defaultMatchStats(), journal: account.journal };
     localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
     closeModal();
     updateUIForLoggedInUser();

@@ -1,18 +1,15 @@
 import { CONFIG } from '../core/config.js';
 import { Auth } from './auth.js';
 import { Match } from './match.js';
-import { Notifications } from './notifications.js';
 import { ScrollAnimation } from '../core/scrollAnimation.js';
 
 export const Profile = (() => {
   const USER_KEY = CONFIG.STORAGE_KEYS.USER;
   const REGISTERED_KEY = CONFIG.STORAGE_KEYS.REGISTERED_USERS;
+  // Jurnal belajar (daftar catatan, form, dan hasil AI) sudah pindah ke
+  // halaman Catatan AI (#/catatan) supaya Profil tidak bercampur dengan
+  // catatan. Yang tersisa di sini hanya teaser berisi jumlahnya.
   const JOURNAL_POINTS = CONFIG.LIMITS.JOURNAL_POINTS;
-
-  const MAPEL_LABELS = Object.assign(
-    { umum: 'Umum' },
-    CONFIG.MAPELS.reduce((o, m) => { o[m.key] = m.label; return o; }, {})
-  );
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
@@ -20,7 +17,6 @@ export const Profile = (() => {
 
   function init() {
     syncUser();
-    bindJournalForm();
     bindAnonToggle();
   }
 
@@ -91,7 +87,7 @@ export const Profile = (() => {
       }
     }
     renderBadges(user);
-    renderJournal(user);
+    syncJournalTeaser(user);
   }
 
   function renderBadges(user) {
@@ -137,91 +133,26 @@ export const Profile = (() => {
     }
   }
 
-  function renderJournal(user) {
-    const container = document.getElementById('journalEntries');
-    if (!container) return;
+  function syncJournalTeaser(user) {
     const entries = (user && user.journal) || [];
-    if (!user) {
-      container.innerHTML = '<div class="card-panel !p-8 text-center"><div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl" style="background:var(--accent-light);color:var(--accent);"><i class="fas fa-book-open"></i></div>' +
-        '<h3 class="text-lg font-bold mb-1" style="color:var(--text-primary);">Jurnal belajar masih kosong</h3>' +
-        '<p class="text-sm mb-4" style="color:var(--text-secondary);">Buat akun dulu untuk mulai mencatat progress harianmu dan dapatkan poin.</p>' +
-        '<button data-action="register" class="btn-edquest btn-primary-grad text-sm !py-2 !px-4"><i class="fas fa-user-plus"></i> Daftar Sekarang</button></div>';
-      return;
-    }
-    if (entries.length === 0) {
-      container.innerHTML = '<div class="card-panel !p-8 text-center"><div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl" style="background:var(--accent-light);color:var(--accent);"><i class="fas fa-pen-nib"></i></div>' +
-        '<h3 class="text-lg font-bold mb-1" style="color:var(--text-primary);">Belum ada catatan</h3>' +
-        '<p class="text-sm" style="color:var(--text-secondary);">Klik <strong>Catat Hari Ini</strong> dan mulailah jurnal belajarmu. Setiap catatan memberi +' + JOURNAL_POINTS + ' poin.</p></div>';
-      return;
-    }
-    container.innerHTML = entries.map((entry, i) => buildJournalCard(entry, i)).join('');
-  }
-
-  function buildJournalCard(entry, i) {
-    if (!entry) return '';
-    const label = MAPEL_LABELS[entry.mapel] || capitalize(String(entry.mapel || 'umum'));
-    return '<div class="progress-card reveal reveal-stagger-' + ((i % 3) + 1) + '">' +
-      '<div class="flex items-center justify-between mb-2">' +
-        '<span class="status-tag">' + esc(label) + '</span>' +
-        '<span class="text-xs" style="color:var(--text-muted);">' + relativeTime(entry.time) + '</span>' +
-      '</div>' +
-      '<p class="text-sm leading-relaxed" style="color:var(--text-secondary);">' + esc(entry.text) + '</p>' +
-      '<div class="flex items-center gap-2 mt-2 text-xs" style="color:var(--primary);"><i class="fas fa-circle-check"></i> +' + (Number(entry.points) || JOURNAL_POINTS) + ' poin</div>' +
-    '</div>';
-  }
-
-  function relativeTime(iso) {
-    if (!iso) return 'Baru saja';
-    const t = new Date(iso).getTime();
-    if (isNaN(t)) return 'Baru saja';
-    const diff = Date.now() - t;
-    const m = Math.floor(diff / 60000);
-    if (m < 1) return 'Baru saja';
-    if (m < 60) return m + ' menit lalu';
-    const h = Math.floor(m / 60);
-    if (h < 24) return h + ' jam lalu';
-    const d = Math.floor(h / 24);
-    if (d === 1) return 'Kemarin';
-    if (d < 7) return d + ' hari lalu';
-    return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-  }
-
-  function bindJournalForm() {
-    const addBtn = document.getElementById('addJournalBtn');
-    const form = document.getElementById('journalForm');
-    const cancelBtn = document.getElementById('cancelJournalBtn');
-    if (!addBtn || !form) return;
-    addBtn.addEventListener('click', () => {
-      if (!Auth.isLoggedIn()) { Auth.openModal('register'); return; }
-      form.style.display = form.style.display === 'none' ? 'block' : 'none';
-    });
-    if (cancelBtn) cancelBtn.addEventListener('click', () => { form.style.display = 'none'; });
-    const entryForm = document.getElementById('journalEntryForm');
-    if (entryForm) {
-      entryForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (!Auth.isLoggedIn()) { Auth.openModal('register'); return; }
-        const mapelEl = document.getElementById('journalMapel');
-        const textEl = document.getElementById('journalText');
-        const mapel = mapelEl ? mapelEl.value : 'umum';
-        const text = textEl ? textEl.value.trim() : '';
-        if (!text) { Auth.showToast('Catatan tidak boleh kosong', 'error'); return; }
-        const user = Auth.getUser();
-        user.journal = user.journal || [];
-        user.journal.unshift({ mapel, text, time: new Date().toISOString(), points: JOURNAL_POINTS });
-        persistJournal(user);
-        if (textEl) textEl.value = '';
-        form.style.display = 'none';
-        const gained = addPoints(JOURNAL_POINTS);
-        renderJournal(user);
-        renderBadges(user);
-        Auth.showToast(gained ? 'Progress tercatat! +' + JOURNAL_POINTS + ' poin' : 'Progress tercatat!', 'success');
-        if (gained) Notifications.push({ type: 'journal', title: 'Progress tercatat!', message: '+' + JOURNAL_POINTS + ' poin · ' + (MAPEL_LABELS[mapel] || capitalize(mapel)), link: '#/profile' });
-      });
+    const done = entries.filter(e => e && e.ai).length;
+    const countEl = document.getElementById('profileJournalCount');
+    const aiEl = document.getElementById('profileJournalAiCount');
+    const hintEl = document.getElementById('profileJournalHint');
+    if (countEl) countEl.textContent = entries.length;
+    if (aiEl) aiEl.textContent = done;
+    if (hintEl) {
+      hintEl.textContent = entries.length
+        ? done
+          ? done + ' dari ' + entries.length + ' catatan sudah dibantu AI.'
+          : 'Klik salah satu catatan untuk minta AI merangkum.'
+        : 'Belum ada catatan. Mulai dengan mencatat apa yang kamu pelajari hari ini.';
     }
   }
 
-  function persistJournal(user) {
+  // Dipakai juga oleh halaman Catatan AI untuk menyimpan hasil analisis
+  // ke dalam entri jurnal (entry.ai) lewat jalur persist yang sama.
+  function persist(user) {
     Auth.persistUser(user);
     if (!user || !user.email) return;
     try {
@@ -238,7 +169,7 @@ export const Profile = (() => {
     const user = Auth.getUser();
     if (!user) return false;
     user.points = (user.points || 0) + amount;
-    persistJournal(user);
+    persist(user);
     const pointsEl = document.getElementById('profilePoints');
     if (pointsEl) pointsEl.textContent = user.points;
     return true;
@@ -257,7 +188,6 @@ export const Profile = (() => {
     });
   }
 
-  function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
-
-  return { init };
+  // Dipakai halaman Catatan AI saat pengguna menyimpan catatan baru.
+  return { init, persist, addPoints };
 })();

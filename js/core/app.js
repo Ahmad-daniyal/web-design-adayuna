@@ -4,6 +4,7 @@ import { Forum } from '../services/forum.js';
 import { Matching } from '../services/buddy.js';
 import { Match } from '../services/match.js';
 import { Profile } from '../services/profile.js';
+import { Notes } from '../services/notes.js';
 import { Settings } from '../services/settings.js';
 import { initHomeSearch } from '../../features/home/home.js';
 import { initForumSearch } from '../../features/forum/forum.js';
@@ -45,6 +46,9 @@ export const App = (() => {
         if (page === 'friend') Matching.init();
         if (page === 'match') Match.init();
         if (page === 'profile') Profile.init();
+        // Params query ikut diteruskan Router (mis. catatan mana yang
+        // dibuka pada halaman Catatan AI).
+        if (page === 'catatan') Notes.init(e.detail.params);
         ScrollAnimation.refresh();
       }));
     });

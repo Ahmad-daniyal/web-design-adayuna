@@ -7,7 +7,9 @@ export const dataStore = {
   questions: [],
   leaderboard: [],
   about: null,
-  faq: null
+  faq: null,
+  notes: null,
+  journalSamples: null
 };
 
 let loaded = false;
@@ -27,7 +29,9 @@ export async function preloadData() {
     load(CONFIG.DATA_PATHS.QUESTIONS, 'questions'),
     load(CONFIG.DATA_PATHS.LEADERBOARD, 'leaderboard'),
     load(CONFIG.DATA_PATHS.ABOUT, 'about'),
-    load(CONFIG.DATA_PATHS.FAQ, 'faq')
+    load(CONFIG.DATA_PATHS.FAQ, 'faq'),
+    load(CONFIG.DATA_PATHS.NOTES, 'notes'),
+    load(CONFIG.DATA_PATHS.JOURNAL_SAMPLES, 'journalSamples')
   ]);
   loaded = true;
 }

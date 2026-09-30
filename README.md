@@ -61,7 +61,8 @@ Siswa butuh tempat untuk berpendapat, mencoba, dan melihat perkembangan diri mer
 
 - **Forum Diskusi Anonim** — thread diskusi per kategori mapel (Matematika, Fisika, Kimia, Biologi, Sejarah, Bahasa, IPS).
 - **Study Buddy Matching** — cari teman belajar sesuai mapel dan minat/gaya belajar.
-- **Progress Journal** — catat aktivitas belajar harian, setiap catatan memberi +5 poin.
+- **Progress Journal** — catat aktivitas belajar harian, setiap catatan memberi +5 poin. Jurnal ini punya halaman sendiri, terpisah dari Profil.
+- **Catatan AI** — dari jurnal, klik satu catatan untuk membukanya di halaman Catatan AI, lalu minta rangkuman singkat, poin penting, langkah belajar, atau kuis pilihan ganda. Hasilnya menempel pada catatan itu (ikut tersimpan di localStorage) dan bisa dibuka lagi kapan saja. Catatan pertama yang muncul setelah pendaftaran adalah **catatan contoh**, jadi cara pakainya kelihatan tanpa perlu menulis dari nol; setiap catatan bisa dihapus lagi.
 - **Poin & Badge** — apresiasi atas kontribusi dan pencapaian belajar.
 - **Ice Breaker** — kalimat siap salin untuk memulai diskusi tanpa canggung.
 - **Mode Gelap & Pencarian** — pengalaman membaca yang nyaman siang maupun malam.
@@ -71,13 +72,14 @@ Siswa butuh tempat untuk berpendapat, mencoba, dan melihat perkembangan diri mer
 ## Teknologi
 
 - **Vanilla JavaScript SPA** — tanpa framework, ES Modules native, entry file `js/core/main.js`.
-- **Struktur modular** — `js/core/` (main, router, app, config, theme), `js/services/` (auth, forum, buddy, profile, settings), `js/utils/`, `js/data/`, `components/` (layout & ui), `features/` (halaman + CSS masing-masing).
-- **Data JSON** — konten statis (forum, buddy, home) diambil dari `data/*.json` dan di-cache ke `dataStore` lewat `preloadData()`.
+- **Struktur modular** — `js/core/` (main, router, app, config, theme), `js/services/` (auth, forum, buddy, match, profile, notes, ai, settings), `js/utils/`, `js/data/`, `components/` (layout & ui), `features/` (halaman + CSS masing-masing).
+- **Data JSON** — konten statis (forum, buddy, home, template catatan, catatan contoh, bank soal kuis) diambil dari `data/*.json` dan `features/notes/notes.json`, di-cache ke `dataStore` lewat `preloadData()`.
 - **CSS terpecah** — `css/global.css` untuk tema light/dark + satu file CSS per komponen/fitur, dimuat otomatis via `injectStyle()`.
-- **Hash Routing** — `#/forum`, `#/friend`, dst. — kompatibel penuh dengan static hosting.
+- **Hash Routing** — 7 halaman: `#/`, `#/forum`, `#/friend`, `#/match`, `#/profile`, `#/catatan`, `#/about` — kompatibel penuh dengan static hosting. Halaman Catatan punya dua mode: daftar catatan di `#/catatan` dan bantuan AI di `#/catatan?note=<ref-catatan>`. Tautan lama `#/faq` diarahkan ke `#/about?tab=faq`.
 - **Tailwind CSS (CDN)** + CSS variables untuk tema light/dark.
 - **Font Awesome 6** dan **Google Fonts (Inter)**.
-- **localStorage / sessionStorage** — sesi pengguna dan data spesifik user disimpan di browser.
+- **localStorage / sessionStorage** — sesi pengguna dan data spesifik user disimpan di browser, termasuk hasil AI pada tiap catatan (`entry.ai`).
+- **Mesin AI demo** — `js/services/ai.js` murni lokal: ringkasan, poin penting, dan langkah belajar dihitung dari teks catatan, sedangkan soal kuis diambil dari `data/questions.json` dan dipilih deterministik. Tidak ada panggilan API, jadi tidak butuh API key maupun biaya. Mengganti dengan AI sungguhan cukup mengubah isi empat fungsi di file tersebut.
 
 > Catatan: ini versi demo/mockup. Data disimpan sementara di localStorage dan tidak dikirim ke server manapun.
 

@@ -1,0 +1,20 @@
+{
+  "note": "Tersalin ke jurnal pengguna saat pertama kali mendaftar, supaya ada contoh nyata cara memakai fitur Catatan AI. Ditandai sample: true dan bisa dihapus kapan saja.",
+  "samples": [
+    {
+      "mapel": "matematika",
+      "ageHours": 2,
+      "text": "Hari ini aku belajar turunan fungsi di kelas. Guru menjelaskan bahwa turunan itu kecepatan perubahan, jadi turunan dari x kuadrat itu 2x. Aku juga belajar aturan hasil kali, misalnya turunan dari x pangkat 2 kali sin x itu 2x sin x ditambah x kuadrat cos x. Turunan dari sin x itu cos x dan turunan dari cos x itu negatif sin x. Besok aku mau latihan soal turunan tapi masih bingung bedanya turunan pertama dan turunan kedua."
+    },
+    {
+      "mapel": "fisika",
+      "ageHours": 26,
+      "text": "Pagi ini aku belajar gaya di Fisika. Guru bilang gaya itu tarikan atau dorongan dan satuannya newton. Aku buat analogi pas dorong lemari es yang berat, itu butuh gaya. Setelah itu aku belajar Hukum Newton, yaitu gaya sama dengan massa dikali percepatan. Jadi kalau massaku 40 kilogram dan percepatannya 2 meter per detik kuadrat, gaya yang keluar 80 newton. Rumus ini kepake banget di soal-soal mobil dan lift."
+    },
+    {
+      "mapel": "sejarah",
+      "ageHours": 50,
+      "text": "Aku belajar tentang proklamasi kemerdekaan Indonesia. Kemerdekaannya dibacakan Ir. Soekarno tanggal 17 Agustus 1945. Proklamasi itu juga dibacakan di kota Bandung dan Surabaya. Ir. Soekarno dan Mohammad Hatta memperjuangkan kemerdekaan bersama. Sekarang aku jadi lebih paham kenapa tanggal 17 Agustus selalu diperjuangkan setiap tahun."
+    }
+  ]
+}

@@ -30,7 +30,7 @@
     {
       "icon": "fa-book",
       "q": "Apakah ada jurnal belajar?",
-      "a": "Ya! Setiap pengguna punya jurnal belajar pribadi di halaman Profil. Catat apa yang udah kamu pelajari setiap hari — setiap catatan memberi poin dan bisa jadi motivasi buat lihat progress-mu seiring waktu."
+      "a": "Ya! Setiap pengguna punya jurnal belajar pribadi di halaman Catatan AI. Catat apa yang udah kamu pelajari setiap hari — setiap catatan memberi poin, lalu bisa langsung minta AI merangkum, membedah poin pentingnya, atau menguji kamu dengan kuis."
     },
     {
       "icon": "fa-shield-alt",

@@ -14,12 +14,16 @@ export const CONFIG = {
     QUESTIONS: 'data/questions.json',
     LEADERBOARD: 'data/leaderboard.json',
     ABOUT: 'data/about.json',
-    FAQ: 'data/faq.json'
+    FAQ: 'data/faq.json',
+    NOTES: 'features/notes/notes.json',
+    JOURNAL_SAMPLES: 'data/journal-samples.json'
   },
   LIMITS: {
     MAX_PAGES: 7,
     SEARCH_MAX: 6,
-    JOURNAL_POINTS: 5
+    JOURNAL_POINTS: 5,
+    AI_THINK_MIN_MS: 700,
+    AI_THINK_JITTER_MS: 500
   },
   MAPELS: [
     { key: 'matematika', label: 'Matematika', icon: 'fa-calculator' },

@@ -1,2 +1,57 @@
-/* ===== About ===== */
-/* Konten about sepenuhnya memakai class global (card-panel, section-badge). */
+/* ===== About (gabungan About + FAQ) ===== */
+/* Konten About memakai class global (card-panel, section-badge); yang
+   perlu aturan khusus hanya tab bar dan accordion FAQ. */
+
+.page-tabs {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.page-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.page-tab:hover {
+  background: var(--navy-hover);
+  color: var(--text-primary);
+}
+
+.page-tab.active {
+  background: var(--gradient-primary);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.dark .page-tab.active {
+  box-shadow: var(--glow-soft);
+}
+
+/* ===== FAQ Accordion ===== */
+.faq-toggle:hover {
+  background: var(--bg-section);
+}
+
+.faq-chevron {
+  transition: transform 0.3s ease;
+  transform-origin: center;
+}
